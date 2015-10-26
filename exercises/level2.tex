@@ -1,98 +1,29 @@
 \chapter{\RU{Уровень}\EN{Level} 2}
 
-\RU{Для решения задач второго уровня, вам вероятно понадобится текстовый редактор или тетрадка с ручкой}
-\EN{For solving exercises of level 2, you probably will need text editor or paper with pencil}.
+\RU{Для решения задач второго уровня, вам вероятно понадобится текстовый редактор или тетрадка с ручкой.}
+\EN{For solving exercises of level 2, you may need a text editor or paper and pencil.}
 
 \section{\Exercise 2.1}
-% toupper()
+% sqrt
 
-\index{OpenWatcom}
-\RU{Это стандартная функция из библиотек Си. Исходник взят из OpenWatcom}
-\EN{This is standard C library function. Source code taken from OpenWatcom}.
+\subsection{\Optimizing MSVC 2010 x86}
 
-\subsection{MSVC 2010}
+\lstinputlisting{exercises/2/sqrt_MSVC2010_Ox.asm}
 
-\lstinputlisting{exercises/1_1_msvc.asm}
+\subsection{\Optimizing MSVC 2012 x64}
 
-\subsection{GCC 4.4.1 + \Othree}
+\lstinputlisting{exercises/2/sqrt_MSVC2012_Ox_x64.asm}
 
-\lstinputlisting{exercises/1_1_gcc.asm}
-
-\subsection{Keil (ARM) + \Othree}
-
-\lstinputlisting{exercises/1_1_ARM.s}
-
-\subsection{Keil (thumb) + \Othree}
-
-\lstinputlisting{exercises/1_1_thumb.s}
-
-\section{\Exercise 2.2}
-% atoi()
-
-\index{OpenWatcom}
-\RU{Это так же стандартная функция из библиотек Си. Исходник взят из OpenWatcom и немного переделан}. 
-\EN{This is also standard C library function. Source code is taken from OpenWatcom and modified slightly}.
-
-\RU{Эта функция использует стандартные функции Си:}
-\EN{This function also use these standard C functions:} isspace() \AndENRU isdigit().
-
-\subsection{MSVC 2010 + \Ox}
-
-\lstinputlisting{exercises/1_2_msvc.asm}
-
-\subsection{GCC 4.4.1}
-
-\RU{Задача немного усложняется тем, что GCC представил isspace() и isdigit() 
-как inline-функции и вставил их тела прямо в код.}
-\EN{This exercise is slightly harder since GCC compiled isspace() and isdigit()
-functions as inline-functions and inserted their bodies right into the code.}
-
-\lstinputlisting{exercises/1_2_gcc.asm}
-
-\subsection{Keil (ARM) + \Othree}
-
-\lstinputlisting{exercises/1_2_ARM.s}
-
-\subsection{Keil (thumb) + \Othree}
-
-\lstinputlisting{exercises/1_2_thumb.s}
-
-\section{\Exercise 2.3}
-% rand()/srand()
-
-\RU{Это так же стандартная функция из библиотек Си, а вернее, две функции, работающие в паре. 
-Исходник взят из MSVC 2010 и немного переделан.}
-\EN{This is standard C function too, actually, two functions working in pair.
-Source code taken from MSVC 2010 and modified slightly.}
-
-\RU{Суть переделки в том, что эта функция может корректно работать в мульти-тредовой среде, 
-а я, для упрощения (или запутывания) убрал поддержку этого.}
-\EN{The matter of modification is that this function can work properly in multi-threaded environment,
-and I removed its support for simplification (or for confusion).}
-
-\subsection{MSVC 2010 + \Ox}
-
-\lstinputlisting{exercises/1_3_msvc.asm}
-
-\subsection{GCC 4.4.1}
-
-\lstinputlisting{exercises/1_3_gcc.asm}
-
-\subsection{Keil (ARM) + \Othree}
-
-\lstinputlisting{exercises/1_3_ARM.s}
-
-\subsection{Keil (thumb) + \Othree}
-
-\lstinputlisting{exercises/1_3_thumb.s}
+% 2.2
+% 2.3
 
 \section{\Exercise 2.4}
 % strstr()
 
 \RU{Это стандартная функция из библиотек Си. Исходник взят из MSVC 2010.}
-\EN{This is standard C library function. Source code taken from MSVC 2010.}
+\EN{This is a standard C library function. The source code is taken from MSVC 2010.}
 
-\subsection{MSVC 2010 + \Ox}
+\subsection{\Optimizing MSVC 2010}
 
 \lstinputlisting{exercises/1_4_msvc.asm}
 
@@ -100,150 +31,61 @@ and I removed its support for simplification (or for confusion).}
 
 \lstinputlisting{exercises/1_4_gcc.asm}
 
-\subsection{Keil (ARM) + \Othree}
+\subsection{\Optimizing Keil (\ARMMode)}
 
 \lstinputlisting{exercises/1_4_ARM.s}
 
-\subsection{Keil (thumb) + \Othree}
+\subsection{\Optimizing Keil (\ThumbMode)}
 
 \lstinputlisting{exercises/1_4_thumb.s}
 
-\section{\Exercise 2.5}
-% Pentium FDIV bug
+\subsection{\Optimizing GCC 4.9.1 (ARM64)}
 
-\RU{Задача, скорее, на эрудицию, нежели на чтение кода.}
-\EN{This exercise is rather on knowledge than on reading code.}
+\lstinputlisting[caption=\Optimizing GCC 4.9.1 (ARM64)]{exercises/1_4_ARM64_O3.s}
 
-\index{OpenWatcom}
-\RU{Функция взята из OpenWatcom}.
-\EN{The function is taken from OpenWatcom}.
+\subsection{\Optimizing GCC 4.4.5 (MIPS)}
 
-\subsection{MSVC 2010 + \Ox}
+\lstinputlisting[caption=\Optimizing GCC 4.4.5 (MIPS) (IDA)]{exercises/1_4_MIPS_O3_IDA.lst}
 
-\lstinputlisting{exercises/1_5_msvc.asm}
+% 2.5
 
 \section{\Exercise 2.6}
 % TEA
 
-\subsection{MSVC 2010 + \Ox}
+\subsection{\Optimizing MSVC 2010}
 
 \lstinputlisting{exercises/1_6_msvc.asm}
 
-\subsection{Keil (ARM) + \Othree}
+\subsection{\Optimizing Keil (\ARMMode)}
 
 \lstinputlisting{exercises/1_6_ARM.s}
 
-\subsection{Keil (thumb) + \Othree}
+\subsection{\Optimizing Keil (\ThumbMode)}
 
 \lstinputlisting{exercises/1_6_thumb.s}
 
-\section{\Exercise 2.7}
-% bitrev.c
+\subsection{\Optimizing GCC 4.9.1 (ARM64)}
 
-\RU{Это взята функция из ядра Linux 2.6.}\EN{This function is taken from Linux 2.6 kernel.}
+\lstinputlisting[caption=\Optimizing GCC 4.9.1 (ARM64)]{exercises/1_6_ARM64_O3.s}
 
-\subsection{MSVC 2010 + \Ox}
+\subsection{\Optimizing GCC 4.4.5 (MIPS)}
 
-\lstinputlisting{exercises/1_7_msvc.asm}
+\lstinputlisting[caption=\Optimizing GCC 4.4.5 (MIPS) (IDA)]{exercises/1_6_MIPS_O3_IDA.lst}
 
-\subsection{Keil (ARM) + \Othree}
-
-\lstinputlisting{exercises/1_7_ARM.s}
-
-\subsection{Keil (thumb) + \Othree}
-
-\lstinputlisting{exercises/1_7_thumb.s}
-
-\section{\Exercise 2.8}
-% matrix addition
-
-\subsection{MSVC 2010 + \TT{/O1}}
-
-(/O1: \RU{оптимизация по размеру кода}\EN{minimize space}).
-
-\lstinputlisting{exercises/1_8_msvc.asm}
-
-\subsection{Keil (ARM) + \Othree}
-
-\lstinputlisting{exercises/1_8_ARM.s}
-
-\subsection{Keil (thumb) + \Othree}
-
-\lstinputlisting{exercises/1_8_thumb.s}
-
-\section{\Exercise 2.9}
-% matrix multiplication
-
-\subsection{MSVC 2010 + \TT{/O1}}
-
-(/O1: \RU{оптимизация по размеру кода}\EN{minimize space}).
-
-\lstinputlisting{exercises/1_9_msvc.asm}
-
-\subsection{Keil (ARM) + \Othree}
-
-\lstinputlisting{exercises/1_9_ARM.s}
-
-\subsection{Keil (thumb) + \Othree}
-
-\lstinputlisting{exercises/1_9_thumb.s}
-
-\section{\Exercise 2.10}
-
-\RU{Если это скомпилировать и запустить, появится некоторое число. Откуда оно берется? 
-Откуда оно берется если скомпилировать в MSVC с оптимизациями (\Ox)?}
-\EN{If to compile this piece of code and run, a number will be printed. Where it came from?
-Where it came from if to compile it in MSVC with optimization (\Ox)?}
-
-\begin{lstlisting}
-#include <stdio.h>
-
-int main()
-{
-	printf ("%d\n");
-
-	return 0;
-};
-\end{lstlisting}
-
-\section{\Exercise 2.11}
-
-\RU{В рамках шутки, ``обманите'' ваш Windows Task Manager чтобы он показывал
-больше процессоров/ядер процессоров чем есть в вашем компьютере на самом деле}
-\EN{As a practical joke, ``fool'' your Windows Task Manager 
-to show much more CPUs/CPU cores than your machine actually has}:
-
-\begin{figure}[H]
-\centering
-\includegraphics[scale=\FigScale]{exercises/taskmgr_64cpu_crop.png}
-\caption{\RU{Обманутый}\EN{Fooled} Windows Task Manager}
-\end{figure}
-
-\section{\Exercise 2.12}
-% ROT13
-
-\RU{Это довольно известный алгоритм}\EN{This is a well-known algorithm}.
-\RU{Как он называется}\EN{How it's called}?
-
-\subsection{MSVC 2012 x64 + \Ox}
-
-\lstinputlisting{exercises/1_12_MSVC_x64.asm}
-
-\subsection{Keil (ARM)}
-
-\lstinputlisting{exercises/1_12_ARM.s}
-
-\subsection{Keil (thumb)}
-
-\lstinputlisting{exercises/1_12_thumb.s}
+% 2.7
+% 2.8
+% 2.9
+% 2.10
+% 2.11
+% 2.12
 
 \section{\Exercise 2.13}
 % LFSR
 
-\RU{Это довольно известный криптоалгоритм прошлого}\EN{This is a well-known cryptoalgorithm of the past}.
-\RU{Как он называется}\EN{How it's called}?
+\RU{Это довольно известный криптоалгоритм прошлого}\EN{This is a well-known cryptographic algorithm from the past}.
+\RU{Как он называется}\EN{How is it called}?
 
-\subsection{MSVC 2012 + \Ox}
+\subsection{\Optimizing MSVC 2012}
 
 \begin{lstlisting}
 _in$ = 8						; size = 2
@@ -263,7 +105,7 @@ _f	PROC
 _f	ENDP
 \end{lstlisting}
 
-\subsection{Keil (ARM)}
+\subsection{Keil (\ARMMode)}
 
 \begin{lstlisting}
 f PROC
@@ -277,7 +119,7 @@ f PROC
         ENDP
 \end{lstlisting}
 
-\subsection{Keil (thumb)}
+\subsection{Keil (\ThumbMode)}
 
 \begin{lstlisting}
 f PROC
@@ -295,106 +137,158 @@ f PROC
         ENDP
 \end{lstlisting}
 
+\subsection{\Optimizing GCC 4.9.1 (ARM64)}
+
+\begin{lstlisting}
+f:
+	uxth	w1, w0
+	lsr	w2, w1, 3
+	lsr	w0, w1, 1
+	eor	w2, w2, w1, lsr 2
+	eor	w2, w1, w2
+	eor	w1, w2, w1, lsr 5
+	and	w1, w1, 1
+	orr	w0, w0, w1, lsl 15
+	ret
+\end{lstlisting}
+
+\subsection{\Optimizing GCC 4.4.5 (MIPS)}
+
+\lstinputlisting[caption=\Optimizing GCC 4.4.5 (MIPS) (IDA)]{exercises/2_13_MIPS_O3_IDA.lst}
+
 \section{\Exercise 2.14}
 % GCD
 
-\RU{Еще один хорошо известный алгоритм. Ф-ция берет на вход 2 значения и возвращает одно.}
-\EN{Another well-known algorithm. The function takes two variables and returning one.}
+\RU{Еще один хорошо известный алгоритм. Функция берет на вход 2 значения и возвращает одно.}
+\EN{Another well-known algorithm. The function takes two variables and returns one.}
 
 \subsection{MSVC 2012}
 
-\index{ARM!\Instructions!CLZ}
+\index{x86!\Instructions!BSF}
 \lstinputlisting{exercises/2/GCD_MSVC_2012_Ox.asm}
 
-\subsection{Keil (ARM mode)}
+\subsection{Keil (\ARMMode)}
 
 \index{ARM!\Instructions!CLZ}
 \lstinputlisting{exercises/2/GCD_Keil_ARM_O3.s}
 
-\subsection{GCC 4.6.3 for Raspberry Pi (ARM mode)}
+\subsection{GCC 4.6.3 for Raspberry Pi (\ARMMode)}
 
-\index{x86!\Instructions!BSF}
+\index{ARM!\Instructions!CLZ}
 \lstinputlisting{exercises/2/GCD_ARM_pi_GCC_4.6.3_O3.s}
+
+\subsection{\Optimizing GCC 4.9.1 (ARM64)}
+
+\lstinputlisting[caption=\Optimizing GCC 4.9.1 (ARM64)]{exercises/2/GCD_ARM64_GCC491_O3.s}
+
+\subsection{\Optimizing GCC 4.4.5 (MIPS)}
+
+\lstinputlisting[caption=\Optimizing GCC 4.4.5 (MIPS) (IDA)]{exercises/2/GCD_MIPS_O3_IDA.lst}
 
 \section{\Exercise 2.15}
 % Monte Carlo
 
-\RU{И снова известный алгоритм. Что он делает?}\EN{Well-known algorithm again. What it does?}
+\RU{И снова известный алгоритм. Что он делает?}\EN{A well-known algorithm again. What does it do?}
 
 \RU{Обратите внимание, что код для x86 использует FPU, а для x64 --- SIMD-инструкции. Это нормально}
-\EN{Take also notice that the code for x86 uses FPU, but SIMD-instructions are used instead in x64 code.
-That's OK}: \ref{floating_SIMD}.
+\EN{Take also notice that the code for x86 uses FPU, but SIMD instructions are used instead in x64 code.
+That's OK}: \myref{floating_SIMD}.
 
-\subsection{MSVC 2012 x64 /Ox}
+\subsection{\Optimizing MSVC 2012 x64}
 
 \lstinputlisting{exercises/2/monte_MSVC_2012_Ox_x64.asm}
 
-\subsection{GCC 4.4.6 -O3 x64}
+\subsection{\Optimizing GCC 4.4.6 x64}
 
 \lstinputlisting{exercises/2/monte_GCC_4.4.6_O3_x64.s}
 
-\subsection{GCC 4.8.1 -O3 x86}
+\subsection{\Optimizing GCC 4.8.1 x86}
 
 \lstinputlisting{exercises/2/monte_GCC_4.8.1_O3_x86.s}
 
-\subsection{Keil (ARM mode): \RU{для процессора Cortex-R4F}\EN{Cortex-R4F CPU as target}}
+\subsection{Keil (\ARMMode): \RU{для процессора Cortex-R4F}\EN{Cortex-R4F CPU as target}}
 
 \lstinputlisting{exercises/2/monte_Keil_ARM_Cortex.s}
+
+\subsection{\Optimizing GCC 4.9.1 (ARM64)}
+
+\lstinputlisting[caption=\Optimizing GCC 4.9.1 (ARM64)]{exercises/2/monte_GCC_491_ARM64_O3.s}
+
+\subsection{\Optimizing GCC 4.4.5 (MIPS)}
+
+\lstinputlisting[caption=\Optimizing GCC 4.4.5 (MIPS) (IDA)]{exercises/2/monte_GCC_4.4.6_O3_x64.s}
 
 \section{\Exercise 2.16}
 % Ackermann function
 
 \RU{Известная функция. Что она вычисляет? Почему стек переполняется если на вход подать
-числа 4 и 2? Есть ли здесь какая-то ошибка?}\EN{Well-known function. What it computes? 
-Why stack overflows if 4 and 2 are supplied at input? Are there any error?}
+числа 4 и 2? Есть ли здесь какая-то ошибка?}\EN{Well-known function. What does it compute? 
+Why does the stack overflow if 4 and 2 are supplied at input? Is there any error?}
 
-\subsection{MSVC 2012 x64 /Ox}
+\subsection{\Optimizing MSVC 2012 x64}
 
 \lstinputlisting{exercises/2/ack_MSVC_Ox_x64.asm}
 
-\subsection{Keil (ARM) -O3}
+\subsection{\Optimizing Keil (\ARMMode)}
 
 \lstinputlisting{exercises/2/ack_ARM_O3.s}
 
-\subsection{Keil (thumb) -O3}
+\subsection{\Optimizing Keil (\ThumbMode)}
 
 \lstinputlisting{exercises/2/ack_thumb_O3.s}
+
+\subsection{\NonOptimizing GCC 4.9.1 (ARM64)}
+
+\lstinputlisting[caption=\NonOptimizing GCC 4.9.1 (ARM64)]{exercises/2/ack_ARM64_GCC491_O0.s}
+
+\subsection{\Optimizing GCC 4.9.1 (ARM64)}
+
+\RU{Оптимизирующий GCC генерирует куда больше кода. Почему?}
+\EN{Optimizing GCC generates a lot more code. Why?}
+
+\lstinputlisting[caption=\Optimizing GCC 4.9.1 (ARM64)]{exercises/2/ack_ARM64_GCC491_O3.s}
+
+\subsection{\NonOptimizing GCC 4.4.5 (MIPS)}
+
+\lstinputlisting[caption=\NonOptimizing GCC 4.4.5 (MIPS) (IDA)]{exercises/2/ack_MIPS_O0_IDA.lst}
 
 \section{\Exercise 2.17}
 % Rule 110
 
-\RU{Эта программа выдает в \IT{stdout} какую-то информацию, каждый раз --- разную}\EN{This program
-prints some information to \IT{stdout}, each time different}.
-\RU{Что это}\EN{What is it}?
+\RU{Эта программа выдает в \gls{stdout} какую-то информацию, каждый раз --- разную}\EN{This program
+prints some information to \gls{stdout}, each time different}.
+\RU{Что это}\EN{What is that}?
 
 \RU{Скомпилированные бинарные файлы}\EN{Compiled binaries}:
 
 \begin{itemize}
-\item Linux x64: \url{http://yurichev.com/RE-exercises/2/17/17_Linux_x64.tar}
-\item \MacOSX: \url{http://yurichev.com/RE-exercises/2/17/17_MacOSX_x64.tar}
-\item Win32: \url{http://yurichev.com/RE-exercises/2/17/17_win32.exe}
-\item Win64: \url{http://yurichev.com/RE-exercises/2/17/17_win64.exe}
+\item \href{http://go.yurichev.com/17170}{Linux x64 (beginners.re)}
+\item \href{http://go.yurichev.com/17171}{\MacOSX (beginners.re)}
+\item \href{http://go.yurichev.com/17172}{Linux MIPS (beginners.re)}
+\item \href{http://go.yurichev.com/17173}{Win32 (beginners.re)}
+\item \href{http://go.yurichev.com/17174}{Win64 (beginners.re)}
 \end{itemize}
 
 \RU{Для версий под Windows, возможно, нужно будет установить}
-\EN{As of Windows versions, you may need to install} 
-\href{http://www.microsoft.com/en-us/download/details.aspx?id=30679}{MSVC 2012 redist}.
+\EN{As for the Windows versions, you may need to install} 
+\href{http://go.yurichev.com/17302}{MSVC 2012 redist}.
 
 \section{\Exercise 2.18}
 
-\RU{Эта программа запрашивает пароль}\EN{This program requires password}.
+\RU{Эта программа запрашивает пароль}\EN{This program requires a password}.
 \RU{Найдите его}\EN{Find it}.
 
 \RU{Кстати, не только один пароль может подойти}\EN{By the way, multiple passwords may work}. 
-\RU{Попробуйте найти еще}\EN{Try to find more}.
+\RU{Попробуйте найти еще}\EN{Try to find them}.
 
 \RU{Как дополнительное упражнение, попробуйте изменить пароль модифицируя исполняемый файл}
-\EN{As an additional exercise, try to change the password by patching executable file}.
+\EN{As an additional exercise, try to change the password by patching the executable file}.
 
 \begin{itemize}
-\item Win32: \url{http://yurichev.com/RE-exercises/2/18/password2.exe}
-\item Linux x86: \url{http://yurichev.com/RE-exercises/2/18/password2_Linux_x86.tar}
-\item \MacOSX: \url{http://yurichev.com/RE-exercises/2/18/password2_MacOSX64.tar}
+\item \href{http://go.yurichev.com/17175}{Win32 (beginners.re)}
+\item \href{http://go.yurichev.com/17176}{Linux x86 (beginners.re)}
+\item \href{http://go.yurichev.com/17177}{\MacOSX (beginners.re)}
+\item \href{http://go.yurichev.com/17178}{Linux MIPS (beginners.re)}
 \end{itemize}
 
 \section{\Exercise 2.19}
@@ -402,8 +296,25 @@ prints some information to \IT{stdout}, each time different}.
 \RU{То же что и в упражнении}\EN{The same as in exercise} 2.18.
 
 \begin{itemize}
-\item Win32: \url{http://yurichev.com/RE-exercises/2/19/password3.exe}
-\item Linux x86: \url{http://yurichev.com/RE-exercises/2/19/password3_Linux_x86.tar}
-\item \MacOSX: \url{http://yurichev.com/RE-exercises/2/19/password3_MacOSX64.tar}
+\item \href{http://go.yurichev.com/17179}{Win32 (beginners.re)}
+\item \href{http://go.yurichev.com/17180}{Linux x86 (beginners.re)}
+\item \href{http://go.yurichev.com/17181}{\MacOSX (beginners.re)}
+\item \href{http://go.yurichev.com/17182}{Linux MIPS (beginners.re)}
 \end{itemize}
 
+\section{\Exercise 2.20}
+% Collatz conjecture
+
+\RU{Эта программа выдает в \gls{stdout} какие-то числа.}
+\EN{This program prints some numbers to \gls{stdout}.}
+\RU{Что это}\EN{What is it}?
+
+\RU{Скомпилированные бинарные файлы}\EN{Compiled binaries}:
+
+\begin{itemize}
+\item \href{http://go.yurichev.com/17183}{Linux x64 (beginners.re)}
+\item \href{http://go.yurichev.com/17184}{\MacOSX (beginners.re)}
+\item \href{http://go.yurichev.com/17185}{Linux ARM Raspberry Pi (beginners.re)}
+\item \href{http://go.yurichev.com/17186}{Linux MIPS (beginners.re)}
+\item \href{http://go.yurichev.com/17187}{Win64 (beginners.re)}
+\end{itemize}

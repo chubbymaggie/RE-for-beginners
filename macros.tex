@@ -1,22 +1,69 @@
 \newcommand*{\TT}[1]{\texttt{#1}}
 \newcommand*{\IT}[1]{\textit{#1}}
 \newcommand*{\EN}[1]{\iflanguage{english}{#1}{}}
-\newcommand*{\RU}[1]{\iflanguage{english}{}{#1}}
-\newcommand{\LANG}{\RU{ru}\EN{en}}
-\newcommand*{\dittoclosing}{---''---}
-\newcommand*{\EMDASH}{\RU{ --- }\EN{---}}
 
-\newcommand{\figname}{\RU{илл}\EN{fig}.\xspace}
-\newcommand{\bitENRU}{\RU{бит}\EN{bit}\xspace}
-\newcommand{\Sourcecode}{\RU{Исходный код}\EN{Source code}\xspace}
-\newcommand{\Seealso}{\RU{См. также}\EN{See also}\xspace}
+\ifdefined\RUSSIAN{}
+\newcommand*{\RU}[1]{\iflanguage{russian}{#1}{}}
+\else
+\newcommand*{\RU}[1]{}
+\fi
+
+\ifdefined\SPANISH{}
+\newcommand*{\ES}[1]{\iflanguage{spanish}{#1}{}}
+\else
+\newcommand*{\ES}[1]{}
+\fi
+
+\ifdefined\BRAZILIAN{}
+\newcommand*{\PTBR}[1]{\iflanguage{portuges}{#1}{}}
+\else
+\newcommand*{\PTBR}[1]{}
+\fi
+
+\ifdefined\POLISH{}
+\newcommand*{\PL}[1]{\iflanguage{polish}{#1}{}}
+\else
+\newcommand*{\PL}[1]{}
+\fi
+
+\newcommand{\LANG}{\RU{ru}\EN{en}\ES{es}\PTBR{ptbr}\PL{pl}}
+
+\newcommand{\ESph}{\ES{Spanish text placeholder}}
+\newcommand{\PTBRph}{\PTBR{Brazilian Portuguese text placeholder}}
+\newcommand{\PLph}{\PL{Polish text placeholder}}
+
+\newcommand*{\dittoclosing}{---''---}
+\newcommand*{\EMDASH}{\RU{~--- }\EN{---}}
+\newcommand*{\AsteriskOne}{${}^{*}$}
+\newcommand*{\AsteriskTwo}{${}^{**}$}
+\newcommand*{\AsteriskThree}{${}^{***}$}
+\newcommand{\q}[1]{\enquote{#1}}
+\newcommand{\var}[1]{\textit{#1}}
+
+\newcommand{\ttf}{\TT{f()}\xspace}
+\newcommand{\ttfone}{\TT{f1()}\xspace}
+
+% without dot!
+\newcommand{\etc}{\RU{и~т.д}\EN{etc}\PTBRph{}\ESph{}\PLph{}}
+
+% http://tex.stackexchange.com/questions/32160/new-line-after-paragraph
+\newcommand{\myparagraph}[1]{\paragraph{#1}\mbox{}\\} 
+
+\newcommand{\figname}{\RU{илл}\EN{fig}\PTBRph{}\ESph{}\PLph{}.\xspace}
+\newcommand{\figref}[1]{\figname{}\ref{#1}\xspace}
+\newcommand{\listingname}{\RU{листинг}\EN{listing}\PTBRph{}\ESph{}\PLph{}.\xspace}
+\newcommand{\lstref}[1]{\listingname{}\ref{#1}\xspace}
+\newcommand{\bitENRU}{\RU{бит}\EN{bit}\PTBRph{}\ESph{}\PLph{}\xspace}
+\newcommand{\bitsENRU}{\RU{бита}\EN{bits}\PTBRph{}\ESph{}\PLph{}\xspace}
+\newcommand{\Sourcecode}{\RU{Исходный код}\EN{Source code}\PTBRph{}\ESph{}\PLph{}\xspace}
+\newcommand{\Seealso}{\RU{См. также}\EN{See also}\PTBRph{}\ESph{}\PLph{}\xspace}
 \newcommand{\MacOSX}{Mac OS X\xspace}
 
-% TODO non-overlapping color!
+% FIXME TODO non-overlapping color!
 % \newcommand{\headercolor}{\cellcolor{blue!25}}
 \newcommand{\headercolor}{}
 
-\newcommand{\tableheader}{\headercolor{} \RU{смещение}\EN{offset} & \headercolor{} \RU{описание}\EN{description}}
+\newcommand{\tableheader}{\headercolor{} \RU{смещение}\EN{offset}\PTBRph{}\ESph{}\PLph{} & \headercolor{} \RU{описание}\EN{description}\PTBRph{}\ESph{}}
 
 \newcommand{\IDA}{\ac{IDA}\xspace}
 
@@ -48,78 +95,111 @@
 \newcommand{\scanf}{\TT{scanf()}\xspace} 
 \newcommand{\rand}{\TT{rand()}\xspace} 
 
+
+% for easier fiddling with formatting of all instructions together
+\newcommand{\INS}[1]{\TT{#1}\xspace}
+
 % x86 instructions
-\newcommand{\ADD}{\TT{ADD}\xspace} 
-\newcommand{\ANDIns}{\TT{AND}\xspace} 
-\newcommand{\CALL}{\TT{CALL}\xspace} 
-\newcommand{\CPUID}{\TT{CPUID}\xspace} 
-\newcommand{\CMP}{\TT{CMP}\xspace} 
-\newcommand{\DEC}{\TT{DEC}\xspace} 
-\newcommand{\FADDP}{\TT{FADDP}\xspace} 
-\newcommand{\FCOM}{\TT{FCOM}\xspace}
-\newcommand{\FCOMP}{\TT{FCOMP}\xspace}
-\newcommand{\FCOMI}{\TT{FCOMI}\xspace}
-\newcommand{\FCOMIP}{\TT{FCOMIP}\xspace}
-\newcommand{\FUCOM}{\TT{FUCOM}\xspace}
-\newcommand{\FUCOMI}{\TT{FUCOMI}\xspace}
-\newcommand{\FUCOMIP}{\TT{FUCOMIP}\xspace}
-\newcommand{\FUCOMPP}{\TT{FUCOMPP}\xspace}
-\newcommand{\FDIVR}{\TT{FDIVR}\xspace} 
-\newcommand{\FDIV}{\TT{FDIV}\xspace} 
-\newcommand{\FLD}{\TT{FLD}\xspace} 
-\newcommand{\FMUL}{\TT{FMUL}\xspace} 
-\newcommand{\FSTP}{\TT{FSTP}\xspace} 
-\newcommand{\FDIVP}{\TT{FDIVP}\xspace}
-\newcommand{\IDIV}{\TT{IDIV}\xspace} 
-\newcommand{\IMUL}{\TT{IMUL}\xspace} 
-\newcommand{\INC}{\TT{INC}\xspace} 
-\newcommand{\JAE}{\TT{JAE}\xspace} 
-\newcommand{\JA}{\TT{JA}\xspace} 
-\newcommand{\JBE}{\TT{JBE}\xspace} 
-\newcommand{\JB}{\TT{JBE}\xspace} 
-\newcommand{\JE}{\TT{JE}\xspace} 
-\newcommand{\JGE}{\TT{JGE}\xspace} 
-\newcommand{\JG}{\TT{JG}\xspace} 
-\newcommand{\JLE}{\TT{JLE}\xspace} 
-\newcommand{\JL}{\TT{JL}\xspace} 
-\newcommand{\JMP}{\TT{JMP}\xspace} 
-\newcommand{\JNE}{\TT{JNE}\xspace} 
-\newcommand{\JNZ}{\TT{JNZ}\xspace} 
-\newcommand{\JNA}{\TT{JNA}\xspace} 
-\newcommand{\JNAE}{\TT{JNAE}\xspace} 
-\newcommand{\JNB}{\TT{JNB}\xspace} 
-\newcommand{\JNBE}{\TT{JNBE}\xspace} 
-\newcommand{\JZ}{\TT{JZ}\xspace} 
-\newcommand{\JP}{\TT{JP}\xspace} 
-\newcommand{\Jcc}{\TT{Jcc}\xspace} 
-\newcommand{\SETcc}{\TT{SETcc}\xspace} 
-\newcommand{\LEA}{\TT{LEA}\xspace} 
-\newcommand{\LOOP}{\TT{LOOP}\xspace}
-\newcommand{\MOVSX}{\TT{MOVSX}~(\ref{MOVSX})\xspace} 
-\newcommand{\MOVZX}{\TT{MOVZX}\xspace} 
-\newcommand{\MOV}{\TT{MOV}\xspace} 
-\newcommand{\NOP}{\TT{NOP}\xspace} 
-\newcommand{\POP}{\TT{POP}\xspace} 
-\newcommand{\PUSH}{\TT{PUSH}\xspace} 
-\newcommand{\NOT}{\TT{NOT}\xspace} 
-\newcommand{\RET}{\TT{RET}\xspace} 
-\newcommand{\RETN}{\TT{RETN}\xspace} 
-\newcommand{\SETNZ}{\TT{SETNZ}\xspace} 
-\newcommand{\SETBE}{\TT{SETBE}\xspace} 
-\newcommand{\SETNBE}{\TT{SETNBE}\xspace} 
-\newcommand{\SUB}{\TT{SUB}\xspace} 
-\newcommand{\TEST}{\TT{TEST}\xspace} 
-\newcommand{\FNSTSW}{\TT{FNSTSW}\xspace}
-\newcommand{\SAHF}{\TT{SAHF}\xspace}
-\newcommand{\XOR}{\TT{XOR}\xspace} 
-\newcommand{\OR}{\TT{OR}\xspace} 
-\newcommand{\SHL}{\TT{SHL}\xspace} 
-\newcommand{\SHR}{\TT{SHR}\xspace} 
-\newcommand{\LEAVE}{\TT{LEAVE}\xspace} 
-\newcommand{\MOVDQA}{\TT{MOVDQA}\xspace} 
-\newcommand{\MOVDQU}{\TT{MOVDQU}\xspace} 
-\newcommand{\PADDD}{\TT{PADDD}\xspace} 
-\newcommand{\PCMPEQB}{\TT{PCMPEQB}\xspace} 
+\newcommand{\ADD}{\INS{ADD}}
+\newcommand{\ADRP}{\INS{ADRP}}
+\newcommand{\AND}{\INS{AND}}
+\newcommand{\CALL}{\INS{CALL}}
+\newcommand{\CPUID}{\INS{CPUID}}
+\newcommand{\CMP}{\INS{CMP}}
+\newcommand{\DEC}{\INS{DEC}}
+\newcommand{\FADDP}{\INS{FADDP}}
+\newcommand{\FCOM}{\INS{FCOM}}
+\newcommand{\FCOMP}{\INS{FCOMP}}
+\newcommand{\FCOMI}{\INS{FCOMI}}
+\newcommand{\FCOMIP}{\INS{FCOMIP}}
+\newcommand{\FUCOM}{\INS{FUCOM}}
+\newcommand{\FUCOMI}{\INS{FUCOMI}}
+\newcommand{\FUCOMIP}{\INS{FUCOMIP}}
+\newcommand{\FUCOMPP}{\INS{FUCOMPP}}
+\newcommand{\FDIVR}{\INS{FDIVR}}
+\newcommand{\FDIV}{\INS{FDIV}}
+\newcommand{\FLD}{\INS{FLD}}
+\newcommand{\FMUL}{\INS{FMUL}}
+\newcommand{\MUL}{\INS{MUL}}
+\newcommand{\FSTP}{\INS{FSTP}}
+\newcommand{\FDIVP}{\INS{FDIVP}}
+\newcommand{\IDIV}{\INS{IDIV}}
+\newcommand{\IMUL}{\INS{IMUL}}
+\newcommand{\INC}{\INS{INC}}
+\newcommand{\JAE}{\INS{JAE}}
+\newcommand{\JA}{\INS{JA}}
+\newcommand{\JBE}{\INS{JBE}}
+\newcommand{\JB}{\INS{JB}}
+\newcommand{\JE}{\INS{JE}}
+\newcommand{\JGE}{\INS{JGE}}
+\newcommand{\JG}{\INS{JG}}
+\newcommand{\JLE}{\INS{JLE}}
+\newcommand{\JL}{\INS{JL}}
+\newcommand{\JMP}{\INS{JMP}}
+\newcommand{\JNE}{\INS{JNE}}
+\newcommand{\JNZ}{\INS{JNZ}}
+\newcommand{\JNA}{\INS{JNA}}
+\newcommand{\JNAE}{\INS{JNAE}}
+\newcommand{\JNB}{\INS{JNB}}
+\newcommand{\JNBE}{\INS{JNBE}}
+\newcommand{\JZ}{\INS{JZ}}
+\newcommand{\JP}{\INS{JP}}
+\newcommand{\Jcc}{\INS{Jcc}}
+\newcommand{\SETcc}{\INS{SETcc}}
+\newcommand{\LEA}{\INS{LEA}}
+\newcommand{\LOOP}{\INS{LOOP}}
+\newcommand{\MOVSX}{\INS{MOVSX}}
+\newcommand{\MOVZX}{\INS{MOVZX}}
+\newcommand{\MOV}{\INS{MOV}}
+\newcommand{\NOP}{\INS{NOP}}
+\newcommand{\POP}{\INS{POP}}
+\newcommand{\PUSH}{\INS{PUSH}}
+\newcommand{\NOT}{\INS{NOT}}
+\newcommand{\NOR}{\INS{NOR}}
+\newcommand{\RET}{\INS{RET}}
+\newcommand{\RETN}{\INS{RETN}}
+\newcommand{\SETNZ}{\INS{SETNZ}}
+\newcommand{\SETBE}{\INS{SETBE}}
+\newcommand{\SETNBE}{\INS{SETNBE}}
+\newcommand{\SUB}{\INS{SUB}}
+\newcommand{\TEST}{\INS{TEST}}
+\newcommand{\TST}{\INS{TST}}
+\newcommand{\FNSTSW}{\INS{FNSTSW}}
+\newcommand{\SAHF}{\INS{SAHF}}
+\newcommand{\XOR}{\INS{XOR}}
+\newcommand{\OR}{\INS{OR}}
+\newcommand{\SHL}{\INS{SHL}}
+\newcommand{\SHR}{\INS{SHR}}
+\newcommand{\SAR}{\INS{SAR}}
+\newcommand{\LEAVE}{\INS{LEAVE}}
+\newcommand{\MOVDQA}{\INS{MOVDQA}}
+\newcommand{\MOVDQU}{\INS{MOVDQU}}
+\newcommand{\PADDD}{\INS{PADDD}}
+\newcommand{\PCMPEQB}{\INS{PCMPEQB}}
+\newcommand{\LDR}{\INS{LDR}}
+\newcommand{\LSL}{\INS{LSL}}
+\newcommand{\LSR}{\INS{LSR}}
+\newcommand{\ASR}{\INS{ASR}}
+\newcommand{\RSB}{\INS{RSB}}
+\newcommand{\BTR}{\INS{BTR}}
+\newcommand{\BTS}{\INS{BTS}}
+\newcommand{\BTC}{\INS{BTC}}
+\newcommand{\LUI}{\INS{LUI}}
+\newcommand{\ORI}{\INS{ORI}}
+\newcommand{\BIC}{\INS{BIC}}
+\newcommand{\EOR}{\INS{EOR}}
+\newcommand{\MOVS}{\INS{MOVS}}
+\newcommand{\LSLS}{\INS{LSLS}}
+\newcommand{\LSRS}{\INS{LSRS}}
+\newcommand{\FMRS}{\INS{FMRS}}
+\newcommand{\CMOVNE}{\INS{CMOVNE}}
+\newcommand{\CMOVNZ}{\INS{CMOVNZ}}
+\newcommand{\ROL}{\INS{ROL}}
+\newcommand{\CSEL}{\INS{CSEL}}
+\newcommand{\SLL}{\INS{SLL}}
+\newcommand{\SLLV}{\INS{SLLV}}
+\newcommand{\SW}{\INS{SW}}
+\newcommand{\LW}{\INS{LW}}
 
 % x86 flags
 
@@ -139,8 +219,6 @@
 \newcommand{\DL}{\TT{DL}\xspace} 
 \newcommand{\ESI}{\TT{ESI}\xspace} 
 \newcommand{\EDI}{\TT{EDI}\xspace} 
-\newcommand{\STZERO}{\TT{ST(0)}\xspace} 
-\newcommand{\STONE}{\TT{ST(1)}\xspace} 
 \newcommand{\EBP}{\TT{EBP}\xspace} 
 \newcommand{\ESP}{\TT{ESP}\xspace} 
 \newcommand{\RSP}{\TT{RSP}\xspace} 
@@ -153,25 +231,20 @@
 \newcommand{\RBP}{\TT{RBP}\xspace} 
 \newcommand{\RSI}{\TT{RSI}\xspace} 
 \newcommand{\RDI}{\TT{RDI}\xspace} 
-\newcommand*{\Reg}[1]{\TT{R#1}\xspace}
-\newcommand{\XMMONE}{\TT{XMM1}\xspace}
-\newcommand{\XMMZERO}{\TT{XMM0}\xspace}
+\newcommand*{\ST}[1]{\TT{ST(#1)}\xspace}
+\newcommand*{\XMM}[1]{\TT{XMM#1}\xspace}
 
 % ARM
+\newcommand*{\Reg}[1]{\TT{R#1}\xspace}
+\newcommand*{\RegX}[1]{\TT{X#1}\xspace}
+\newcommand*{\RegW}[1]{\TT{W#1}\xspace}
+\newcommand*{\RegD}[1]{\TT{D#1}\xspace}
 \newcommand{\ADREQ}{\TT{ADREQ}\xspace}
 \newcommand{\ADRNE}{\TT{ADRNE}\xspace}
 \newcommand{\BEQ}{\TT{BEQ}\xspace}
 
 % instructions descriptions
-\newcommand{\ASRdesc}{\RU{арифметический сдвиг вправо}\EN{arithmetic shift right}}
-\newcommand{\LDMFDDESC}{Load Multiple Full Descending}
-\newcommand{\STMFDdesc}{Store Multiple Full Descending}
-\newcommand{\STMEDdesc}{Store Multiple Empty Descending}
-\newcommand{\LDMEDdesc}{Load Multiple Empty Descending}
-\newcommand{\STMFAdesc}{Store Multiple Full Ascending}
-\newcommand{\LDMFAdesc}{Load Multiple Full Ascending}
-\newcommand{\STMEAdesc}{Store Multiple Empty Ascending}
-\newcommand{\LDMEAdesc}{Load Multiple Empty Ascending}
+\newcommand{\ASRdesc}{\RU{арифметический сдвиг вправо}\EN{arithmetic shift right}\PTBRph{}\ESph{}\PLph{}}
 
 % x86 registers tables
 % TODO: non-overlapping color!
@@ -194,8 +267,11 @@
  2nd &
  1st &
  0th}
+\PTBRph{}\ESph{}
+\PLph{}
 }
 
+% FIXME навести порядок тут...
 \newcommand{\RegTableThree}[5]{
 \begin{center}
 \begin{tabular}{ | l | l | l | l | l | l | l | l | l |}
@@ -234,4 +310,21 @@
 \end{center}
 }
 
+\newcommand{\RegTableFour}[4]{
+\begin{center}
+\begin{tabular}{ | l | l | l | l | l | l | l | l | l |}
+\hline
+\RegHeader \\
+\hline
+\multicolumn{8}{ | c | }{#1} \\
+\hline
+\multicolumn{4}{ | c | }{} & \multicolumn{4}{ c | }{#2} \\
+\hline
+\multicolumn{6}{ | c | }{} & \multicolumn{2}{ c | }{#3} \\
+\hline
+\multicolumn{7}{ | c | }{} & #4 \\
+\hline
+\end{tabular}
+\end{center}
+}
 

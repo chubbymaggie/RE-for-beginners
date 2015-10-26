@@ -62,8 +62,7 @@ _main    PROC
     mov    DWORD PTR __$SEHRec$[ebp+20], 0 ; exiting inner try block, set previous try level back to 0
     jmp    SHORT $LN2@main
 
-    ; inner block filter
-
+; inner block filter:
 $LN12@main:
 $LN18@main:
     mov    ecx, DWORD PTR __$SEHRec$[ebp+4]
@@ -82,8 +81,7 @@ $LN14@main:
 $LN16@main:
     ret    0
 
-    ; inner block handler
-
+; inner block handler:
 $LN13@main:
     mov    esp, DWORD PTR __$SEHRec$[ebp]
     push   OFFSET $SG85501 ; 'access violation, can''t recover'
@@ -94,8 +92,7 @@ $LN2@main:
     mov    DWORD PTR __$SEHRec$[ebp+20], -2 ; exiting both blocks, setting previous try level back to -2
     jmp    SHORT $LN7@main
 
-    ; outer block filter
-
+; outer block filter:
 $LN8@main:
 $LN19@main:
     mov    ecx, DWORD PTR __$SEHRec$[ebp+4]
@@ -112,8 +109,7 @@ $LN10@main:
 $LN17@main:
     ret    0
 
-    ; outer block handler
-
+; outer block handler:
 $LN9@main:
     mov    esp, DWORD PTR __$SEHRec$[ebp]
     push   OFFSET $SG85503 ; 'user exception caught'

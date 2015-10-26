@@ -2,75 +2,57 @@
 
 \subsection{MSVC}
 
-\RU{Имеем в итоге}\EN{What we have after compilation} (MSVC 2010 Express):
+\RU{Рассмотрим пример, скомпилированный в}\EN{Here is what we get after compilation} (MSVC 2010 Express):
 
-\lstinputlisting[label=src:passing_arguments_ex_MSVC_cdecl,caption=MSVC 2010 Express]{patterns/05_passing_arguments/msvc.asm}
+\lstinputlisting[label=src:passing_arguments_ex_MSVC_cdecl,caption=MSVC 2010 Express]{patterns/05_passing_arguments/msvc.asm.\LANG}
 
 \index{x86!\Registers!EBP}
 \RU{Итак, здесь видно: в функции \main заталкиваются три числа в стек и вызывается 
 функция \TT{f(int,int,int)}.}
-\EN{What we see is the 3 numbers are pushing to stack in function \main and \TT{f(int,int,int)} 
-is called then.}
-\RU{Внутри \TT{f()}, доступ к аргументам, также как и к локальным переменным, происходит через макросы: 
+\EN{What we see is that the \main function pushes 3 numbers onto the stack and calls \TT{f(int,int,int).}} 
+\RU{Внутри \ttf доступ к аргументам, также как и к локальным переменным, происходит через макросы: 
 \TT{\_a\$ = 8}, но разница в том, что эти смещения со знаком \IT{плюс}, 
 таким образом если прибавить макрос \TT{\_a\$} к указателю на \EBP, то адресуется \IT{внешняя} 
 часть \glslink{stack frame}{фрейма} стека относительно \EBP.}
-\EN{Argument access inside \TT{f()} is organized with the help of macros like: \TT{\_a\$ = 8}, 
-in the same way as local variables accessed,
-but the difference in that these offsets are positive 
-(addressed with \IT{plus} sign).
-So, adding \TT{\_a\$} macro to the value in the \EBP register, \IT{outer} side of \gls{stack frame} is addressed.}
+\EN{Argument access inside \ttf is organized with the help of macros like: \TT{\_a\$ = 8}, 
+in the same way as local variables,
+but with positive offsets
+(addressed with \IT{plus}).
+So, we are addressing the \IT{outer} side of the \gls{stack frame} by adding the \TT{\_a\$} macro to the value in the \EBP register.}
 
 \index{x86!\Instructions!IMUL}
 \index{x86!\Instructions!ADD}
-\RU{Далее все более-менее просто: значение a помещается в \EAX. 
-Далее \EAX умножается при помощи инструкции \IMUL на то что лежит в \TT{\_b}, 
-так в \EAX остается произведение\FNPRODUCT этих двух значений.}
-\EN{Then \TT{a} value is stored into \EAX. After \IMUL instruction execution, value in the \EAX is 
-a product\FNPRODUCT of value in \EAX and what is stored in \TT{\_b}.}
-\RU{Далее к регистру \EAX прибавляется то что лежит в \TT{\_c}.}
-\EN{After \IMUL execution, \ADD is 
-summing value in \EAX and what is stored in \TT{\_c}.}
+\RU{Далее всё более-менее просто: значение $a$ помещается в \EAX. 
+Далее \EAX умножается при помощи инструкции \IMUL на то, что лежит в \TT{\_b}, 
+и в \EAX остается \glslink{product}{произведение} этих двух значений.}
+\EN{Then the value of $a$ is stored into \EAX. After \IMUL instruction execution, the value in \EAX is 
+a \gls{product} of the value in \EAX and the content of \TT{\_b}.}
+\RU{Далее к регистру \EAX прибавляется то, что лежит в \TT{\_c}.}
+\EN{After that, \ADD adds the value in \TT{\_c} to \EAX.}
 \RU{Значение из \EAX никуда не нужно перекладывать, оно уже лежит где надо. 
-Возвращаем управление вызываемой 
-функции ~--- она возьмет значение из \EAX и отправит его в \printf.}
-\EN{Value in the \EAX is not needed to be moved: it is already in place it must be.
-Now return to \gls{caller}~---it will take value from the \EAX and used it as \printf argument.}
+Возвращаем управление вызываемой функции~--- она возьмет значение из \EAX и отправит его в \printf.}
+\EN{The value in \EAX does not need to be moved: it is already where it must be.
+On returning to \gls{caller}, it takes the \EAX value and use it as an argument to \printf.}
 
-\subsection{MSVC + \olly}
+\ifdefined\IncludeOlly
+\input{patterns/05_passing_arguments/olly.tex}
+\fi
 
-\RU{Проиллюстрируем всё это в}\EN{Let's illustrate this in} \olly.
-\RU{Когда мы протрассируем до первой инструкции в \TT{f()}, которая использует какой-то из аргументов
-(первый), мы увидим что \EBP указывает на \glslink{stack frame}{фрейм стека}, 
-я отметил его начало красной стрелкой}\EN{When 
-we trace until the very first instruction in \TT{f()} that uses one of the arguments (first one),
-we see that \EBP is pointing to the \gls{stack frame}, I marked its begin with red arrow}.
-\RU{Самый первый элемент \glslink{stack frame}{фрейма стека} это сохраненное значение \EBP, 
-затем \ac{RA}, третий элемент это
-первый аргумент ф-ции, затем второй аргумент и третий}\EN{The first element of \gls{stack frame} is saved \EBP value, 
-second is \ac{RA}, third is first function argument, then second argument and third one}.
-\RU{Для доступа к первому аргументу ф-ции, нужно прибавить к \EBP аккурат 8 (2 32-битных слова)}
-\EN{To access the first function argument, one need to add exactly 8 (2 32-bit words) to \EBP}.
-
-\begin{figure}[H]
-\centering
-\includegraphics[scale=\FigScale]{patterns/05_passing_arguments/olly.png}
-\caption{\olly: \RU{внутри ф-ции}\EN{inside of} f()\EN{ function}}
-\label{fig:passing_arguments_olly}
-\end{figure}
-
+\ifdefined\IncludeGCC
 \subsection{GCC}
 
 \RU{Скомпилируем то же в GCC 4.4.1 и посмотрим результат в \IDA:}
-\EN{Let's compile the same in GCC 4.4.1 and let's see results in \IDA:}
+\EN{Let's compile the same in GCC 4.4.1 and see the results in \IDA:}
 
-\lstinputlisting[caption=GCC 4.4.1]{patterns/05_passing_arguments/gcc.asm}
+\lstinputlisting[caption=GCC 4.4.1]{patterns/05_passing_arguments/gcc.asm.\LANG}
 
-\RU{Практически то же самое, если не считать мелких отличий описанных раннее.}
-\EN{Almost the same result.}
+\RU{Практически то же самое, если не считать мелких отличий описанных ранее.}
+\EN{The result is almost the same with some minor differences discussed earlier.}
 
-\RU{После вызова обоих ф-ций, \glslink{stack pointer}{указатель стека} не возвращается назад, потому что предпоследняя
-инструкция}\EN{The \gls{stack pointer} is not returning back after both function exeuction, because penultimate}
-\TT{LEAVE} (\ref{x86_ins:LEAVE}) \RU{сделает это за один раз, в конце исполнения}\EN{instruction will do this,
-at the end}.
-
+\RU{После вызова обоих функций \glslink{stack pointer}{указатель стека} не возвращается назад, 
+потому что предпоследняя инструкция}
+\EN{The \gls{stack pointer} is not set back after the two function calls(f and printf), 
+because the penultimate} \TT{LEAVE} (\myref{x86_ins:LEAVE}) 
+\RU{делает это за один раз, в конце исполнения.}
+\EN{instruction takes care of this at the end.}
+\fi

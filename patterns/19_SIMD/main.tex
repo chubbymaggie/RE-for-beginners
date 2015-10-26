@@ -1,13 +1,13 @@
 \chapter{SIMD}
 
 \label{SIMD_x86}
-\ac{SIMD} \RU{это акроним:}\EN{is just acronym:} \IT{Single Instruction, Multiple Data}.
+\ac{SIMD} \RU{это акроним}\EN{is an acronym}: \IT{Single Instruction, Multiple Data}.
 
 \RU{Как можно судить по названию, это обработка множества данных исполняя только одну инструкцию.}
-\EN{As it is said, it is multiple data processing using only one instruction.}
+\EN{As its name implies, it processes multiple data using only one instruction.}
 
 \RU{Как и \ac{FPU}, эта подсистема процессора выглядит так же отдельным процессором внутри x86.}
-\EN{Just as \ac{FPU}, that \ac{CPU} subsystem looks like separate processor inside x86.}
+\EN{Like the \ac{FPU}, that \ac{CPU} subsystem looks like a separate processor inside x86.}
 
 \index{x86!MMX}
 \RU{SIMD в x86 начался с MMX. Появилось 8 64-битных регистров MM0-MM7.}
@@ -15,475 +15,80 @@
 
 \RU{Каждый MMX-регистр может содержать 2 32-битных значения, 4 16-битных или же 8 байт. 
 Например, складывая значения двух MMX-регистров, можно складывать одновременно 8 8-битных значений.}
-\EN{Each MMX register may hold 2 32-bit values, 4 16-bit values or 8 bytes.
-For example, it is possible to add 8 8-bit values (bytes) simultaneously by adding two values in MMX-registers.}
+\EN{Each MMX register can hold 2 32-bit values, 4 16-bit values or 8 bytes.
+For example, it is possible to add 8 8-bit values (bytes) simultaneously by adding two values in MMX registers.}
 
 \RU{Простой пример, это некий графический редактор, который хранит открытое изображение как двумерный массив. 
 Когда пользователь меняет яркость изображения, редактору нужно, например, прибавить некий коэффициент 
 ко всем пикселям, или отнять. 
 Для простоты можно представить, что изображение у нас бело-серо-черное и каждый пиксель занимает один байт, 
 то с помощью MMX можно менять яркость сразу у восьми пикселей.}
-\EN{One simple example is graphics editor, representing image as a two dimensional array.
-When user change image brightness, the editor must add a coefficient to each pixel value, or to subtract.
-For the sake of brevity, our image may be grayscale and each pixel defined by one 8-bit byte, then it is possible
-to change brightness of 8 pixels simultaneously.}
+\EN{One simple example is a graphics editor that represents an image as a two dimensional array.
+When the user changes the brightness of the image, the editor must add or subtract a coefficient to/from each pixel value.
+For the sake of brevity if we say that the image is grayscale and each pixel is defined by one 8-bit byte, then it is possible
+to change the brightness of 8 pixels simultaneously.}
+\RU{Кстати, вот причина почему в SIMD присутствуют инструкции с \IT{насыщением} (\IT{saturation}).}
+\EN{By the way, this is the reason why the \IT{saturation} instructions are present in SIMD.}
+\RU{Когда пользователь в графическом редакторе изменяет яркость, переполнение и антипереполнение (\IT{underflow})
+не нужны, так что в SIMD имеются, например, инструкции сложения, которые ничего не будут прибавлять
+если максимальное значение уже достигнуто,\etc{}.}
+\EN{When the user changes the brightness in the graphics editor, overflow and underflow are not desirable, 
+so there are addition instructions in SIMD which are not adding anything if the maximum value is reached, \etc{}.}
 
 \RU{Когда MMX только появилось, эти регистры на самом деле располагались в FPU-регистрах. 
 Можно было использовать 
 либо FPU либо MMX в одно и то же время. Можно подумать, что Intel решило немного сэкономить на транзисторах, 
 но на самом деле причина такого симбиоза проще ~--- более старая \ac{OS} не знающая о дополнительных 
 регистрах процессора не будет сохранять их во время переключения задач, а вот регистры FPU сохранять будет. 
-Таким образом, процессор с MMX + старая \ac{OS} + задача использующая возможности MMX = все 
+Таким образом, процессор с MMX + старая \ac{OS} + задача, использующая возможности MMX = все 
 это может работать вместе.}
-\EN{When MMX appeared, these registers was actually located in FPU registers. 
-It was possible to use either FPU or MMX at the same time. One might think, Intel saved on transistors,
-but in fact, the reason of such symbiosis is simpler~---older \ac{OS} may not aware 
-of additional CPU registers would not save them at the context switching, but will save FPU registers.
-Thus, MMX-enabled CPU + old \ac{OS} + process utilizing MMX features = that all will work together.}
+\EN{When MMX appeared, these registers were actually located in the FPU's registers. 
+It was possible to use either FPU or MMX at the same time. One might think that Intel saved on transistors,
+but in fact the reason of such symbiosis was simpler~---older \ac{OS}es that are not aware 
+of the additional CPU registers would not save them at the context switch, 
+but saving the FPU registers.
+Thus, MMX-enabled CPU + old \ac{OS} + process utilizing MMX features will still work.}
 
 \index{x86!SSE}
 \index{x86!SSE2}
-SSE\EMDASH\RU{это расширение регистров до 128 бит, теперь уже отдельно от FPU.}\EN{is extension of SIMD registers up to 128 bits, now separately from FPU.}
+SSE\EMDASH\RU{это расширение регистров до 128 бит, теперь уже отдельно от FPU.}\EN{is extension of the SIMD registers to 128 bits, now separate from the FPU.}
 
 \index{x86!AVX}
-AVX\EMDASH\RU{расширение регистров до 256 бит.}\EN{another extension to 256 bits.}
+AVX\EMDASH\RU{расширение регистров до 256 бит.}\EN{another extension, to 256 bits.}
 
 \RU{Немного о практическом применении.}\EN{Now about practical usage.}
 
-\RU{Конечно же, копирование блоков в памяти (\TT{memcpy}), сравнение (\TT{memcmp}), и подобное.}
-\EN{Of course, memory copying (\TT{memcpy}), memory comparing (\TT{memcmp}) and so on.}
+\RU{Конечно же, это копирование блоков в памяти (\TT{memcpy}), сравнение (\TT{memcmp}), и подобное.}
+\EN{Of course, this is memory copy routines (\TT{memcpy}), memory comparing (\TT{memcmp}) and so on.}
 
 \index{DES}
 \RU{Еще пример: имеется алгоритм шифрования DES, который берет 64-битный блок, 56-битный ключ, 
 шифрует блок с ключом и образуется 64-битный результат.
 Алгоритм DES можно легко представить в виде очень большой электронной цифровой схемы, 
 с проводами, элементами И, ИЛИ, НЕ.}
-\EN{One more example: we got DES encryption algorithm, it takes 64-bit block, 56-bit key, encrypt block and produce 64-bit result.
-DES algorithm may be considered as a very large electronic circuit, with wires and AND/OR/NOT gates.}
+\EN{One more example: the DES encryption algorithm takes a 64-bit block and a 56-bit key, encrypt the block and produces a 64-bit result.
+The DES algorithm may be considered as a very large electronic circuit, with wires and AND/OR/NOT gates.}
 
 \label{bitslicedes}
-\newcommand{\URLBS}{\url{http://www.darkside.com.au/bitslice/}}
+\newcommand{\URLBS}{\url{http://go.yurichev.com/17329}}
 
 \RU{Идея bitslice DES\footnote{\URLBS} ~--- это обработка сразу группы блоков и ключей одновременно. 
 Скажем, на x86 переменная типа \IT{unsigned int} вмещает в себе 32 бита, так что там можно хранить 
 промежуточные результаты сразу для 32-х блоков-ключей, используя 64+56 переменных типа \IT{unsigned int}.}
-\EN{Bitslice DES\footnote{\URLBS}~---is an idea of processing group of blocks and keys simultaneously.
-Let's say, variable of type \IT{unsigned int} on x86 may hold up to 32 bits, so, it is possible to store there
-intermediate results for 32 blocks-keys pairs simultaneously, using 64+56 variables of \IT{unsigned int} type.}
+\EN{Bitslice DES\footnote{\URLBS}~---is the idea of processing groups of blocks and keys simultaneously.
+Let's say, variable of type \IT{unsigned int} on x86 can hold up to 32 bits, so it is possible to store there
+intermediate results for 32 block-key pairs simultaneously, using 64+56 variables of type \IT{unsigned int}.}
 
 \index{\oracle}
-\RU{Я написал утилиту для перебора паролей/хешей \oracle (которые основаны на алгоритме DES), 
-переделав алгоритм bitslice DES для SSE2 и AVX ~--- и теперь возможно шифровать одновременно 
-128 или 256 блоков-ключей:}
-\EN{I wrote an utility to brute-force \oracle passwords/hashes (ones based on DES),
-slightly modified bitslice DES algorithm for SSE2 and AVX~---now it is possible to encrypt 128 
+\RU{Существует утилита для перебора паролей/хешей \oracle (которые основаны на алгоритме DES), 
+реализующая алгоритм bitslice DES для SSE2 и AVX\EMDASH{}и теперь возможно шифровать одновременно 
+128 или 256 блоков-ключей:}%
+\EN{There is an utility to brute-force \oracle passwords/hashes (ones based on DES),
+using slightly modified bitslice DES algorithm for SSE2 and AVX\EMDASH{}now it is possible to encrypt 128 
 or 256 block-keys pairs simultaneously.}
 
-\url{http://conus.info/utils/ops_SIMD/}
- 
-\section{\RU{Векторизация}\EN{Vectorization}}
-
-\newcommand{\URLVEC}{\href{http://en.wikipedia.org/wiki/Vectorization_(computer_science)}{Wikipedia: vectorization}}
-
-\RU{Векторизация\footnote{\URLVEC} это когда у вас есть цикл, который берет на вход несколько массивов и выдает, 
-например, один массив данных. 
-Тело цикла берет некоторые элементы из входных массивов, что-то делает с ними и помещает в выходной. 
-Важно, что операция применяемая ко всем элементам одна и та же. 
-Векторизация ~--- это обрабатывать несколько элементов одновременно.}
-\EN{Vectorization\footnote{\URLVEC}, for example, is when you have a loop taking couple of arrays at input and produces one array.
-Loop body takes values from input arrays, do something and put result into output array.
-It is important that there is only one single operation applied to each element.
-Vectorization~---is to process several elements simultaneously.}
-
-\RU{Векторизация ~--- это не самая новая технология: автор сих строк видел её по крайней мере на 
-линейке суперкомпьютеров Cray Y-MP от 1988, когда работал на его версии-``лайт'' Cray Y-MP EL
-\footnote{Удаленно. Он находится в музее суперкомпьютеров: \url{http://www.cray-cyber.org}}}
-\EN{Vectorization is not very fresh technology: author of this textbook saw it at least on Cray Y-MP 
-supercomputer line from 1988 when played with its ``lite'' version Cray Y-MP EL
-\footnote{Remotely. It is installed in the museum of supercomputers: \url{http://www.cray-cyber.org}}}.
-
-\RU{Например:}\EN{For example:}
-
-\begin{lstlisting}
-for (i = 0; i < 1024; i++)
-{
-    C[i] = A[i]*B[i];
-}
-\end{lstlisting}
-
-\RU{Этот фрагмент кода берет элементы из A и B, перемножает и сохраняет результат в C.}
-\EN{This fragment of code takes elements from A and B, multiplies them and save result into C.}
-
-\index{x86!\Instructions!PLMULLD}
-\index{x86!\Instructions!PLMULHW}
-\newcommand{\PMULLD}{\IT{PMULLD} (\IT{\RU{Перемножить запакованные знаковые DWORD и сохранить младшую часть результата}
-\EN{Multiply Packed Signed Dword Integers and Store Low Result}})}
-\newcommand{\PMULHW}{\TT{PMULHW} (\IT{\RU{Перемножить запакованные знаковые DWORD и сохранить старшую часть результата}
-\EN{Multiply Packed Signed Integers and Store High Result}})}
-
-\RU{Если представить, что каждый элемент массива ~--- это 32-битный \Tint, то их можно загружать сразу 
-по 4 из А в 128-битный XMM-регистр, 
-из B в другой XMM-регистр и выполнив инструкцию \PMULLD{} и \PMULHW{}, можно получить 4 64-битных 
-\glslink{product}{произведения} сразу.}
-\EN{If each array element we have is 32-bit \Tint, then it is possible to load 4 elements from A into 128-bit 
-XMM-register, from B to another XMM-registers, and by executing \PMULLD{} and \PMULHW{}, 
-it is possible to get 4 64-bit \glspl{product} at once.}
-
-\RU{Таким образом, тело цикла исполняется $1024/4$ раза вместо 1024, что в 4 раза меньше, и, конечно, быстрее.}
-\EN{Thus, loop body count is $1024/4$ instead of $1024$, that is 4 times less and, of course, faster.}
-
-\newcommand{\URLINTELVEC}{\href{http://www.intel.com/intelpress/sum_vmmx.htm}{Excerpt: Effective Automatic Vectorization}}
-
-\index{Intel C++}
-\RU{Некоторые компиляторы умеют делать автоматическую векторизацию в простых случаях, 
-например Intel C++\footnote{Еще о том, как Intel C++ умеет автоматически векторизовать циклы: \URLINTELVEC}.}
-\EN{Some compilers can do vectorization automatically in a simple cases, 
-e.g., Intel C++\footnote{More about Intel C++ automatic vectorization: \URLINTELVEC}.}
-
-\RU{Я написал очень простую функцию:}\EN{I wrote tiny function:}
-
-\begin{lstlisting}
-int f (int sz, int *ar1, int *ar2, int *ar3)
-{
-	for (int i=0; i<sz; i++)
-		ar3[i]=ar1[i]+ar2[i];
-
-	return 0;
-};
-\end{lstlisting}
-
-\subsection{Intel C++}
-
-\RU{Компилирую при помощи}\EN{Let's compile it with} Intel C++ 11.1.051 win32:
-
-\begin{verbatim}
-icl intel.cpp /QaxSSE2 /Faintel.asm /Ox
-\end{verbatim}
-
-\RU{Имеем такое (в \IDA):}\EN{We got (in \IDA):}
-
-\lstinputlisting{patterns/19_SIMD/18_1_en.asm}
-
-\RU{Инструкции, имеющие отношение к SSE2 это:}\EN{SSE2-related instructions are:}
-\index{x86!\Instructions!MOVDQA}
-\index{x86!\Instructions!MOVDQU}
-\index{x86!\Instructions!PADDD}
-\begin{itemize}
-\item
-\MOVDQU (\IT{Move Unaligned Double Quadword})\EMDASH\RU{она просто загружает 16 байт из памяти в XMM-регистр}
-\EN{it just load 16 bytes from memory into a XMM-register}.
-
-\item
-\PADDD (\IT{Add Packed Integers})\EMDASH\RU{складывает сразу 4 пары 32-битных чисел и оставляет в первом операнде результат. 
-Кстати, если произойдет переполнение, то исключения не произойдет и никакие флаги не установятся, 
-запишутся просто младшие 32 бита результата. 
-Если один из операндов \PADDD ~--- адрес значения в памяти, 
-то требуется чтобы адрес был выровнен по 16-байтной границе. Если он не выровнен, произойдет исключение
-\footnote{О выравнивании данных см. также: \URLWPDA}.}
-\EN{adding 4 pairs of 32-bit numbers and leaving result in first operand.
-By the way, no exception raised in case of overflow and no flags will be set, just low 32-bit of result will
-be stored.
-If one of \PADDD operands is address of value in memory,
-then address must be aligned on a 16-byte boundary. If it is not aligned, exception will be occurred
-\footnote{More about data aligning: \URLWPDA}.}
-
-\item
-\MOVDQA (\IT{Move Aligned Double Quadword})\EMDASH\RU{тоже что и \MOVDQU, только подразумевает 
-что адрес в памяти выровнен по 16-байтной границе. 
-Если он не выровнен, произойдет исключение. 
-\MOVDQA работает быстрее чем \MOVDQU, но требует вышеозначенного.}
-\EN{the same as \MOVDQU, but requires address of value in memory to be aligned on a 16-bit border.
-If it is not aligned, exception will be raised.
-\MOVDQA works faster than \MOVDQU, but requires aforesaid.}
-
-\end{itemize}
-
-\RU{Итак, эти SSE2-инструкции исполнятся только в том случае если еще осталось просуммировать 
-4 пары переменных типа \Tint плюс если указатель \TT{ar3} выровнен по 16-байтной границе.}
-\EN{So, these SSE2-instructions will be executed only in case if there are more 4 pairs to work on
-plus pointer \TT{ar3} is aligned on a 16-byte boundary.}
-
-\RU{Более того, если еще и \TT{ar2} выровнен по 16-байтной границе, то будет выполняться этот фрагмент кода:}
-\EN{More than that, if \TT{ar2} is aligned on a 16-byte boundary as well, this fragment of code will be executed:}
-
-\begin{lstlisting}
-movdqu  xmm0, xmmword ptr [ebx+edi*4] ; ar1+i*4
-paddd   xmm0, xmmword ptr [esi+edi*4] ; ar2+i*4
-movdqa  xmmword ptr [eax+edi*4], xmm0 ; ar3+i*4
-\end{lstlisting}
-
-\RU{А иначе, значение из \TT{ar2} загрузится в \XMMZERO используя инструкцию \MOVDQU, 
-которая не требует выровненного указателя, зато может работать чуть медленнее:}
-\EN{Otherwise, value from \TT{ar2} will be loaded into \XMMZERO using \MOVDQU,
-it does not require aligned pointer, but may work slower:}
-
-\begin{lstlisting}
-movdqu  xmm1, xmmword ptr [ebx+edi*4] ; ar1+i*4
-movdqu  xmm0, xmmword ptr [esi+edi*4] ; ar2+i*4 is not 16-byte aligned, so load it to xmm0
-paddd   xmm1, xmm0
-movdqa  xmmword ptr [eax+edi*4], xmm1 ; ar3+i*4
-\end{lstlisting}
-
-\RU{А во всех остальных случаях, будет исполняться код, который был бы, как если бы не была 
-включена поддержка SSE2.}
-\EN{In all other cases, non-SSE2 code will be executed.}
-
-\subsection{GCC}
-
-\newcommand{\URLGCCVEC}{\url{http://gcc.gnu.org/projects/tree-ssa/vectorization.html}}
-
-\RU{Но и GCC умеет кое-что векторизировать\footnote{Подробнее о векторизации в GCC: \URLGCCVEC}, 
-если компилировать с опциями \Othree и включить поддержку SSE2: \TT{-msse2}.}
-\EN{GCC may also vectorize in a simple cases\footnote{More about GCC vectorization support: \URLGCCVEC},
-if to use \Othree option and to turn on SSE2 support: \TT{-msse2}.}
-
-\RU{Вот что вышло}\EN{What we got} (GCC 4.4.1):
-
-\lstinputlisting{patterns/19_SIMD/18_2_gcc_O3.asm}
-
-\RU{Почти то же самое, хотя и не так дотошно как Intel C++.}
-\EN{Almost the same, however, not as meticulously as Intel C++ doing it.}
-
-\section{\RU{Реализация \strlen при помощи SIMD}\EN{SIMD \strlen implementation}}
-
-\newcommand{\URLMSDNSSE}{\href{http://msdn.microsoft.com/en-us/library/y0dh78ez(VS.80).aspx}{MSDN: MMX, SSE, and SSE2 Intrinsics}}
-
-\RU{Прежде всего, следует заметить, что SIMD-инструкции можно вставлять в \CCpp код при помощи специальных 
-макросов\footnote{\URLMSDNSSE}. В MSVC, часть находится в файле \TT{intrin.h}.}
-\EN{It should be noted the \ac{SIMD}-instructions may be inserted into \CCpp code via 
-special macros\footnote{\URLMSDNSSE}.
-As of MSVC, some of them are located in the \TT{intrin.h} file.}
-
-\index{\CStandardLibrary!strlen()}
-\RU{Имеется возможность реализовать функцию \strlen\footnote{strlen() ~--- стандартная функция Си 
-для подсчета длины строки} при помощи SIMD-инструкций, работающий в 2-2.5 раза быстрее обычной реализации. 
-Эта функция будет загружать в XMM-регистр сразу 16 байт и проверять каждый на ноль.}
-\EN{It is possible to implement \strlen function\footnote{strlen()~---standard C library function for calculating
-string length} using SIMD-instructions, working 2-2.5 times faster than common implementation.
-This function will load 16 characters into a XMM-register and check each against zero.}
-
-\lstinputlisting{patterns/19_SIMD/18_3.c}
-
-\newcommand{\URLSTRLEN}{http://www.strchr.com/sse2\_optimised\_strlen}
-
-\RU{(пример базируется на исходнике \href{\URLSTRLEN}{отсюда}).}
-\EN{(the example is based on source code from \href{\URLSTRLEN}{there}).}
-
-\RU{Компилируем в MSVC 2010 с опцией \Ox:}\EN{Let's compile in MSVC 2010 with \Ox option:}
-
-\lstinputlisting{patterns/19_SIMD/18_4_msvc_Ox.asm}
-
-\RU{Итак, прежде всего, мы проверяем указатель \TT{str}, выровнен ли он по 16-байтной границе. 
-Если нет, то мы вызовем обычную реализацию \strlen.}
-\EN{First of all, we check \TT{str} pointer, if it is aligned on a 16-byte boundary.
-If not, let's call generic \strlen implementation.}
-
-\RU{Далее мы загружаем по 16 байт в регистр \XMMONE при помощи команды \MOVDQA.}
-\EN{Then, load next 16 bytes into the \XMMONE register using \MOVDQA instruction.}
-
-\RU{Наблюдательный читатель может спросить, почему в этом месте мы не можем использовать \MOVDQU, 
-которая может загружать откуда угодно не взирая на факт, выровнен ли указатель?}
-\EN{Observant reader might ask, why \MOVDQU cannot be used here since it can load data from the memory
-regardless the fact if the pointer aligned or not.}
-
-\RU{Да, можно было бы сделать вот как: если указатель выровнен, загружаем используя \MOVDQA, 
-иначе используем работающую чуть медленнее \MOVDQU.}
-\EN{Yes, it might be done in this way: if pointer is aligned, load data using \MOVDQA,
-if not~---use slower \MOVDQU.}
-
-\RU{Однако здесь кроется не сразу заметная проблема, которая проявляется вот в чем:}
-\EN{But here we are may stick into hard to notice caveat:}
-
-\index{Page (memory)}
-\newcommand{\URLPAGE}{\url{http://en.wikipedia.org/wiki/Page_(computer_memory)}}
-
-\RU{В \ac{OS} линии \gls{Windows NT}, и не только, память выделяется страницами по 4 KiB (4096 байт). 
-Каждый win32-процесс якобы имеет в наличии 4 GiB, но на самом деле, 
-только некоторые части этого адресного пространства присоединены к реальной физической памяти. 
-Если процесс обратится к блоку памяти, которого не существует, сработает исключение. 
-Так работает виртуальная память\footnote{\URLPAGE}.}
-\EN{In \gls{Windows NT} line of \ac{OS} but not limited to it, memory allocated by pages of 4 KiB (4096 bytes).
-Each win32-process has ostensibly 4 GiB, but in fact, only some parts
-of address space are connected to real physical memory.
-If the process accessing to the absent memory block, exception will be raised.
-That's how virtual memory works\footnote{\URLPAGE}.}
-
-\RU{Так вот, функция, читающая сразу по 16 байт, имеет возможность нечаянно вылезти за границу 
-выделенного блока памяти. 
-Предположим, \ac{OS} выделила программе 8192 (0x2000) байт по адресу 0x008c0000. 
-Таким образом, блок занимает байты с адреса 0x008c0000 по 0x008c1fff включительно.}
-\EN{So, a function loading 16 bytes at once, may step over a border of allocated memory block.
-Let's consider, \ac{OS} allocated 8192 (0x2000) bytes at the address 0x008c0000.
-Thus, the block is the bytes starting from address 0x008c0000 to 0x008c1fff inclusive.}
-
-\RU{За этим блоком, то есть начиная с адреса 0x008c2000 нет вообще ничего, т.е., \ac{OS} не выделяла там память. 
-Обращение к памяти начиная с этого адреса вызовет исключение.}
-\EN{After the block, that is, starting from address 0x008c2000 there is nothing at all, e.g., \ac{OS} not allocated
-any memory there.
-Attempt to access a memory starting from the address will raise exception.}
-
-\RU{И предположим, что программа хранит некую строку из, скажем, пяти символов почти в самом конце блока, 
-что не является преступлением:}
-\EN{And let's consider, the program holding a string containing 5 characters almost at the end of block,
-and that is not a crime.}
-
-\begin{center}
-  \begin{tabular}{ | l | l | }
-    \hline
-        0x008c1ff8 & 'h' \\
-        0x008c1ff9 & 'e' \\
-        0x008c1ffa & 'l' \\
-        0x008c1ffb & 'l' \\
-        0x008c1ffc & 'o' \\
-        0x008c1ffd & '\textbackslash{}x00' \\
-        0x008c1ffe & \RU{здесь случайный мусор}\EN{random noise} \\
-        0x008c1fff & \RU{здесь случайный мусор}\EN{random noise} \\
-    \hline
-  \end{tabular}
-\end{center}
-
-\RU{В обычных условиях, программа вызывает \strlen передав ей указатель на строку \TT{'hello'} 
-лежащую по адресу 0x008c1ff8. 
-\strlen будет читать по одному байту до 0x008c1ffd, где ноль, и здесь она закончит работу.}
-\EN{So, in common conditions the program calling \strlen passing it a pointer to string \TT{'hello'} 
-lying in memory at address 0x008c1ff8.
-\strlen will read one byte at a time until 0x008c1ffd, where zero-byte, and so here it will stop working.}
-
-\RU{Теперь, если мы напишем свою реализацию \strlen читающую сразу по 16 байт, с любого адреса, 
-будь он выровнен по 16-байтной границе или нет, 
-\MOVDQU попытается загрузить 16 байт с адреса 0x008c1ff8 по 0x008c2008, и произойдет исключение. 
-Это ситуация которой, конечно, хочется избежать.}
-\EN{Now if we implement our own \strlen reading 16 byte at once, starting at any address, will it be aligned or not,
-\MOVDQU may attempt to load 16 bytes at once at address 0x008c1ff8 up to 0x008c2008, 
-and then exception will be raised.
-That's the situation to be avoided, of course.}
-
-\RU{Поэтому мы будем работать только с адресами, выровненными по 16 байт, что в сочетании со знанием 
-что размер страницы \ac{OS} также, как правило, выровнен по 16 байт, 
-даст некоторую гарантию что наша функция не будет пытаться читать из мест в невыделенной памяти.}
-\EN{So then we'll work only with the addresses aligned on a 16 byte boundary, what in combination with a knowledge
-of \ac{OS} page size is usually aligned on a 16-byte boundary too, give us some warranty our function will not
-read from unallocated memory.}
-
-\RU{Вернемся к нашей функции}\EN{Let's back to our function}.
-
-\index{x86!\Instructions!PXOR}
-\verb|_mm_setzero_si128()|\EMDASH\RU{это макрос, генерирующий \TT{pxor xmm0, xmm0} ~--- инструкция просто обнуляет регистр \XMMZERO.}
-\EN{is a macro generating \TT{pxor xmm0, xmm0}~---instruction just clears the \XMMZERO register}
-
-\verb|_mm_load_si128()|\EMDASH\RU{это макрос для \MOVDQA, он просто загружает 16 байт по адресу из указателя в \XMMONE.}
-\EN{is a macro for \MOVDQA, it just loading 16 bytes from the address in the \XMMONE register.}
-
-\index{x86!\Instructions!PCMPEQB}
-\verb|_mm_cmpeq_epi8()|\EMDASH\RU{это макрос для \PCMPEQB, это инструкция которая 
-побайтово сравнивает значения из двух XMM регистров.} 
-\EN{is a macro for \PCMPEQB, is an instruction comparing two XMM-registers bytewise.}
-
-\RU{И если какой-то из байт равен другому, то в результирующем значении будет выставлено на месте этого 
-байта \TT{0xff}, либо 0, если байты не были равны.}
-\EN{And if some byte was equals to other, there will be \TT{0xff} at this point in the result or 0 if otherwise.}
-
-\RU{Например.}\EN{For example.}
-
-\begin{verbatim}
-XMM1: 11223344556677880000000000000000
-XMM0: 11ab3444007877881111111111111111
-\end{verbatim}
-
-\RU{После исполнения \TT{pcmpeqb xmm1, xmm0}, регистр \XMMONE будет содержать:}
-\EN{After \TT{pcmpeqb xmm1, xmm0} execution, the \XMMONE register shall contain:}
-
-\begin{verbatim}
-XMM1: ff0000ff0000ffff0000000000000000
-\end{verbatim}
-
-\RU{Эта инструкция в нашем случае, сравнивает каждый 16-байтный блок с блоком состоящим из 16-и нулевых байт, 
-выставленным в \XMMZERO при помощи \TT{pxor xmm0, xmm0}.}
-\EN{In our case, this instruction comparing each 16-byte block with the block of 16 zero-bytes,
-was set in the \XMMZERO register by \TT{pxor xmm0, xmm0}.}
-
-\index{x86!\Instructions!PMOVMSKB}
-\RU{Следующий макрос \TT{\_mm\_movemask\_epi8()} ~--- это инструкция \TT{PMOVMSKB}.}
-\EN{The next macro is \TT{\_mm\_movemask\_epi8()}~---that is \TT{PMOVMSKB} instruction.}
-
-\RU{Она очень удобна как раз для использования в паре с \PCMPEQB.}
-\EN{It is very useful if to use it with \PCMPEQB.}
-
-\TT{pmovmskb eax, xmm1}
-
-\RU{Эта инструкция выставит самый первый бит \EAX в единицу, если старший бит первого байта в 
-регистре \XMMONE является единицей. 
-Иными словами, если первый байт в регистре \XMMONE является \TT{0xff}, то первый бит в \EAX будет также единицей, 
-иначе нулем.}
-\EN{This instruction will set first \EAX bit into 1 if most significant bit of the first byte in the \XMMONE is $1$.
-In other words, if first byte of the \XMMONE register is \TT{0xff}, first \EAX bit will be set to 1 too.}
-
-\RU{Если второй байт в регистре \XMMONE является \TT{0xff}, то второй бит в \EAX также будет единицей. 
-Иными словами, инструкция отвечает на вопрос, \IT{какие из байт в \XMMONE являются \TT{0xff}?}
-В результате приготовит 16 бит и запишет в \EAX. Остальные биты в \EAX обнулятся.}
-\EN{If second byte in the \XMMONE register is \TT{0xff}, then second \EAX bit will be set to 1 too.
-In other words, the instruction is answer to the question \IT{which bytes in the \XMMONE are \TT{0xff?}}
-And will prepare 16 bits in the \EAX register. Other bits in the \EAX register are to be cleared.}
-
-\RU{Кстати, не забывайте также вот о какой особенности нашего алгоритма:}
-\EN{By the way, do not forget about this feature of our algorithm:}
-
-\RU{На вход может прийти 16 байт вроде}\EN{There might be 16 bytes on input like} \TT{hello\textbackslash{}x00garbage\textbackslash{}x00ab}
-
-\RU{Это строка \TT{'hello'}, после нее терминирующий ноль, затем немного мусора в памяти.}
-\EN{It is a \TT{'hello'} string, terminating zero, and also a random noise in memory.}
-
-\newcommand{\MSBFOOTNOTE}{\footnote{most significant bit}}
-\newcommand{\LSBFOOTNOTE}{\footnote{least significant bit}}
-
-\RU{Если мы загрузим эти 16 байт в \XMMONE и сравним с нулевым \XMMZERO, то в итоге получим такое 
-(я использую здесь порядок с MSB\MSBFOOTNOTE до LSB\LSBFOOTNOTE):}
-\EN{If we load these 16 bytes into \XMMONE and compare them with zeroed \XMMZERO, we will get something like
-(I use here order from MSB\MSBFOOTNOTE to LSB\LSBFOOTNOTE):}
-
-\begin{verbatim}
-XMM1: 0000ff00000000000000ff0000000000
-\end{verbatim}
-
-\RU{Это означает что инструкция сравнения обнаружила два нулевых байта, что и не удивительно.}
-\EN{This means, the instruction found two zero bytes, and that is not surprising.}
-
-\RU{\TT{PMOVMSKB} в нашем случае подготовит \EAX вот так (в двоичном представлении):} 
-\EN{\TT{PMOVMSKB} in our case will prepare \EAX like (in binary representation):} \IT{0010000000100000b}.
-
-\RU{Совершенно очевидно, что далее наша функция должна учитывать только первый встретившийся
-нулевой бит и игнорировать все остальное.}
-\EN{Obviously, our function must consider only first zero bit and ignore the rest ones.}
-
-\index{x86!\Instructions!BSF}
-\label{instruction_BSF}
-\RU{Следующая инструкция}\EN{The next instruction}\EMDASH\TT{BSF} (\IT{Bit Scan Forward}). 
-\RU{Это инструкция находит самый младший бит во втором операнде и записывает его позицию в первый операнд.}
-\EN{This instruction find first bit set to 1 and stores its position into first operand.}
-
-\begin{verbatim}
-EAX=0010000000100000b
-\end{verbatim}
-
-\RU{После исполнения этой инструкции \TT{bsf eax, eax}, в \EAX будет 5, что означает, 
-что единица найдена в пятой позиции (считая с нуля).}
-\EN{After \TT{bsf eax, eax} instruction execution, \EAX will contain 5, this means, 
-1 found at 5th bit position (starting from zero).}
-
-\RU{Для использования этой инструкции, в MSVC также имеется макрос}
-\EN{MSVC has a macro for this instruction:} \TT{\_BitScanForward}.
-
-\RU{А дальше все просто. Если нулевой байт найден, его позиция прибавляется к тому что 
-мы уже насчитали и возвращается результат.}
-\EN{Now it is simple. If zero byte found, its position added to what we already counted and now we have 
-ready to return result.}
-
-\RU{Почти всё.}\EN{Almost all.}
-
-\RU{Кстати, следует также отметить, что компилятор MSVC сгенерировал два тела цикла сразу, для оптимизации.}
-\EN{By the way, it is also should be noted, MSVC compiler emitted two loop bodies side by side, for optimization.}
-
-\RU{Кстати, в SSE 4.2 (который появился в Intel Core i7) все эти манипуляции со строками могут быть еще проще:}
-\EN{By the way, SSE 4.2 (appeared in Intel Core i7) offers more instructions where these string manipulations might be
-even easier:} \url{http://www.strchr.com/strcmp\_and\_strlen\_using\_sse\_4.2}
-
+\url{http://go.yurichev.com/17313}
+
+% sections
+\input{patterns/19_SIMD/vectorization.tex}
+\input{patterns/19_SIMD/strlen.tex}

@@ -8,7 +8,7 @@
 \RU{Intel C++ 10.1 которым скомпилирован \oracle 11.2 Linux86, может сгенерировать два \JZ идущих подряд, 
 причем на второй \JZ нет ссылки ниоткуда. Второй \JZ таким образом, не имеет никакого смысла.}
 \EN{Intel C++ 10.1, which was used for \oracle 11.2 Linux86 compilation, may emit two \JZ in row,
-and there are no references to the second \JZ. Second \JZ is thus senseless.}
+and there are no references to the second \JZ. The second \JZ is thus meaningless.}
 
 \begin{lstlisting}[caption=\RU{kdli.o из}\EN{kdli.o from} libserver11.a]
 .text:08114CF1                   loc_8114CF1: ; CODE XREF: __PGOSF539_kdlimemSer+89A
@@ -48,14 +48,19 @@ and there are no references to the second \JZ. Second \JZ is thus senseless.}
 
 \RU{Возможно, это ошибка его кодегенератора, не выявленная тестами 
 (ведь результирующий код и так работает нормально).}
-\EN{It is probably code generator bug was not found by tests, because, 
-resulting code is working correctly anyway.}
+\EN{It is probably a code generator bug that was not found by tests, because 
+resulting code works correctly anyway.}
 
-\RU{Еще одна такая ошибка компилятора описана здесь}
-\EN{Another compiler anomaly I described here}~(\ref{anomaly:LLVM}).
+\RU{Еще подобные аномалии компиляторов в этой книге}
+\EN{Other compiler anomalies here in this book}: 
+\myref{anomaly:LLVM}, \myref{loops_iterators_loop_anomaly}, \myref{Keil_anomaly},
+\myref{MSVC2013_anomaly},
+\myref{MSVC_double_JMP_anomaly},
+\myref{MSVC2012_anomaly}.
 
-\RU{Я показываю здесь подобные случаи для того, чтобы легче было понимать, 
+\RU{В этой книге здесь приводятся подобные случаи для того, чтобы легче было понимать, 
 что подобные ошибки компиляторов 
-все же имеют место быть, и не следует ломать голову над тем, почему он сгенерировал такой странный код.}
-\EN{I demonstrate such cases here, so to understand that such compilers errors are possible and sometimes
-one should not to rack one's brain and think why compiler generated such strange code.}
+все же имеют место быть, и не следует ломать голову над тем, почему он сгенерировал такой странный код.}%
+\EN{Such cases are demonstrated here in this book, to show that such compilers errors are possible and sometimes
+one should not to rack one's brain while thinking why did the compiler generate such strange code.}
+

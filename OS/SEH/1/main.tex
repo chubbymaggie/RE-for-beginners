@@ -1,101 +1,101 @@
 \subsection{\RU{Забудем на время о MSVC}\EN{Let's forget about MSVC}}
 
-\RU{\ac{SEH} в Windows предназначен для обработки исключений, тем не менее, с Си++ и \ac{OOP} он никак не связан}
-\EN{In Windows, \ac{SEH} is intended for exceptions handling, nevertheless, it is language-agnostic,
-it is not connected to the C++ or \ac{OOP} in any way}.
+\RU{\ac{SEH} в Windows предназначен для обработки исключений, тем не менее, с \Cpp и \ac{OOP} он никак не связан}
+\EN{In Windows, the \ac{SEH} is intended for exceptions handling, nevertheless, it is language-agnostic,
+not related to \Cpp or \ac{OOP} in any way}.
 \RU{Здесь мы рассмотрим \ac{SEH} изолированно от Си++ и расширений MSVC}
-\EN{Here we will take a look on \ac{SEH} in isolated (from C++ and MSVC extensions) form}.
+\EN{Here we are going to take a look at \ac{SEH} in its isolated (from C++ and MSVC extensions) form}.
 
 \index{Windows!TIB}
-\index{Win32!RaiseException()}
+\index{Windows!Win32!RaiseException()}
 \RU{Каждый процесс имеет цепочку \ac{SEH}-обработчиков, и адрес последнего записан в \ac{TIB}}
-\EN{Each running process has a chain of \ac{SEH}-handlers, \ac{TIB} has address of the last handler}.
+\EN{Each running process has a chain of \ac{SEH} handlers, \ac{TIB} has the address of the last handler}.
 \RU{Когда происходит исключение (деление на ноль, обращение по неверному адресу в памяти, 
 пользовательское исключение, поднятое при помощи \TT{RaiseException()}),
 \ac{OS} находит последний обработчик в \ac{TIB} и вызывает его, 
 передав ему информацию о состоянии \ac{CPU} в момент исключения
-(все значения регистров, и т.д.)}
-\EN{When exception occurred (division by zero, incorrect address access, user exception triggered by
-calling to \TT{RaiseException()} function), \ac{OS} will find the last handler in \ac{TIB}, and will call it
-with passing all information about \ac{CPU} state (register values, etc) at the moment of exception}.
-\RU{Обработчик выясняет, то ли это исключение, для которого он создавался}\EN{Exception handler will
-consider exception, was it made for it}?
-\RU{Если да, то он обрабатывает исключение}\EN{If so, it will handle exception}.
+(все значения регистров, \etc{}.)}
+\EN{When an exception occurs (division by zero, incorrect address access, user exception triggered by
+calling the \TT{RaiseException()} function), the \ac{OS} finds the last handler in the \ac{TIB} and calls it,
+passing all information about the \ac{CPU} state (register values, \etc{}) at the moment of the exception}.
+\RU{Обработчик выясняет, то ли это исключение, для которого он создавался?}
+\EN{The exception handler considering the exception, was it made for it?}
+\RU{Если да, то он обрабатывает исключение}\EN{If so, it handles the exception}.
 \RU{Если нет, то показывает \ac{OS} что он не может его обработать и \ac{OS} вызывает следующий обработчик
-в цепочке, и так до тех пор, пока не найдется обработчик способный обработать исключение}
-\EN{If no, it will signal to \ac{OS} that it
-cannot handle it and \ac{OS} will call next handler in chain,
-until a handler which is able to handle the exception will be found}.
+в цепочке, и так до тех пор, пока не найдется обработчик способный обработать исключение.}
+\EN{If not, it signals to the \ac{OS} that it
+cannot handle it and the \ac{OS} calls the next handler in the chain,
+until a handler which is able to handle the exception is be found.}
 
 \RU{В самом конце цепочки находится стандартный обработчик, показывающий всем очень известное окно, 
 сообщающее что процесс упал, 
 сообщает также состояние \ac{CPU} в момент падения и позволяет собрать и отправить информацию обработчикам 
 в Microsoft}
-\EN{At the very end of the chain, there a standard handler, showing well-known dialog box, informing a
-process crash, some technical information about \ac{CPU} state at the crash,
+\EN{At the very end of the chain there a standard handler that shows the well-known dialog box, informing the user about a
+process crash, some technical information about the \ac{CPU} state at the time of the crash,
 and offering to collect all information and send it to developers in Microsoft}. 
 
 \begin{figure}[H]
 \centering
-\includegraphics[scale=0.66]{OS/SEH/1/crash_xp1.png}
+\includegraphics[scale=\NormalScale]{OS/SEH/1/crash_xp1.png}
 \caption{Windows XP}
 \end{figure}
 
 \begin{figure}[H]
 \centering
-\includegraphics[scale=0.66]{OS/SEH/1/crash_xp2.png}
+\includegraphics[scale=\NormalScale]{OS/SEH/1/crash_xp2.png}
 \caption{Windows XP}
 \end{figure}
 
 \begin{figure}[H]
 \centering
-\includegraphics[scale=0.66]{OS/SEH/1/crash_win7.png}
+\includegraphics[scale=\NormalScale]{OS/SEH/1/crash_win7.png}
 \caption{Windows 7}
 \end{figure}
 
 \begin{figure}[H]
 \centering
-\includegraphics[scale=0.66]{OS/SEH/1/crash_win81.png}
+\includegraphics[scale=\NormalScale]{OS/SEH/1/crash_win81.png}
 \caption{Windows 8.1}
 \end{figure}
 
-\RU{Раньше этот обработчик назывался Dr. Watson}\EN{This handler was also called Dr. Watson earlier}
-\footnote{\url{https://en.wikipedia.org/wiki/Dr._Watson_(debugger)}}.
+\RU{Раньше этот обработчик назывался Dr. Watson}\EN{Earlier, this handler was called Dr. Watson}
+\footnote{\href{http://go.yurichev.com/17046}{wikipedia}}.
 
 \RU{Кстати, некоторые разработчики делают свой собственный обработчик,
 отправляющий информацию о падении программы им самим}
-\EN{By the way, some developers made their own handler, sending information about program crash to themselves}.
-\index{Win32!SetUnhandledExceptionFilter()}
-\RU{Он регистрируется при помощи ф-ции}\EN{It is registered with the help of} \TT{SetUnhandledExceptionFilter()} 
-\RU{и будет вызван если \ac{OS} не знает как иначе обработать исключение}\EN{and will be called if
-\ac{OS} do not have any other way to handle exception}.
+\EN{By the way, some developers make their own handler that sends information about the program crash to themselves}.
+\index{Windows!Win32!SetUnhandledExceptionFilter()}
+\RU{Он регистрируется при помощи функции}\EN{It is registered with the help of} \TT{SetUnhandledExceptionFilter()} 
+\RU{и будет вызван если \ac{OS} не знает как иначе обработать исключение.}
+\EN{and to be called if the \ac{OS} does not have any other way to handle the exception.}
 \index{\oracle}
-\RU{А, например,}\EN{Other example is} \oracle \RU{в этом случае генерирует огромные дампы, 
+\RU{А, например,}\EN{An example is} \oracle \RU{в этом случае генерирует огромные дампы, 
 содержащие всю возможную информацию и состоянии \ac{CPU} и памяти}
-\EN{it saves huge dumps containing all possible information about \ac{CPU} and memory state}.
+\EN{\EMDASH{}it saves huge dumps containing all possible information about the \ac{CPU} and memory state}.
 
 \RU{Попробуем написать свой примитивный обработчик исключений}
 \EN{Let's write our own primitive exception handler}
 \footnote{
-	\RU{Пример основан на примере из}\EN{The example is based on the example from} \cite{PietrekSEH}
+	\RU{Пример основан на примере из}\EN{This example is based on the example from} \cite{PietrekSEH}
 
-	\RU{Он должен компилироваться с опцией}\EN{It is compiled with the} SAFESEH\EN{ option}: 
+	\RU{Он должен компилироваться с опцией}\EN{It must be compiled with the} SAFESEH\EN{ option}: 
 	\TT{cl seh1.cpp /link /safeseh:no}
 
 	\RU{Подробнее об опции}\EN{More about} SAFESEH \RU{здесь}\EN{here}: \\
-	\url{http://msdn.microsoft.com/en-us/library/9a89h429.aspx}
+	\href{http://go.yurichev.com/17252}{MSDN}
 }:
 	
 \lstinputlisting{OS/SEH/1/1.cpp}
 
 \RU{Сегментный регистр FS: в win32 указывает на \ac{TIB}}
-\EN{FS: segment register is pointing to the \ac{TIB} in win32}.
+\EN{The FS: segment register is pointing to the \ac{TIB} in win32}.
 \RU{Самый первый элемент \ac{TIB} это указатель на последний обработчик в цепочке}
-\EN{The very first element in \ac{TIB} is a pointer to the last handler in chain}.
-\RU{Мы сохраняем его в стеке и записываем туда адрес своего обработчика}\EN{We saving it in the stack and store
-an address of our handler there}.
+\EN{The very first element in the \ac{TIB} is a pointer to the last handler in the chain}.
+\RU{Мы сохраняем его в стеке и записываем туда адрес своего обработчика}\EN{We save it in the stack and store
+the address of our handler there}.
 \RU{Эта структура называется}\EN{The structure is named} \TT{\_EXCEPTION\_REGISTRATION}, 
-\RU{это простейший односвязный список, и эти элементы хранятся прямо в стеке}\EN{it is a simplest singly-linked
+\RU{это простейший односвязный список, и эти элементы хранятся прямо в стеке}\EN{it is a simple singly-linked
 list and its elements are stored right in the stack}.
 
 \begin{lstlisting}[caption=MSVC/VC/crt/src/exsup.inc]
@@ -105,36 +105,36 @@ list and its elements are stored right in the stack}.
 \_EXCEPTION\_REGISTRATION ends
 \end{lstlisting}
 
-\RU{Так что каждое поле}\EN{So each} ``handler'' \RU{указывает на обработчик,
-а каждое поле}\EN{field points to handler and an each} ``prev'' \RU{указывает на предыдущую структуру
-в стеке}\EN{field points to previous record in the stack}.
-\RU{Самая последняя структура имеет}\EN{The last record has} \TT{0xFFFFFFFF} (-1) \RU{в поле}\EN{in} 
-``prev''\EN{ field}.
+\RU{Так что каждое поле}\EN{So each} \q{handler} \RU{указывает на обработчик,
+а каждое поле}\EN{field points to a handler and an each} \q{prev} \RU{указывает на предыдущую структуру
+в стеке}\EN{field points to the previous record in the stack}.
+\RU{Самая последняя структура имеет}\EN{The last record has} \TT{0xFFFFFFFF} (-1) \RU{в поле}\EN{in the} 
+\q{prev}\EN{ field}.
 
 \input{OS/SEH/1/tikz}
 
-\RU{После инсталляции своего обработчика, вызываем}\EN{When our handler is installed, let's call}
+\RU{После инсталляции своего обработчика, вызываем}\EN{After our handler is installed, we call}
 \TT{RaiseException()}
-\footnote{\url{http://msdn.microsoft.com/en-us/library/windows/desktop/ms680552(v=vs.85).aspx}}.
-\RU{Это пользовательские исключения}\EN{This is user exception}. \RU{Обработчик проверяет код}\EN{Handler will check
-the code}.
-\RU{Если код}\EN{If the code is} \TT{0xE1223344}, \RU{то он возвращает}\EN{it will return} 
+\footnote{\href{http://go.yurichev.com/17253}{MSDN}}.
+\RU{Это пользовательские исключения}\EN{This is an user exception}. 
+\RU{Обработчик проверяет код}\EN{The handler checks the code}.
+\RU{Если код}\EN{If the code is} \TT{0xE1223344}, \RU{то он возвращает}\EN{it returning} 
 \TT{ExceptionContinueExecution},
-\RU{что сигнализирует системе что обработчик изменил состояние CPU (обычно это EIP/ESP) и что OS может
+\RU{что сигнализирует системе что обработчик скорректировал состояние CPU (обычно это регистры EIP/ESP) и что \ac{OS} может
 возобновить исполнение треда}
-\EN{which means that handler fixes CPU state (it is usually EIP/ESP) and the OS can resume thread execution}.
-\RU{Если вы немного измените код так что обработчик будет возвращать}\EN{If to alter the code slightly
-so the handler will return} \TT{ExceptionContinueSearch},
+\EN{which means that handler corrected the CPU state (it is usually a correction of the EIP/ESP registers) and the \ac{OS} can resume the execution of the}.
+\RU{Если вы немного измените код так что обработчик будет возвращать}\EN{If you alter slightly the code
+so the handler returns} \TT{ExceptionContinueSearch},
 \RU{то \ac{OS} будет вызывать остальные
-обработчики в цепочке, и врядли найдется тот, кто обработает ваше исключение,
+обработчики в цепочке, и вряд ли найдется тот, кто обработает ваше исключение,
 ведь информации о нем (вернее, его коде) ни у кого нет}
-\EN{then \ac{OS} will call other handlers, and very unlikely the one who can handle it will be founded, since
-no one have information about it (rather about its code)}.
+\EN{then the \ac{OS} will call the other handlers, and it's unlikely that one who can handle it will be found, since
+no one will have any information about it (rather about its code)}.
 \RU{Вы увидите стандартное окно Windows о падении процесса}\EN{You will see the standard Windows dialog about
-process crash}.
+a process crash}.
 
 \RU{Какова разница между системными исключениями и пользовательскими}\EN{What is the difference between
-system exceptions and user}? \RU{Вот системные}\EN{Here is a system ones}:
+a system exceptions and a user one}? \RU{Вот системные}\EN{Here are the system ones}:
 
 \begin{center}
 \begin{tabular}{ | l | l | l | }
@@ -194,10 +194,10 @@ CONTROL\_C\_EXIT                      & STATUS\_CONTROL\_C\_EXIT             & 0
 \end{tabular}
 \end{center}
 
-\RU{Так определяется код}\EN{That is how code is defined}:
+\RU{Так определяется код}\EN{That is how the code is defined}:
 
 \begin{center}
-\begin{bytefield}{32}
+\begin{bytefield}[bitwidth=0.03\linewidth]{32}
 \bitheader[endianness=big]{31,29,28,27,16,15,0} \\
 \bitbox{2}{\TT{S}} & 
 \bitbox{1}{\TT{U}} &
@@ -214,63 +214,62 @@ S \RU{это код статуса}\EN{is a basic status code}:
 00\EMDASH{}\RU{успех}\EN{success}.
 U\EMDASH\RU{является ли этот код пользовательским, а не системным}\EN{whether the code is user code}.
 
-\RU{Вот почему я выбрал}\EN{That is why I chose} 0xE1223344\EMDASH{}
+\RU{Вот почему мы выбрали}\EN{That is why we chose} 0xE1223344\EMDASH{}
 %E\textsubscript{16} (1110\textsubscript{2}) 
 0xE (1110b) 
-\RU{означает что это 1) пользовательское исключение; 2) ошибка}\EN{mean this is 1) user exception; 2) error}.
+\RU{означает что это 1) пользовательское исключение; 2) ошибка}\EN{mean this it is 1) user exception; 2) error}.
 \RU{Хотя, если быть честным, этот пример нормально работает и без этих старших бит}
-\EN{But to be honest, this example works finely without these high bits}.
+\EN{But to be honest, this example works fine without these high bits}.
 
 \RU{Далее мы пытаемся прочитать значение из памяти по адресу 0}\EN{Then we try to read a value from memory
-at the 0th address}.
+at address 0}.
 \RU{Конечно, в win32 по этому адресу обычно ничего нет, и сработает исключение}
-\EN{Of course, there are nothing at this address in win32, so exception is raised}.
-\RU{Однако, первый обработчик, который будет заниматься этим делом ~--- ваш, и он узнает об этом
+\EN{Of course, there is nothing at this address in win32, so an exception is raised}.
+\RU{Однако, первый обработчик, который будет заниматься этим делом\EMDASH{}ваш, и он узнает об этом
 первым, проверяя код на соответствие с константной \TT{EXCEPTION\_ACCESS\_VIOLATION}}
-\EN{However, the very first handler will be called --- yours, it will be notified first, checking
-the code on equality to the \TT{EXCEPTION\_ACCESS\_VIOLATION} constant}.
+\EN{The very first handler is to be called\EMDASH{}yours, and it will know about it first, by checking
+the code if it's equal to the \TT{EXCEPTION\_ACCESS\_VIOLATION} constant}.
 
 \RU{А если заглянуть в то что получилось на ассемблере,
-то можно увидеть что код читающий из памяти по адресу 0, выглядит так}\EN{The code reading from memory at
-0th address is looks like}:
+то можно увидеть, что код читающий из памяти по адресу 0, выглядит так}\EN{The code that's reading from memory at
+address 0 is looks like this}:
 
 \lstinputlisting[caption=MSVC 2010]{OS/SEH/1/1_fragment.asm}
 
-\RU{Возможно ли ``на лету'' исправить ошибку и предложить программе исполняться далее}
-\EN{Will it be possible to fix error ``on fly'' and to continue program execution}?
+\RU{Возможно ли \q{на лету} исправить ошибку и предложить программе исполняться далее}
+\EN{Will it be possible to fix this error \q{on the fly} and to continue with program execution}?
 \RU{Да, наш обработчик может изменить значение в \EAX и предложить \ac{OS} исполнить эту же инструкцию еще раз}
-\EN{Yes, our exception handler can fix \EAX value and now let \ac{OS} will execute this instruction once again}.
-\RU{Что мы и делаем}\EN{So that is what we do}. \printf \RU{напечатает}\EN{will print} 1234,
-\RU{потому что после работы нашего обработчика}\EN{because, after execution of our handler},
-\EAX \RU{будет не}\EN{will not be} 0,
-\RU{а будет содержать адрес глобальной переменной}\EN{it will contain address of global variable} \TT{new\_value}.
-\RU{Программа будет исполняться далее}\EN{Execution will be resumed}.
+\EN{Yes, our exception handler can fix the \EAX value and let the \ac{OS} execute this instruction once again}.
+\RU{Что мы и делаем}\EN{So that is what we do}. \printf \RU{напечатает}\EN{prints} 1234,
+\RU{потому что после работы нашего обработчика, }\EN{because after the execution of our handler }
+\EAX \RU{будет не}\EN{is not} 0,
+\RU{а будет содержать адрес глобальной переменной}
+\EN{but contains the address of the global variable} \TT{new\_value}.
+\RU{Программа будет исполняться далее}\EN{The execution will resume}.
 
 \RU{Собственно, вот что происходит}\EN{That is what is going on}: 
-\RU{срабатывает защита менеджера памяти в \ac{CPU}}\EN{memory manager in \ac{CPU} signaling about error}, 
-\RU{он останавливает работу треда}\EN{the \ac{CPU} suspends the thread},
-\RU{отыскивает в ядре Windows обработчик исключений}\EN{it finds exception handler in the Windows kernel}, 
+\RU{срабатывает защита менеджера памяти в \ac{CPU}}\EN{the memory manager in the \ac{CPU} signals about an error}, 
+\RU{он останавливает работу треда}\EN{the the \ac{CPU} suspends the thread},
+\RU{отыскивает в ядре Windows обработчик исключений}\EN{finds the exception handler in the Windows kernel}, 
 \RU{тот, в свою очередь, начинает вызывать обработчики из цепочки \ac{SEH}, по одному}
-\EN{latter, in turn, is starting to call all handlers in \ac{SEH} chain, one by one}.
+\EN{which, in turn, starts to call all handlers in the \ac{SEH} chain, one by one}.
 
-\RU{Я компилирую это всё в MSVC 2010, но конечно же, нет никакой гарантии 
-что для указателя будет использован именно регистр \EAX}\EN{I use MSVC 2010 now, but of course,
-there are no any guarantee that \EAX will be used for pointer}.
+\RU{Мы компилируем это всё в MSVC 2010, но конечно же, нет никакой гарантии 
+что для указателя будет использован именно регистр \EAX.}%
+\EN{We use MSVC 2010 here, but of course,
+there is no any guarantee that \EAX will be used for this pointer.}
 
-\RU{Этот трюк с подменой адреса эффектно выглядит, 
-и я его привожу здесь для наглядной иллюстрации работы \ac{SEH}}
-\EN{This address replacement trick is looks showingly, and I offer it here for \ac{SEH} internals illustration}.
-\RU{Тем не менее, я затрудняюсь
-припомнить, применяется ли где-то подобное на практике для исправления ошибок ``на лету''}
-\EN{Nevertheless, I cannot recall
-where it is used for ``on-fly'' error fixing in practice}.
+\RU{Этот трюк с подменой адреса эффектно выглядит, и мы рассматриваем его здесь для наглядной иллюстрации работы \ac{SEH}.}%
+\EN{This address replacement trick is showy, and we considering it here as an illustration of \ac{SEH}'s internals.}
+\RU{Тем не менее, трудно припомнить, применяется ли где-то подобное на практике для исправления ошибок \q{на лету}.}%
+\EN{Nevertheless, it's hard to recall any case where it is used for \q{on-the-fly} error fixing.}
 
 \RU{Почему SEH-записи хранятся именно в стеке а не в каком-то другом месте}
 \EN{Why SEH-related records are stored right in the stack instead of some other place}?
-\RU{Вероятно, потому что тогда \ac{OS} не будет заботиться об освобождении этой информации, эти записи
-пропадают как ненужные когда ф-ция заканчивает работу}
-\EN{Supposedly because then \ac{OS} will not need to care about freeing this information, these records
-will be disposed when function finishing its execution}.
-\RU{Но я не уверен на}\EN{But I'm not} 100\%\RU{ и могу ошибаться}\EN{-sure and can be wrong}.
-\RU{Это чем-то похоже на}\EN{This is somewhat like} alloca(): (\ref{alloca}).
+\RU{Вероятно, потому что \ac{OS} не нужно заботиться об освобождении этой информации, эти записи
+просто пропадают как ненужные когда функция заканчивает работу.}
+\EN{Supposedly because the \ac{OS} is not needing to care about freeing this information, 
+these records are simply disposed when the function finishes its execution.}
+\index{\CStandardLibrary!alloca()}
+\RU{Это чем-то похоже на}\EN{This is somewhat like} alloca(): (\myref{alloca}).
 

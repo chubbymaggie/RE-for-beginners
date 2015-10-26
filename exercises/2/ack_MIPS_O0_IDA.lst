@@ -1,0 +1,66 @@
+f:                                     # CODE XREF: f+64
+                                         # f+94 ...
+
+var_C           = -0xC
+var_8           = -8
+var_4           = -4
+arg_0           =  0
+arg_4           =  4
+
+                addiu   $sp, -0x28
+                sw      $ra, 0x28+var_4($sp)
+                sw      $fp, 0x28+var_8($sp)
+                sw      $s0, 0x28+var_C($sp)
+                move    $fp, $sp
+                sw      $a0, 0x28+arg_0($fp)
+                sw      $a1, 0x28+arg_4($fp)
+                lw      $v0, 0x28+arg_0($fp)
+                or      $at, $zero
+                bnez    $v0, loc_40
+                or      $at, $zero
+                lw      $v0, 0x28+arg_4($fp)
+                or      $at, $zero
+                addiu   $v0, 1
+                b       loc_AC
+                or      $at, $zero
+
+loc_40:                                  # CODE XREF: f+24
+                lw      $v0, 0x28+arg_4($fp)
+                or      $at, $zero
+                bnez    $v0, loc_74
+                or      $at, $zero
+                lw      $v0, 0x28+arg_0($fp)
+                or      $at, $zero
+                addiu   $v0, -1
+                move    $a0, $v0
+                li      $a1, 1
+                jal     f
+                or      $at, $zero
+                b       loc_AC
+                or      $at, $zero
+
+loc_74:                                  # CODE XREF: f+48
+                lw      $v0, 0x28+arg_0($fp)
+                or      $at, $zero
+                addiu   $s0, $v0, -1
+                lw      $v0, 0x28+arg_4($fp)
+                or      $at, $zero
+                addiu   $v0, -1
+                lw      $a0, 0x28+arg_0($fp)
+                move    $a1, $v0
+                jal     f
+                or      $at, $zero
+                move    $a0, $s0
+                move    $a1, $v0
+                jal     f
+                or      $at, $zero
+
+loc_AC:                                  # CODE XREF: f+38
+                                         # f+6C
+                move    $sp, $fp
+                lw      $ra, 0x28+var_4($sp)
+                lw      $fp, 0x28+var_8($sp)
+                lw      $s0, 0x28+var_C($sp)
+                addiu   $sp, 0x28
+                jr      $ra
+                or      $at, $zero

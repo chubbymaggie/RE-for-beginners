@@ -1,0 +1,49 @@
+\section{\Exercises}
+
+% 1
+
+\subsection{\Exercise \#2}
+\label{exercise_arith_optimizations_2}
+
+\WhatThisCodeDoes\
+
+\begin{lstlisting}[caption=\Optimizing MSVC 2010]
+_a$ = 8
+_f	PROC
+	mov	ecx, DWORD PTR _a$[esp-4]
+	lea	eax, DWORD PTR [ecx*8]
+	sub	eax, ecx
+	ret	0
+_f	ENDP
+\end{lstlisting}
+
+\begin{lstlisting}[caption=\NonOptimizingKeilVI (\ARMMode)]
+f PROC
+        RSB      r0,r0,r0,LSL #3
+        BX       lr
+        ENDP
+\end{lstlisting}
+
+\begin{lstlisting}[caption=\NonOptimizingKeilVI (\ThumbMode)]
+f PROC
+        LSLS     r1,r0,#3
+        SUBS     r0,r1,r0
+        BX       lr
+        ENDP
+\end{lstlisting}
+
+\begin{lstlisting}[caption=\Optimizing GCC 4.9 (ARM64)]
+f:
+	lsl	w1, w0, 3
+	sub	w0, w1, w0
+	ret
+\end{lstlisting}
+
+\begin{lstlisting}[caption=\Optimizing GCC 4.4.5 (MIPS) (IDA)]
+f:
+                sll     $v0, $a0, 3
+                jr      $ra
+                subu    $v0, $a0
+\end{lstlisting}
+
+\Answer\: \myref{exercise_solutions_arith_optimizations_2}.

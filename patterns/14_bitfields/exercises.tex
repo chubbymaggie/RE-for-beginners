@@ -1,0 +1,303 @@
+\section{\Exercises}
+
+\subsection{\Exercise \#1}
+\label{exercise_bitfields_1}
+
+\WhatThisCodeDoes\
+
+\begin{lstlisting}[caption=\Optimizing MSVC 2010]
+_a$ = 8
+_f	PROC
+	mov	ecx, DWORD PTR _a$[esp-4]
+	mov	eax, ecx
+	mov	edx, ecx
+	shl	edx, 16		; 00000010H
+	and	eax, 65280	; 0000ff00H
+	or	eax, edx
+	mov	edx, ecx
+	and	edx, 16711680	; 00ff0000H
+	shr	ecx, 16		; 00000010H
+	or	edx, ecx
+	shl	eax, 8
+	shr	edx, 8
+	or	eax, edx
+	ret	0
+_f	ENDP
+\end{lstlisting}
+
+\begin{lstlisting}[caption=\OptimizingKeilVI (\ARMMode)]
+f PROC
+        MOV      r1,#0xff0000
+        AND      r1,r1,r0,LSL #8
+        MOV      r2,#0xff00
+        ORR      r1,r1,r0,LSR #24
+        AND      r2,r2,r0,LSR #8
+        ORR      r1,r1,r2
+        ORR      r0,r1,r0,LSL #24
+        BX       lr
+        ENDP
+\end{lstlisting}
+
+\begin{lstlisting}[caption=\OptimizingKeilVI (\ThumbMode)]
+f PROC
+        MOVS     r3,#0xff
+        LSLS     r2,r0,#8
+        LSLS     r3,r3,#16
+        ANDS     r2,r2,r3
+        LSRS     r1,r0,#24
+        ORRS     r1,r1,r2
+        LSRS     r2,r0,#8
+        ASRS     r3,r3,#8
+        ANDS     r2,r2,r3
+        ORRS     r1,r1,r2
+        LSLS     r0,r0,#24
+        ORRS     r0,r0,r1
+        BX       lr
+        ENDP
+\end{lstlisting}
+
+\begin{lstlisting}[caption=\Optimizing GCC 4.9 (ARM64)]
+f:
+	rev	w0, w0
+	ret
+\end{lstlisting}
+
+\lstinputlisting[caption=\Optimizing GCC 4.4.5 (MIPS) (IDA)]{patterns/14_bitfields/1_MIPS_O3_IDA.lst}
+
+\Answer{}: \myref{exercise_solutions_bitfields_1}.
+
+\subsection{\Exercise \#2}
+\label{exercise_bitfields_2}
+
+\WhatThisCodeDoes\
+
+\begin{lstlisting}[caption=\Optimizing MSVC 2010]
+_a$ = 8							; size = 4
+_f	PROC
+	push	esi
+	mov	esi, DWORD PTR _a$[esp]
+	xor	ecx, ecx
+	push	edi
+	lea	edx, DWORD PTR [ecx+1]
+	xor	eax, eax
+	npad	3 ; align next label
+$LL3@f:
+	mov	edi, esi
+	shr	edi, cl
+	add	ecx, 4
+	and	edi, 15
+	imul	edi, edx
+	lea	edx, DWORD PTR [edx+edx*4]
+	add	eax, edi
+	add	edx, edx
+	cmp	ecx, 28
+	jle	SHORT $LL3@f
+	pop	edi
+	pop	esi
+	ret	0
+_f	ENDP
+\end{lstlisting}
+
+\begin{lstlisting}[caption=\OptimizingKeilVI (\ARMMode)]
+f PROC
+        MOV      r3,r0
+        MOV      r1,#0
+        MOV      r2,#1
+        MOV      r0,r1
+|L0.16|
+        LSR      r12,r3,r1
+        AND      r12,r12,#0xf
+        MLA      r0,r12,r2,r0
+        ADD      r1,r1,#4
+        ADD      r2,r2,r2,LSL #2
+        CMP      r1,#0x1c
+        LSL      r2,r2,#1
+        BLE      |L0.16|
+        BX       lr
+        ENDP
+\end{lstlisting}
+
+\begin{lstlisting}[caption=\OptimizingKeilVI (\ThumbMode)]
+f PROC
+        PUSH     {r4,lr}
+        MOVS     r3,r0
+        MOVS     r1,#0
+        MOVS     r2,#1
+        MOVS     r0,r1
+|L0.10|
+        MOVS     r4,r3
+        LSRS     r4,r4,r1
+        LSLS     r4,r4,#28
+        LSRS     r4,r4,#28
+        MULS     r4,r2,r4
+        ADDS     r0,r4,r0
+        MOVS     r4,#0xa
+        MULS     r2,r4,r2
+        ADDS     r1,r1,#4
+        CMP      r1,#0x1c
+        BLE      |L0.10|
+        POP      {r4,pc}
+        ENDP
+\end{lstlisting}
+
+\begin{lstlisting}[caption=\NonOptimizing GCC 4.9 (ARM64)]
+f:
+	sub	sp, sp, #32
+	str	w0, [sp,12]
+	str	wzr, [sp,28]
+	mov	w0, 1
+	str	w0, [sp,24]
+	str	wzr, [sp,20]
+	b	.L2
+.L3:
+	ldr	w0, [sp,28]
+	ldr	w1, [sp,12]
+	lsr	w0, w1, w0
+	and	w1, w0, 15
+	ldr	w0, [sp,24]
+	mul	w0, w1, w0
+	ldr	w1, [sp,20]
+	add	w0, w1, w0
+	str	w0, [sp,20]
+	ldr	w0, [sp,28]
+	add	w0, w0, 4
+	str	w0, [sp,28]
+	ldr	w1, [sp,24]
+	mov	w0, w1
+	lsl	w0, w0, 2
+	add	w0, w0, w1
+	lsl	w0, w0, 1
+	str	w0, [sp,24]
+.L2:
+	ldr	w0, [sp,28]
+	cmp	w0, 28
+	ble	.L3
+	ldr	w0, [sp,20]
+	add	sp, sp, 32
+	ret
+\end{lstlisting}
+
+\lstinputlisting[caption=\Optimizing GCC 4.4.5 (MIPS) (IDA)]{patterns/14_bitfields/2_MIPS_O3_IDA.lst}
+
+\Answer{}: \myref{exercise_solutions_bitfields_2}.
+
+\subsection{\Exercise \#3}
+\label{exercise_bitfields_3}
+
+\EN{Using the \ac{MSDN} documentation, find out which flags were used in the \TT{MessageBox()} win32 function call.}
+\RU{Используя документацию \ac{MSDN}, найдите, какие флаги использовались в вызове win32-функции 
+\TT{MessageBox()}.}
+
+\begin{lstlisting}[caption=\Optimizing MSVC 2010]
+_main	PROC
+	push	278595		; 00044043H
+	push	OFFSET $SG79792 ; 'caption'
+	push	OFFSET $SG79793 ; 'hello, world!'
+	push	0
+	call	DWORD PTR __imp__MessageBoxA@16
+	xor	eax, eax
+	ret	0
+_main	ENDP
+\end{lstlisting}
+
+\Answer{}: \myref{exercise_solutions_bitfields_3}.
+
+\subsection{\Exercise \#4}
+\label{exercise_bitfields_4}
+
+\WhatThisCodeDoes\
+
+\begin{lstlisting}[caption=\Optimizing MSVC 2010]
+_m$ = 8		; size = 4
+_n$ = 12	; size = 4
+_f	PROC
+	mov	ecx, DWORD PTR _n$[esp-4]
+	xor	eax, eax
+	xor	edx, edx
+	test	ecx, ecx
+	je	SHORT $LN2@f
+	push	esi
+	mov	esi, DWORD PTR _m$[esp]
+$LL3@f:
+	test	cl, 1
+	je	SHORT $LN1@f
+	add	eax, esi
+	adc	edx, 0
+$LN1@f:
+	add	esi, esi
+	shr	ecx, 1
+	jne	SHORT $LL3@f
+	pop	esi
+$LN2@f:
+	ret	0
+_f	ENDP
+\end{lstlisting}
+
+\begin{lstlisting}[caption=\OptimizingKeilVI (\ARMMode)]
+f PROC
+        PUSH     {r4,lr}
+        MOV      r3,r0
+        MOV      r0,#0
+        MOV      r2,r0
+        MOV      r12,r0
+        B        |L0.48|
+|L0.24|
+        TST      r1,#1
+        BEQ      |L0.40|
+        ADDS     r0,r0,r3
+        ADC      r2,r2,r12
+|L0.40|
+        LSL      r3,r3,#1
+        LSR      r1,r1,#1
+|L0.48|
+        CMP      r1,#0
+        MOVEQ    r1,r2
+        BNE      |L0.24|
+        POP      {r4,pc}
+        ENDP
+\end{lstlisting}
+
+\begin{lstlisting}[caption=\OptimizingKeilVI (\ThumbMode)]
+f PROC
+        PUSH     {r4,r5,lr}
+        MOVS     r3,r0
+        MOVS     r0,#0
+        MOVS     r2,r0
+        MOVS     r4,r0
+        B        |L0.24|
+|L0.12|
+        LSLS     r5,r1,#31
+        BEQ      |L0.20|
+        ADDS     r0,r0,r3
+        ADCS     r2,r2,r4
+|L0.20|
+        LSLS     r3,r3,#1
+        LSRS     r1,r1,#1
+|L0.24|
+        CMP      r1,#0
+        BNE      |L0.12|
+        MOVS     r1,r2
+        POP      {r4,r5,pc}
+        ENDP
+\end{lstlisting}
+
+\begin{lstlisting}[caption=\Optimizing GCC 4.9 (ARM64)]
+f:
+	mov	w2, w0
+	mov	x0, 0
+	cbz	w1, .L2
+.L3:
+	and	w3, w1, 1
+	lsr	w1, w1, 1
+	cmp	w3, wzr
+	add	x3, x0, x2, uxtw
+	lsl	w2, w2, 1
+	csel	x0, x3, x0, ne
+	cbnz	w1, .L3
+.L2:
+	ret
+\end{lstlisting}
+
+\lstinputlisting[caption=\Optimizing GCC 4.4.5 (MIPS) (IDA)]{patterns/14_bitfields/4_MIPS_O3_IDA.lst}
+
+\Answer{}: \myref{exercise_solutions_bitfields_4}.

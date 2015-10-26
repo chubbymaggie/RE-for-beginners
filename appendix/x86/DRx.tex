@@ -12,12 +12,13 @@
 \end{itemize}
 
 \subsection{DR6}
+\index{x86!\Registers!DR6}
 
 \begin{center}
 \begin{tabular}{ | l | l | }
 \hline
-\headercolor{} \RU{Бит}\EN{Bit} (\RU{маска}\EN{mask}) &
-\headercolor{} \RU{Описание}\EN{Description} \\
+\headercolor\ \RU{Бит}\EN{Bit} (\RU{маска}\EN{mask}) &
+\headercolor\ \RU{Описание}\EN{Description} \\
 \hline
 0 (1)       &  B0 --- \RU{сработала точка останова \#1}\EN{breakpoint \#1 was triggered} \\
 \hline
@@ -28,7 +29,7 @@
 3 (8)       &  B3 --- \RU{сработала точка останова \#4}\EN{breakpoint \#4 was triggered} \\
 \hline
 13 (0x2000) &  BD --- \RU{была попытка модифицировать один из регистров DRx.}
-               \EN{modification attempt of one of DRx registers.} \\
+               \EN{modification attempt of one of the DRx registers.} \\
             &  \RU{может быть выставлен если бит GD выставлен.}
 	       \EN{may be raised if GD is enabled} \\
 \hline
@@ -37,26 +38,27 @@
 	    &  \RU{Наивысший приоритет. Другие биты также могут быть выставлены}
 	       \EN{Highest priority. Other bits may also be set}. \\
 \hline
-% FIXME: describe BT
+% TODO: describe BT
 15 (0x8000) &  BT (task switch flag) \\
 \hline
 \end{tabular}
 \end{center}
 
 N.B. \RU{Точка останова single step это срабатывающая после каждой инструкции}
-\EN{Single step breakpoint is a breakpoint occurring after each instruction}.
+\EN{A single step breakpoint is a breakpoint which occurs after each instruction}.
 \RU{Может быть включена выставлением флага TF в EFLAGS}
-\EN{It can be enabled by setting TF in EFLAGS} (\ref{EFLAGS}).
+\EN{It can be enabled by setting TF in EFLAGS} (\myref{EFLAGS}).
 
 \subsection{DR7}
+\index{x86!\Registers!DR7}
 
 \RU{В этом регистре задаются типы точек останова}\EN{Breakpoint types are set here}.
 
 \begin{center}
 \begin{tabular}{ | l | l | }
 \hline
-\headercolor{} \RU{Бит}\EN{Bit} (\RU{маска}\EN{mask}) &
-\headercolor{} \RU{Описание}\EN{Description} \\
+\headercolor\ \RU{Бит}\EN{Bit} (\RU{маска}\EN{mask}) &
+\headercolor\ \RU{Описание}\EN{Description} \\
 \hline
 0 (1)       &  L0 --- \RU{разрешить точку останова}\EN{enable breakpoint} \#1 \RU{для текущей задачи}\EN{for the current task} \\
 \hline
@@ -74,14 +76,14 @@ N.B. \RU{Точка останова single step это срабатывающа
 \hline
 7 (0x80)    &  G3 --- \RU{разрешить точку останова}\EN{enable breakpoint} \#4 \RU{для всех задач}\EN{for all tasks} \\
 \hline
-8 (0x100)   &  LE --- \RU{не поддерживается начиная с P6}\EN{not supported since P6} \\
+8 (0x100)   &  LE --- \RU{не поддерживается, начиная с P6}\EN{not supported since P6} \\
 \hline
-9 (0x200)   &  GE --- \RU{не поддерживается начиная с P6}\EN{not supported since P6} \\
+9 (0x200)   &  GE --- \RU{не поддерживается, начиная с P6}\EN{not supported since P6} \\
 \hline
 13 (0x2000) &  GD --- \RU{исключение будет вызвано если какая-либо инструкция MOV}
-			\EN{exception will be raised if any MOV instruction} \\
+			\EN{exception is to be raised if any MOV instruction} \\
             & \RU{попытается модифицировать один из DRx-регистров}
-			\EN{tries to modify one of DRx registers} \\
+			\EN{tries to modify one of the DRx registers} \\
 \hline
 16,17 (0x30000)    &  \RU{точка останова}\EN{breakpoint} \#1: R/W --- \RU{тип}\EN{type} \\
 \hline
@@ -102,7 +104,7 @@ N.B. \RU{Точка останова single step это срабатывающа
 \end{tabular}
 \end{center}
 
-\RU{Так задается тип точки останова}\EN{Breakpoint type is to be set as follows} (R/W):
+\RU{Так задается тип точки останова}\EN{The breakpoint type is to be set as follows} (R/W):
 
 \begin{itemize}
 \item 00 --- \RU{исполнение инструкции}\EN{instruction execution}
@@ -123,5 +125,3 @@ N.B.: \RU{отдельного типа для чтения из памяти д
 		\EN{undefined for 32-bit mode, eight-byte in 64-bit mode}
 \item 11 --- \RU{4 байта}\EN{four-byte}
 \end{itemize}
-
-% to be proofreaded (end)

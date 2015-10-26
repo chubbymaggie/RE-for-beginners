@@ -64,13 +64,13 @@ $LN14:
 $LN11@main:
 	lea	rcx, OFFSET FLAT:$SG86292 ; 'access violation, can''t recover'
 	call	printf
-	npad	1
+	npad	1 ; align next label
 $LN13@main:
 	jmp	SHORT $LN9@main
 $LN7@main:
 	lea	rcx, OFFSET FLAT:$SG86294 ; 'user exception caught'
 	call	printf
-	npad	1
+	npad	1 ; align next label
 $LN9@main:
 	xor	eax, eax
 	add	rsp, 32
@@ -105,7 +105,7 @@ $LN6@main$filt$:
 	mov	rdx, rcx
 	mov	ecx, DWORD PTR [rax]
 	call	filter_user_exceptions
-	npad	1
+	npad	1 ; align next label
 $LN8@main$filt$:
 	add	rsp, 32
 	pop	rbp

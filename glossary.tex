@@ -1,76 +1,76 @@
 \newglossaryentry{tail call}
 {
-  name=\RU{хвостовая рекурсия}\EN{tail call},
+  name=\RU{хвостовая рекурсия}\EN{tail call}\ESph{}\PTBRph{}\PLph{},
   description={\RU{Это когда компилятор или интерпретатор превращает рекурсию 
-  (с которой возможно это проделать, т.е., \IT{хвостовую}) в итерацию для эффективности}
-  \EN{It is when compiler (or interpreter) transforms recursion (with which it is possible: \IT{tail recursion}) 
-  into iteration for efficiency}: \url{http://en.wikipedia.org/wiki/Tail_call}}
+  (с которой возможно это проделать, т.е. \IT{хвостовую}) в итерацию для эффективности}
+  \EN{It is when the compiler (or interpreter) transforms the recursion (with which it is possible: \IT{tail recursion}) 
+  into an iteration for efficiency}\ESph{}\PTBRph{}\PLph{}: \href{http://go.yurichev.com/17105}{wikipedia}}
 }
 
 \newglossaryentry{endianness}
 {
   name=endianness,
-  description={\RU{Порядок байт}\EN{Byte order}: \ref{sec:endianness}}
+  description={\RU{Порядок байт}\EN{Byte order}\ESph{}\PTBRph{}\PLph{}: \myref{sec:endianness}}
 }
 
 \newglossaryentry{caller}
 {
   name=caller,
-  description={\RU{Ф-ция вызывающая другую ф-цию}\EN{A function calling another}}
+  description={\RU{Функция вызывающая другую функцию}\EN{A function calling another}\ESph{}\PTBRph{}\PLph{}}
 }
 
 \newglossaryentry{callee}
 {
   name=callee,
-  description={\RU{Вызываемая ф-ция}\EN{A function being called by another}}
+  description={\RU{Вызываемая функция}\EN{A function being called by another}\ESph{}\PTBRph{}\PLph{}}
 }
 
 \newglossaryentry{debuggee}
 {
   name=debuggee,
-  description={\RU{Отлаживаемая программа}\EN{A program being debugged}}
+  description={\RU{Отлаживаемая программа}\EN{A program being debugged}\ESph{}\PTBRph{}\PLph{}}
 }
 
 \newglossaryentry{leaf function}
 {
   name=leaf function,
-  description={\RU{Ф-ция не вызывающая больше никаких ф-ций}
-  \EN{A function which is not calling any other function}}
+  description={\RU{Функция не вызывающая больше никаких функций}
+  \EN{A function which does not call any other function}\ESph{}\PTBRph{}\PLph{}}
 }
 
 \newglossaryentry{link register}
 {
   name=link register,
   description=(RISC) {\RU{Регистр в котором обычно записан адрес возврата.
-  Это позволяет вызывать leaf-функции без использования стека, т.е., быстрее.}
-  \EN{A register where return address is usually stored.
-  This makes calling leaf functions without stack usage, i.e., faster.}}
+  Это позволяет вызывать leaf-функции без использования стека, т.е. быстрее}
+  \EN{A register where the return address is usually stored.
+  This makes it possible to call leaf functions without using the stack, i.e., faster}\ESph{}\PTBRph{}\PLph{}}
 }
 
 \newglossaryentry{anti-pattern}
 {
   name=anti-pattern,
   description={\RU{Нечто широко известное как плохое решение}
-  \EN{Generally considered as bad practice}}
+  \EN{Generally considered as bad practice}\ESph{}\PTBRph{}\PLph{}}
 }
 
 \newglossaryentry{stack pointer}
 {
-  name=\RU{указатель стека}\EN{stack pointer},
-  description={\RU{Регистр указывающий на место в стеке.}
-  \EN{A register pointing to the place in the stack.}}
+  name=\RU{указатель стека}\EN{stack pointer}\ESph{}\PTBRph{}\PLph{},
+  description={\RU{Регистр указывающий на место в стеке}
+  \EN{A register pointing to a place in the stack}\ESph{}\PTBRph{}\PLph{}}
 }
 
 \newglossaryentry{decrement}
 {
-  name=\RU{декремент}\EN{decrement},
-  description={\RU{Уменьшение на $1$}\EN{Decrease by $1$}}
+  name=\RU{декремент}\EN{decrement}\ESph{}\PTBRph{}\PLph{},
+  description={\RU{Уменьшение на 1}\EN{Decrease by 1}\ESph{}\PTBRph{}\PLph{}}
 }
 
 \newglossaryentry{increment}
 {
-  name=\RU{инкремент}\EN{increment},
-  description={\RU{Увеличение на $1$}\EN{Increase by $1$}}
+  name=\RU{инкремент}\EN{increment}\ESph{}\PTBRph{}\PLph{},
+  description={\RU{Увеличение на 1}\EN{Increase by 1}\ESph{}\PTBRph{}\PLph{}}
 }
 
 \newglossaryentry{loop unwinding}
@@ -78,80 +78,79 @@
   name=loop unwinding,
   description={\RU{Это когда вместо организации цикла на $n$ итераций, компилятор генерирует $n$ копий тела
   цикла, для экономии на инструкциях, обеспечивающих сам цикл}
-  \EN{It is when a compiler instead of generation loop code of $n$ iteration, generates just $n$ copies of the
-  loop body, in order to get rid of loop maintenance instructions}}
+  \EN{It is when a compiler, instead of generating loop code for $n$ iterations, generates just $n$ copies of the
+  loop body, in order to get rid of the instructions for loop maintenance}\ESph{}\PTBRph{}\PLph{}}
 }
 
 \newglossaryentry{register allocator}
 {
   name=register allocator,
-  description={\RU{Ф-ция компилятора распределяющая локальные переменные по регистрам процессора}
-  \EN{Compiler's function assigning local variables to CPU registers}}
+  description={\RU{Функция компилятора распределяющая локальные переменные по регистрам процессора}
+  \EN{The part of the compiler that assigns CPU registers to local variables}\ESph{}\PTBRph{}\PLph{}}
 }
 
 \newglossaryentry{quotient}
 {
-  name=\RU{частное}\EN{quotient},
-  description={\RU{Результат деления}\EN{Division result}}
+  name=\RU{частное}\EN{quotient}\ESph{}\PTBRph{}\PLph{},
+  description={\RU{Результат деления}\EN{Division result}\ESph{}\PTBRph{}\PLph{}}
 }
 
 \newglossaryentry{product}
 {
-  name=\RU{произведение}\EN{product},
-  description={\RU{Результат умножения}\EN{Multiplication result}}
+  name=\RU{произведение}\EN{product}\ESph{}\PTBRph{}\PLph{},
+  description={\RU{Результат умножения}\EN{Multiplication result}\ESph{}\PTBRph{}\PLph{}}
 }
 
 \newglossaryentry{NOP}
 {
   name=NOP,
-  description={``no operation'', \RU{холостая инструкция}\EN{idle instruction}}
+  description={\q{no operation}, \RU{холостая инструкция}\EN{idle instruction}\ESph{}\PTBRph{}\PLph{}}
 }
 
 \newglossaryentry{POKE}
 {
   name=POKE,
   description={\RU{Инструкция языка BASIC записывающая байт по определенному адресу}
-  	\EN{BASIC language instruction writing byte on specific address}}
+  	\EN{BASIC language instruction for writing a byte at a specific address}\ESph{}\PTBRph{}\PLph{}}
 }
 
 \newglossaryentry{keygenme}
 {
   name=keygenme,
   description={\RU{Программа, имитирующая защиту вымышленной программы, для которой нужно сделать 
-  генератор ключей/лицензий}\EN{A program which imitates fictional software protection,
-  for which one needs to make a keys/licenses generator}}
+  генератор ключей/лицензий}\EN{A program which imitates software protection,
+  for which one needs to make a key/license generator}\ESph{}\PTBRph{}\PLph{}}
 }
 
 \newglossaryentry{dongle}
 {
   name=dongle,
   description={\RU{Небольшое устройство подключаемое к LPT-порту для принтера (в прошлом) или к USB}
-  \EN{Dongle is a small piece of hardware connected to LPT printer port (in past) or to USB}.
+  \EN{Dongle is a small piece of hardware connected to LPT printer port (in past) or to USB}\ESph{}\PTBRph{}\PLph{}.
   \RU{Исполняло функции security token-а, имела память и, иногда,
-  секретную (крипто-)хеширующую функцию}
-  \EN{Its function was akin to security token, it has some memory and, sometimes,
-  secret (crypto-)hashing algorithm}.}
+  секретную (крипто-)хеширующую функцию}\EN{Its function was similar to a security token, 
+  it has some memory and, sometimes, a secret (crypto-)hashing algorithm}\ESph{}\PTBRph{}\PLph{}}
 }
 
 \newglossaryentry{thunk function}
 {
   name=thunk function,
-  description={\RU{Крохотная функция делающая только одно: вызывающая другую функцию.}
-  \EN{Tiny function with a single role: call another function.}}
+  description={\RU{Крохотная функция делающая только одно: вызывающая другую функцию}
+  \EN{Tiny function with a single role: call another function}\ESph{}\PTBRph{}\PLph{}}
 }
 
 \newglossaryentry{user mode}
 {
   name=user mode,
   description={\RU{Режим CPU с ограниченными возможностями в котором он исполняет прикладное ПО. ср.}
-  \EN{A restricted CPU mode in which it executes all applied software code. cf.} \gls{kernel mode}.}
+  \EN{A restricted CPU mode in which it all application software code is executed. cf.}\ESph{}\PTBRph{}\PLph{} \gls{kernel mode}}
 }
 
 \newglossaryentry{kernel mode}
 {
   name=kernel mode,
   description={\RU{Режим CPU с неограниченными возможностями в котором он исполняет ядро OS и драйвера. ср.}
-  \EN{A restrictions-free CPU mode in which it executes OS kernel and drivers. cf.} \gls{user mode}.}
+  \EN{A restrictions-free CPU mode in which the OS kernel and drivers execute. cf.}\ESph{}\PTBRph{}\PLph{} \gls{user mode}}
 }
 
 \newglossaryentry{Windows NT}
@@ -164,12 +163,12 @@
 {
   name=atomic operation,
   description={
-  ``$\alpha{}\tau{}o\mu{}o\varsigma{}$''
-  %``atomic''
-  \RU{означает ``неделимый'' в греческом языке, так что атомарная операция
+  \q{$\alpha{}\tau{}o\mu{}o\varsigma{}$}
+  %\q{atomic}
+  \RU{означает \q{неделимый} в греческом языке, так что атомарная операция ---
   это операция которая гарантированно не будет прервана другими тредами}
-  \EN{mean ``indivisible'' in Greek, so atomic operation is what guaranteed not
-  to be broke up during operation by other threads}}
+  \EN{stands for \q{indivisible} in Greek, so an atomic operation is guaranteed not
+  to be interrupted by other threads}\ESph{}\PTBRph{}\PLph{}}
 }
 
 % to be proofreaded (begin)
@@ -177,8 +176,9 @@
 {
   name=NaN,
   description={
-  	\RU{не число: специальные случаи чисел с плавающей запятой, обычно сигнализирующие об ошибках}
-	\EN{not a number: special cases of floating point numbers, usually signaling about errors}
+  	\RU{не число: специальные случаи чисел с плавающей запятой, 
+  	обычно сигнализирующие об ошибках}\EN{not a number: 
+  	a special cases for floating point numbers, usually signaling about errors}\ESph{}\PTBRph{}\PLph{}
   }
 }
 
@@ -186,56 +186,56 @@
 {
   name=basic block,
   description={
-  	\RU{группа инструкций не имеющая инструкций переходов,
+  	\RU{группа инструкций, не имеющая инструкций переходов,
 	а также не имеющая переходов в середину блока извне.
-	В IDA он выглядит как просто список инструкций без строк-разрывов}
-	\EN{a group of instructions not having jump/branch instructions, and also not having
-	jumps inside block from the outside.
-	In IDA it looks just like as a list of instructions without breaking empty lines}
+	В \IDA он выглядит как просто список инструкций без строк-разрывов}\EN{a group of 
+	instructions that do not have jump/branch instructions, and also don't have
+	jumps inside the block from the outside.
+	In \IDA it looks just like as a list of instructions without empty lines}\ESph{}\PTBRph{}\PLph{}
   }
 }
 
 \newglossaryentry{NEON}
 {
   name=NEON,
-  description={\ac{AKA} ``Advanced SIMD''\EMDASH\ac{SIMD} \RU{от}\EN{from} ARM}
+  description={\ac{AKA} \q{Advanced SIMD}\EMDASH\ac{SIMD} \RU{от}\EN{from}\ESph{}\PTBRph{}\PLph{} ARM}
 }
 
 \newglossaryentry{reverse engineering}
 {
   name=reverse engineering,
   description={\RU{процесс понимания как устроена некая вещь, иногда, с целью клонирования оной}
-  \EN{act of understanding, how the thing works, sometimes, in order to clone it}}
+  \EN{act of understanding how the thing works, sometimes in order to clone it}\ESph{}\PTBRph{}\PLph{}}
 }
 
 \newglossaryentry{compiler intrinsic}
 {
   name=compiler intrinsic,
-  description={\RU{Специфичная для компилятора ф-ция не являющаяся обычной библиотечной ф-цией.
+  description={\RU{Специфичная для компилятора функция не являющаяся обычной библиотечной функцией.
 	Компилятор вместо её вызова генерирует определенный машинный код.
 	Нередко, это псевдофункции для определенной инструкции \ac{CPU}. Читайте больше:}
-	\EN{A function specific to a compiler which is not usual library function.
-	Compiler generate a specific machine code instead of call to it.
-	It is often a pseudofunction for specific \ac{CPU} instruction. Read more:} (\ref{sec:compiler_intrinsic})}
+	\EN{A function specific to a compiler which is not an usual library function.
+	The compiler generates a specific machine code instead of a call to it.
+	Often, it's a pseudofunction for a specific \ac{CPU} instruction. Read more:}\ESph{}\PTBRph{}\PLph{} (\myref{sec:compiler_intrinsic})}
 }
 
 \newglossaryentry{heap}
 {
   name=heap,
   description={\RU{(куча) обычно, большой кусок памяти предоставляемый \ac{OS}, так что прикладное ПО может делить его
-  как захочет. malloc()/free() работают с кучей.}
-  \EN{usually, a big chunk of memory provided by \ac{OS} so that applications can divide it by themselves as they wish.
-  malloc()/free() works with heap.}}
+  как захочет. malloc()/free() работают с кучей}
+  \EN{usually, a big chunk of memory provided by the \ac{OS} so that applications can divide it by themselves as they wish.
+  malloc()/free() work with the heap}\ESph{}\PTBRph{}\PLph{}}
 }
 
 \newglossaryentry{name mangling}
 {
   name=name mangling,
-  description={\RU{применяется как минимум в Си++, где компилятору нужно закодировать имя класса,
+  description={\RU{применяется как минимум в \Cpp, где компилятору нужно закодировать имя класса,
   метода и типы аргументов в одной
-  строке, которая будет внутренним именем ф-ции. читайте также здесь}
-  \EN{used at least in C++, where compiler need to encode name of class, method and argument types in the one string,
-  which will become internal name of the function. read more here}: \ref{namemangling}}
+  строке, которая будет внутренним именем функции. читайте также здесь}
+  \EN{used at least in \Cpp, where the compiler needs to encode the name of class, method and argument types in one string,
+  which will become the internal name of the function. You can read more about it here}\ESph{}\PTBRph{}\PLph{}: \myref{namemangling}}
 }
 
 \newglossaryentry{xoring}
@@ -243,51 +243,103 @@
   name=xoring,
   description={\RU{нередко применяемое в английском языке, означает применение операции 
   \ac{XOR}}
-  \EN{often used in English language, meaning applying \ac{XOR} operation}}
+  \EN{often used in the English language, which implying applying the \ac{XOR} operation}\ESph{}\PTBRph{}\PLph{}}
 }
 
 \newglossaryentry{security cookie}
 {
   name=security cookie,
   description={\RU{Случайное значение, разное при каждом исполнении. Читайте больше об этом тут}
-  \EN{A random value, different at each execution. Read more about it}: \ref{subsec:BO_protection}}
+  \EN{A random value, different at each execution. You can read more about it here}\ESph{}\PTBRph{}\PLph{}: \myref{subsec:BO_protection}}
 }
 
 \newglossaryentry{tracer}
 {
   name=tracer,
   description={\RU{Моя простейшая утилита для отладки. Читайте больше об этом тут}
-  \EN{My own simple debugging tool. Read more about it}: \ref{tracer}}
+  \EN{My own simple debugging tool. You can read more about it here}\ESph{}\PTBRph{}\PLph{}: \myref{tracer}}
 }
 
 \newglossaryentry{GiB}
 {
   name=GiB,
   description={\RU{Гибибайт: $2^{30}$ или 1024 мебибайт или 1073741824 байт}
-  \EN{Gibibyte: $2^{30}$ or 1024 mebibytes or 1073741824 bytes}}
+  \EN{Gibibyte: $2^{30}$ or 1024 mebibytes or 1073741824 bytes}\ESph{}\PTBRph{}\PLph{}}
 }
 
 \newglossaryentry{CP/M}
 {
   name=CP/M,
   description={Control Program for Microcomputers: \RU{очень простая дисковая \ac{OS} использовавшаяся перед}
-  \EN{a very basic disk \ac{OS} used before} MS-DOS}
+  \EN{a very basic disk \ac{OS} used before}\ESph{}\PTBRph{}\PLph{} MS-DOS}
 }
 
 \newglossaryentry{stack frame}
 {
   name=stack frame,
-  description={\RU{Часть стека, в которой хранится информация связанная с текущей ф-цией: локальные переменные,
-  аргументы ф-ции, \ac{RA}, итд}\EN{Part of stack containing information specific to the current functions:
-  local variables, function arguments, \ac{RA}, etc}}
+  description={\RU{Часть стека, в которой хранится информация, связанная с текущей функцией: локальные переменные,
+  аргументы функции, \ac{RA}, \etc{}.}\EN{A part of the stack that contains information specific to the current function:
+  local variables, function arguments, \ac{RA}, \etc{}}\ESph{}\PTBRph{}\PLph{}}
 }
 
 \newglossaryentry{jump offset}
 {
   name=jump offset,
   description={\RU{Часть опкода JMP или Jcc инструкции, просто прибавляется к адресу следующей инструкции,
-  и так вычисляется новый \ac{PC}. Может быть отрицательным.}\EN{a part of JMP or Jcc instruction opcode, 
-  it just to be added to the address
-  of the next instruction, and thus is how new \ac{PC} is calculated. May be negative as well.}}
+  и так вычисляется новый \ac{PC}. Может быть отрицательным}\EN{a part of the JMP or Jcc instruction's opcode, 
+  to be added to the address
+  of the next instruction, and this is how the new \ac{PC} is calculated. May be negative as well}\ESph{}\PTBRph{}\PLph{}}
 }
 
+\newglossaryentry{integral type}
+{
+  name=\RU{интегральный тип данных}\EN{integral data type}\ESph{}\PTBRph{}\PLph{},
+  description={\RU{обычные числа, но не вещественные. могут использоваться для передачи булевых типов и перечислений (enumerations)}
+  \EN{usual numbers, but not a real ones. may be used for passing variables of boolean data type and enumerations}\ESph{}\PTBRph{}\PLph{}}
+}
+
+\newglossaryentry{real number}
+{
+  name=\RU{вещественное число}\EN{real number}\ESph{}\PTBRph{}\PLph{},
+  description={\RU{числа, которые могут иметь точку. в \CCpp это \Tfloat и \Tdouble}
+  \EN{numbers which may contain a dot. this is \Tfloat and \Tdouble in \CCpp}\ESph{}\PTBRph{}\PLph{}}
+}
+
+\newglossaryentry{PDB}
+{
+  name=PDB,
+  description={(Win32) \RU{Файл с отладочной информацией, обычно просто имена функций, 
+  но иногда имена аргументов функций и локальных переменных}
+  \EN{Debugging information file, usually just function names, but sometimes also function
+  arguments and local variables names}\ESph{}\PTBRph{}\PLph{}}
+}
+
+\newglossaryentry{NTAPI}
+{
+  name=NTAPI,
+  description={\RU{\ac{API} доступное только в линии Windows NT. 
+  Большей частью не документировано Microsoft-ом}\EN{\ac{API} available only in the Windows NT line. 
+  Largely not documented by Microsoft}\ESph{}\PTBRph{}\PLph{}}
+}
+
+\newglossaryentry{stdout}
+{
+  name=stdout,
+  description={standard output}
+}
+
+\newglossaryentry{word}
+{
+  name=word,
+  description={\EN{data type fitting in \ac{GPR}}\RU{(слово) тип данных помещающийся в \ac{GPR}\ESph{}\PTBRph{}\PLph{}}. 
+  \RU{В компьютерах старше персональных, память часто измерялась не в байтах, 
+  а в словах}\EN{In the computers older than PCs, 
+  the memory size was often measured in words rather than bytes}\ESph{}\PTBRph{}\PLph{}}
+}
+
+\newglossaryentry{arithmetic mean}
+{
+  name=\RU{среднее арифметическое}\EN{arithmetic mean}\ESph{}\PTBRph{}\PLph{},
+  description={\EN{a sum of all values divided by their count}
+  \RU{сумма всех значений, разделенная на их количество}\ESph{}\PTBRph{}\PLph{}}
+}

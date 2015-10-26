@@ -2,19 +2,17 @@
 \appendix
 \addcontentsline{toc}{part}{\RU{Приложение}\EN{Appendix}}
 
-\chapter{\RU{Общая терминология}\EN{Common terminology}}
-
-\begin{description}
-\item[\RU{слово}\EN{word}] \RU{обычно, слово это переменная помещающаяся в \ac{GPR}
-	\ac{CPU}}\EN{usually is a variable fitting into \ac{GPR} of \ac{CPU}}.
-	\RU{В компьютерах старше персональных, память часто измерялась не в байтах, а в словах}
-	\EN{In the computers older than personal, memory size was often measured in words rather then bytes}.
-\end{description}
-
 % chapters
 \input{appendix/x86/main}
+\ifdefined\IncludeARM
 \input{appendix/ARM/main}
+\fi
+\ifdefined\IncludeMIPS
+\input{appendix/MIPS/main}
+\fi
+\ifx\LITE\undefined
 \input{appendix/GCC_library}
 \input{appendix/MSVC_library}
 \input{appendix/cheatsheets}
 \input{appendix/exercise_solutions/main}
+\fi

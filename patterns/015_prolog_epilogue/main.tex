@@ -1,9 +1,9 @@
-\chapter{\RU{Пролог и эпилог в функции}\EN{Function prologue and epilogue}}
+\chapter{\RU{Пролог и эпилог функций}\EN{Function prologue and epilogue}}
 \label{sec:prologepilog}
 \index{Function epilogue}
 \index{Function prologue}
 
-\RU{Пролог функции ~--- это инструкции в самом начале функции. Как правило это что-то вроде такого
+\RU{Пролог функции это инструкции в самом начале функции. Как правило это что-то вроде такого
 фрагмента кода:}
 \EN{A function prologue is a sequence of instructions at the start of a function. It often looks something like the following
 code fragment:}
@@ -16,21 +16,21 @@ code fragment:}
 
 \RU{Эти инструкции делают следующее: сохраняют значение регистра \EBP на будущее, выставляют \EBP равным \ESP, 
 затем подготавливают место в стеке для хранения локальных переменных.}
-\EN{What these instruction do: saves the value in the \EBP register,
-sets the value of the \EBP register to the value of the \ESP and then allocates space on the stack 
+\EN{What these instruction do: save the value in the \EBP register,
+set the value of the \EBP register to the value of the \ESP and then allocate space on the stack 
 for local variables.}
 
 \RU{\EBP сохраняет свое значение на протяжении всей функции, он будет использоваться здесь для доступа 
 к локальным переменным и аргументам. Можно было бы использовать и \ESP, но он постоянно меняется и 
 это не очень удобно.}
-\EN{The value in the \EBP is fixed over a period of function execution and it is to be used for local variables and 
+\EN{The value in the \EBP stays the same over the period of the function execution and is to be used for local variables and 
 arguments access. 
-One can use \ESP, but it is changing over time and it is not convenient.}
+For the same purpose one can use \ESP, but since it changes over time this approach is not too convenient.}
 
-\RU{Эпилог функции аннулирует выделенное место в стеке, возвращает значение \EBP на то что было и возвращает 
+\RU{Эпилог функции аннулирует выделенное место в стеке, восстанавливает значение \EBP на старое и возвращает 
 управление в вызывающую функцию:}
-\EN{The function epilogue frees allocated space in the stack, returns the value in the \EBP register back to initial state 
-and returns the control flow to \gls{callee}:}
+\EN{The function epilogue frees the allocated space in the stack, returns the value in the \EBP register back to its initial state 
+and returns the control flow to the \gls{callee}:}
 
 \begin{lstlisting}
     mov    esp, ebp
@@ -38,25 +38,15 @@ and returns the control flow to \gls{callee}:}
     ret    0
 \end{lstlisting}
 
-\RU{Пролог и эпилог ф-ции обычно находятся в в дизассемблерах для размежевания ф-ций 
-друг от друга}\EN{Function prologues and epilogues are usually detected in disassemblers for function
-delimitation from each other}.
+% what about calling convention?
+\RU{Пролог и эпилог функции обычно находятся в дизассемблерах для отделения функций друг от друга.}
+\EN{Function prologues and epilogues are usually detected in disassemblers for function delimitation.}
 
 \section{\Recursion}
 
 \index{\Recursion}
 \RU{Наличие эпилога и пролога может несколько ухудшить эффективность рекурсии.}
-\EN{Epilogues and prologues can make recursion performance worse.}
+\EN{Epilogues and prologues can negatively affect the recursion performance.}
 
-\RU{Например, однажды я написал функцию для поиска нужного узла в двоичном дереве. 
-Рекурсивно она выглядела очень красиво, но из-за того, что при каждом вызове тратилось время на эпилог и пролог, 
-все это работало в несколько раз медленнее чем та же функция, но без рекурсии.}
-\EN{For example, once upon a time I wrote a function to seek the correct node in a binary tree. 
-As a recursive function it would look stylish but since additional time
-is to be spend at each function call
-for the prologue/epilogue, it was working a couple of times slower than an iterative (recursion-free)
-implementation.}
-
-\index{\Recursion!Tail recursion}
-\RU{Кстати, поэтому есть такая вещь как \glslink{tail call}{хвостовая рекурсия}}
-\EN{By the way, that is the reason compilers use \gls{tail call}}.
+\EN{More about recursion in this book}\RU{Больше о рекурсии в этой книге}: 
+\myref{Recursion_and_tail_call}.

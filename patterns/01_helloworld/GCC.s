@@ -1,7 +1,7 @@
 	.file	"1_1.c"
 	.section	.rodata
 .LC0:
-	.string	"hello, world"
+	.string	"hello, world\n"
 	.text
 	.globl	main
 	.type	main, @function

@@ -1,103 +1,51 @@
-\section{\RU{Предисловие}\EN{Preface}}
+\section*{\RU{Предисловие}\EN{Preface}\PTBRph{}\ESph{}\PLph{}}
 
+\iffalse
 \RU{Здесь (будет) немного моих заметок о \gls{reverse engineering} на русском языке для начинающих, 
 для тех кто хочет научиться понимать создаваемый \CCpp компиляторами код для x86 (коего, 
 практически, больше всего остального) и ARM.}
-\EN{Here are some of my notes about \gls{reverse engineering} in English language for 
-those beginners who would like to learn to understand x86 (which accounts for almost 
+\EN{Here are some of my notes in English for beginners in \gls{reverse engineering}
+who would like to learn to understand x86 (which accounts for almost
 all executable software in the world) and ARM code created by \CCpp compilers.}
+\fi
 
-\RU{У термина ``\gls{reverse engineering}'' несколько популярных значений: 
+\RU{У термина \q{\gls{reverse engineering}} несколько популярных значений:
 1) исследование скомпилированных
 программ; 2) сканирование трехмерной модели для последующего копирования;
 3) восстановление структуры СУБД. Настоящий сборник заметок
-связан с первым значением}
-\EN{There are several popular meanings of the term ``\gls{reverse engineering}'': 
-1) reverse engineering of software: researching of compiled programs;
-2) 3D model scanning and reworking in order to make a copy of it;
+связан с первым значением.}
+\EN{There are several popular meanings of the term \q{\gls{reverse engineering}}:
+1) The reverse engineering of software: researching compiled programs;
+2) The scanning of 3D structures and the subsequent digital manipulation required order to duplicate them;
 3) recreating \ac{DBMS} structure.
-These notes are related to the first meaning.}
+This book is about the first meaning.}
 
-\subsection*{\RU{Рассмотренные темы}\EN{Topics discussed}}
+\ifx\LITE\undefined
+\subsection*{\RU{Рассмотренные темы}\EN{Topics discussed in-depth}\PTBRph{}\ESph{}\PLph{}}
 
-x86, ARM.
+x86/x64, ARM/ARM64, MIPS, Java/JVM.
 
-\subsection*{\RU{Затронутые темы}\EN{Topics touched}}
+\subsection*{\RU{Затронутые темы}\EN{Topics touched upon}\PTBRph{}\ESph{}\PLph{}}
 
-\oracle (\ref{oracle}),
-Itanium (\ref{itanium}),
-\RU{донглы для защиты от копирования}\EN{copy-protection dongles} (\ref{dongles}), 
-LD\_PRELOAD (\ref{ld_preload}),
+\oracle (\myref{oracle}),
+Itanium (\myref{itanium}),
+\RU{донглы для защиты от копирования}\EN{copy-protection dongles} (\myref{dongles}), 
+LD\_PRELOAD (\myref{ld_preload}),
 \RU{переполнение стека}\EN{stack overflow}, 
 \ac{ELF},
-\RU{формат файла PE в win32}\EN{win32 PE file format} (\ref{win32_pe}),
-x86-64 (\ref{x86-64}),
-\RU{критические секции}\EN{critical sections} (\ref{critical_sections}),
-\RU{сисколлы}\EN{syscalls} (\ref{syscalls}), 
+\RU{формат файла PE в win32}\EN{win32 PE file format} (\myref{win32_pe}),
+x86-64 (\myref{x86-64}),
+\RU{критические секции}\EN{critical sections} (\myref{critical_sections}),
+\RU{системные вызовы}\EN{syscalls} (\myref{syscalls}), 
 \ac{TLS},
-\RU{адресно-независимый код}\EN{position-independent code} (\ac{PIC}) (\ref{sec:PIC}), 
-profile-guided optimization (\ref{PGO}),
-C++ STL (\ref{cpp_STL}),
-OpenMP (\ref{openmp}),
-SEH (\label{sec:SEH}).
+\RU{адресно-независимый код}\EN{position-independent code} (\ac{PIC}) (\myref{sec:PIC}), 
+profile-guided optimization (\myref{PGO}),
+C++ STL (\myref{cpp_STL}),
+OpenMP (\myref{openmp}),
+SEH (\myref{sec:SEH}).
+\fi
 
-\subsection*{\RU{Мини-}\EN{Mini-}\ac{FAQ}}
-
-\newcommand{\FNURLREDDIT}{\footnote{\url{http://www.reddit.com/r/ReverseEngineering/}}}
-
-\begin{itemize}
-\item
-Q: \RU{Нужно ли учиться понимать язык ассемблера в наше время?}
-\EN{Should one learn to understand assembly language these days?} \\
-A: \RU{Да: ради того чтобы понимать лучше внутреннее устройство, отлаживать код лучше и быстрее.}
-\EN{Yes: in order to have deeper understanding of the internals and to debug your software better and faster.}
-
-\item
-Q: \RU{Нужно ли учиться писать на языке ассемблера в наше время?}
-\EN{Should one learn to write in assembly language these days?} \\
-A: \RU{Пожалуй, нет, если только не писать низкоуровневый код для \ac{OS}.}
-\EN{Unless one writes low-level \ac{OS} code, probably no.}
-
-\item
-Q: \RU{Но для написания очень оптимизированных процедур?}
-\EN{But what about writing highly optimized routines?} \\
-A: \RU{Нет, современные компиляторы \CCpp делают это лучше.}
-\EN{No, modern \CCpp compilers do this job better.}
-
-\item
-Q: \RU{Нужно ли знать внутреннее устройство микропроцессоров}
-\EN{Should I learn microprocessor internals}? \\
-A: \RU{Современные}\EN{Modern} \ac{CPU}\RU{ очень сложные}\EN{-s are very complex}.
-\RU{Если вы не собираетесь писать очень оптимизированный код
-или не работаете над кодегенератором компилятора,
-тогда устройство CPU можно изучать только в общих чертах}
-\EN{If you do not plan to write highly optimized code or if you do not work on compiler's code generator
-then you may still learn internals in bare outlines.}
-\footnote{\RU{Очень хороший текст на эту тему}\EN{Very good text about it}: \cite{AgnerFog}}.
-\RU{В то же время для понимания и анализа кода
-достаточно только знать \ac{ISA}, назначения регистров, т.е., ``внешнюю'' часть \ac{CPU}, доступную
-для прикладного программиста}
-\EN{At the same time, in order to understand and analyze compiled code it is enough to know
-only \ac{ISA}, register's descriptions, i.e., the ``outside'' part of a \ac{CPU} that is available to
-an application programmer}.
-
-\item
-Q: \RU{И всё-таки, зачем мне учить ассемблер}\EN{So why should I learn assembly language anyway}? \\
-A: \RU{В основном для лучшего понимания происходящего во время отладки и для исследования
-программ без наличия исходных кодов, включая зловреды (или вредоносы)
-\footnote{современные (2013) русскоязычные термины для malware}}
-\EN{Mostly to better understand what is going on while debugging and for \gls{reverse engineering} without source code, including, but not limited to, malware}.
-
-\item
-Q: \RU{Как можно найти работу reverse engineer-а}\EN{How would I search for a reverse engineering job}? \\
-A: \RU{На reddit, посвященному RE\FNURLREDDIT, время от времени бывают hiring thread}
-\EN{There are hiring threads that appear from time to time on reddit devoted to RE\FNURLREDDIT}
-(\href{http://www.reddit.com/r/ReverseEngineering/comments/1hywvr/rreverseengineerings_q3_2013_hiring_thread/}{2013 Q3}, 
-\href{http://www.reddit.com/r/ReverseEngineering/comments/1vui22/rreverseengineerings_2014_hiring_thread/}{2014}).
-\RU{Посмотрите там}\EN{Try to take a look there}.
-\end{itemize}
-
-\subsection*{\RU{Об авторе}\EN{About the author}}
+\subsection*{\RU{Об авторе}\EN{About the author}\PTBRph{}\ESph{}\PLph{}}
 
 \begin{tabularx}{\textwidth}{ l X }
 
@@ -106,67 +54,158 @@ A: \RU{На reddit, посвященному RE\FNURLREDDIT, время от в�
 }
 
 &
-\RU{Денис Юричев ~--- опытный reverse engineer и программист.
-С его резюме можно ознакомиться на его сайте}
-\EN{Dennis Yurichev is an experienced reverse engineer and programmer.
-His CV is available on his website}\footnote{\url{http://yurichev.com/Dennis_Yurichev.pdf}}. \\
+\RU{Денис Юричев~--- опытный reverse engineer и программист.}%
+\EN{Dennis Yurichev is an experienced reverse engineer and programmer.}
+\EN{He can be contacted by email:}%
+\RU{С ним можно контактировать по емейлу:} \textbf{\EMAIL{}}, 
+\EN{or on Skype:}\RU{или по Skype:} \textbf{dennis.yurichev}.
+
 % FIXME: no link. \tablefootnote doesn't work
 \end{tabularx}
 
-\subsection*{\RU{Благодарности}\EN{Thanks}}
+% subsections:
+\input{praise}
 
-\HERMIT, \RU{Слава ''Avid'' Казаков, Станислав ''Beaver'' Бобрицкий, Александр Лысенко, 
-Александр ''Lstar'' Черненький, Андрей Зубинский, Владимир Ботов}
-\EN{Slava ''Avid'' Kazakov, Stanislav ''Beaver'' Bobrytskyy, Alexander Lysenko, 
-Alexander ''Lstar'' Chernenkiy, Andrew Zubinski, Vladimir Botov}, \RU{Марк}\EN{Mark} ``Logxen'' \RU{Купер}\EN{Cooper},
-Shell Rocket, Yuan Jochen Kang, Arnaud Patard (rtp \RU{на}\EN{on} \#debian-arm IRC), 
-\RU{и всем тем на github.com кто присылал замечания и коррективы}\EN{and all the folks on github.com
-who have contributed notes and corrections}.
+\subsection*{\RU{Благодарности}\EN{Thanks}\PTBRph{}\ESph{}\PLph{}}
 
-\RU{Было использовано множество пакетов \LaTeX{}: их авторов я также хотел бы поблагодарить}
-\EN{A lot of \LaTeX{} packages were used: I would thank their authors as well}.
+\RU{Тем, кто много помогал мне отвечая на массу вопросов}\EN{For patiently answering all my questions}:
+\HERMIT, \RU{Слава \q{Avid} Казаков}\EN{Slava \q{Avid} Kazakov}.
 
-\subsection*{\RU{Отзывы об этой книге}\EN{Praise for \IT{\TITLE}}}
+\RU{Тем, кто присылал замечания об ошибках и неточностях}\EN{For sending me notes
+about mistakes and inaccuracies}:
+\RU{Станислав \q{Beaver} Бобрицкий, Александр Лысенко}%
+\EN{Stanislav \q{Beaver} Bobrytskyy, Alexander Lysenko}, Shell Rocket, Zhu Ruijin, Changmin Heo.
 
-\begin{itemize}
-\item ``It's very well done .. and for free .. amazing.''\footnote{\url{https://twitter.com/daniel_bilar/status/436578617221742593}} Daniel Bilar, Siege Technologies, LLC.
+\RU{Просто помогали разными способами}\EN{For helping me in other ways}:
+\RU{Андрей Зубинский}\EN{Andrew Zubinski}, 
+Arnaud Patard (rtp \RU{на}\EN{on} \#debian-arm IRC),
+\EN{Aliaksandr Autayeu}\RU{Александр Автаев}.
 
-\item ``...excellent and free''\footnote{\url{https://twitter.com/petefinnigan/status/400551705797869568}} Pete Finnigan, \RU{гуру по безопасности }\oracle\EN{ security guru}.
+\RU{Переводчикам на китайский язык}\EN{For translating the book into Simplified Chinese}: Antiy Labs (\href{http://antiy.cn}{antiy.cn}) \AndENRU Archer.
 
-\item ``... book is interesting, great job!'' Michael Sikorski, \RU{автор книги}\EN{author of} \IT{Practical Malware Analysis: The Hands-On Guide to Dissecting Malicious Software}.
+\RU{Переводчику на корейский язык}\EN{For translating the book into Korean}: Byungho Min.
 
-\item ``... my compliments for the very nice tutorial!'' Herbert Bos, \RU{профессор университета}\EN{full professor at the} Vrije Universiteit Amsterdam.
+\RU{Корректорам}\EN{For proofreading}:
+\RU{Александр \q{Lstar} Черненький}\EN{Alexander \q{Lstar} Chernenkiy},
+\RU{Владимир Ботов}\EN{Vladimir Botov},
+\RU{Андрей Бражук}\EN{Andrei Brazhuk},
+\RU{Марк}\EN{Mark} ``Logxen'' \RU{Купер}\EN{Cooper},
+Yuan Jochen Kang, Mal Malakov, Lewis Porter, Jarle Thorsen.
 
-\item ``... It is amazing and unbelievable.'' Luis Rocha, CISSP / ISSAP, Technical Manager, Network \& Information Security at Verizon Business.
+\RU{Васил Колев сделал очень много исправлений и указал на многие ошибки.}
+\EN{Vasil Kolev did a great amount of work in proofreading and correcting many mistakes.}
 
-\item ``Thanks for the great work and your book.'' Joris van de Vis, SAP Netweaver \& Security specialist.
+\RU{За иллюстрации и обложку: Андрей Нечаевский.}\EN{For illustrations and cover art: Andy Nechaevsky.}
 
-\item ``... reasonable intro to some of the techniques.''\footnote{\url{http://www.reddit.com/r/IAmA/comments/24nb6f/i_was_a_professional_password_cracker_who_taught/}} (Mike Stay, teacher at the Federal Law Enforcement Training Center, Georgia, US.)
+\RU{И ещё всем тем на github.com кто присылал замечания и исправления.}
+\EN{Thanks also to all the folks on github.com who have contributed notes and corrections.}
 
-\end{itemize}
+\RU{Было использовано множество пакетов \LaTeX. Их авторов я также хотел бы поблагодарить.}
+\EN{Many \LaTeX\ packages were used: I would like to thank the authors as well.}
 
-\input{donate}
+\subsubsection*{\RU{Жертвователи}\EN{Donors}}
 
-\subsection*{\RU{Об иллюстрациях}\EN{About illustrations}}
+\EN{Those who supported me during the time when I wrote significant part of the book:}%
+\RU{Те, кто поддерживал меня во время написании этой книги:}
 
-\RU{Читатели, привыкшие читать интернет-страницы, вероятно привыкли к тому что иллюстрации
-находятся там же, где и должны}\EN{Those readers who are used to read a lot in the Internet, expects
-seeing illustrations at the places where they should be}.
-\RU{Это потому что там нет разбивок на страницы, там она только одна}\EN{It's because there 
-are no pages at all, only single one}.
-\RU{В книгах же, иллюстрации далеко не всегда удается вставить в том контексте где нужно}
-\EN{It's not possible to place illustrations in the book at the suitable context}.
-\RU{Так что, здесь бывает так, что они все находятся в конце секции,
-и по тексту на них ставятся ссылки вроде}\EN{So, in this book, illustrations can be at the end of section,
-and a referenceses in the text may be present, like}
-``\figname{}1.1''.
+2 * Oleg Vygovsky (50+100 UAH), 
+Daniel Bilar ($\$$50), 
+James Truscott ($\$$4.5),
+Luis Rocha ($\$$63), 
+Joris van de Vis ($\$$127), 
+Richard S Shultz ($\$$20), 
+Jang Minchang ($\$$20), 
+Shade Atlas (5 AUD), 
+Yao Xiao ($\$$10),
+Pawel Szczur (40 CHF), 
+Justin Simms ($\$$20), 
+Shawn the R0ck ($\$$27), 
+Ki Chan Ahn ($\$$50), 
+Triop AB (100 SEK), 
+Ange Albertini (\euro{}10+50),
+Sergey Lukianov (300 RUR), 
+Ludvig Gislason (200 SEK), 
+Gérard Labadie (\euro{}40), 
+Sergey Volchkov (10 AUD),
+Vankayala Vigneswararao ($\$$50),
+Philippe Teuwen ($\$$4),
+Martin Haeberli ($\$$10),
+Victor Cazacov (\euro{}5),
+Tobias Sturzenegger (10 CHF),
+Sonny Thai ($\$$15),
+Bayna AlZaabi ($\$$75),
+Redfive B.V. (\euro{}25),
+Joona Oskari Heikkilä (\euro{}5),
+Marshall Bishop ($\$$50),
+Nicolas Werner (\euro{}12),
+Jeremy Brown ($\$$100),
+Alexandre Borges ($\$$25),
+Vladimir Dikovski (\euro{}50),
+Jiarui Hong (100.00 SEK),
+Jim Di (500 RUR),
+Tan Vincent ($\$$30),
+Sri Harsha Kandrakota (10 AUD),
+Pillay Harish (10 SGD),
+Timur Valiev (230 RUR),
+Carlos Garcia Prado (\euro{}10),
+Salikov Alexander (500 RUR),
+Oliver Whitehouse (30 GBP),
+Katy Moe ($\$$14),
+Maxim Dyakonov ($\$$3),
+Sebastian Aguilera (\euro{}20),
+Hans-Martin Münch (\euro{}15),
+Jarle Thorsen (100 NOK),
+Vitaly Osipov ($\$$100),
+Yuri Romanov (1000 RUR),
+Aliaksandr Autayeu (\euro{}10),
+Tudor Azoitei ($\$$40),
+Z0vsky (\euro{}10),
+Yu Dai ($\$$10). 
+
+\RU{Огромное спасибо каждому!}\EN{Thanks a lot to every donor!}
+
+% subsections
+\input{FAQ}
+
 \ifdefined\ebook
-
-\RU{Это версия формата A5 для электронных читалок}\EN{This is A5-format version for e-book readers}. 
+\RU{Это версия формата A5 для электронных читалок}\EN{This is the A5-format version for e-book readers}. 
 \RU{Хотя, тут всё то же самое, но иллюстрации уменьшены и не очень хорошо читаемы}
-\EN{Although, it mostly the same, but illustrations are resized and probably not readable}. 
-\RU{Извините}\EN{Sorry for this}! \RU{Вы всегда можете посмотреть их в версии формата A4 здесь}
-\EN{You can always view them in A4-format version here}: \url{http://yurichev.com/RE-book.html}.
+\EN{Although the content is mostly the same, the illustrations are resized and probably not readable}. 
+\EN{You may try to change scale in your e-book reader.}
+\RU{Вы можете попробовать изменить масштаб в вашей читалке.}
+\RU{Так или иначе, вы всегда можете посмотреть их в версии формата A4 здесь}
+\EN{Otherwise, you can always view them in the A4-format version here}: \href{http://go.yurichev.com/17009}{beginners.re}.
 \fi
 
 % {\RU{Целевая аудитория}\EN{Target audience}}
+
+\subsection*{\RU{О переводе на корейский язык}\EN{About the Korean translation}\PTBRph{}\ESph{}\PLph{}}
+
+\EN{In January 2015, the Acorn publishing company (\href{http://www.acornpub.co.kr}{www.acornpub.co.kr}) in South Korea did a huge amount of work in translating and publishing 
+my book (as it was in August 2014) into Korean.}
+\RU{В январе 2015, издательство Acorn в Южной Корее сделало много работы в переводе 
+и издании моей книги (по состоянию на август 2014) на корейский язык.}
+
+\RU{Она теперь доступна на}\EN{It's now available at} 
+\href{http://go.yurichev.com/17343}{\EN{their website}\RU{их сайте}}.
+
+\iffalse
+\begin{figure}[H]
+\centering
+\includegraphics[scale=0.3]{acorn_cover.jpg}
+\end{figure}
+\fi
+
+\RU{Переводил}\EN{The translator is} Byungho Min (\href{http://go.yurichev.com/17344}{twitter/tais9}).
+
+\EN{The cover art was done by my artistic friend, Andy Nechaevsky}
+\RU{Обложку нарисовал мой хороший знакомый художник Андрей Нечаевский}: 
+\href{http://go.yurichev.com/17023}{facebook/andydinka}.
+
+\RU{Они также имеют права на издании книги на корейском языке.}
+\EN{They also hold the copyright to the Korean translation.}
+
+\RU{Так что если вы хотите иметь \IT{настоящую} книгу на полке на корейском языке и
+хотите поддержать мою работу, вы можете купить её.}
+\EN{So, if you want to have a \IT{real} book on your shelf in Korean and 
+want to support my work, it is now available for purchase.}

@@ -1,0 +1,77 @@
+f:
+
+var_10          = -0x10
+var_8           = -8
+var_4           = -4
+
+                lui     $gp, (__gnu_local_gp >> 16)
+                addiu   $sp, -0x20
+                la      $gp, (__gnu_local_gp & 0xFFFF)
+                sw      $ra, 0x20+var_4($sp)
+                sw      $s0, 0x20+var_8($sp)
+                sw      $gp, 0x20+var_10($sp)
+                lw      $v0, 0($a0)
+                or      $at, $zero
+                slti    $v0, 0x3E9
+                bnez    $v0, loc_C8
+                move    $s0, $a0
+                lw      $v0, 4($a0)
+                or      $at, $zero
+                sltiu   $v0, 0xB
+                bnez    $v0, loc_AC
+                lui     $v0, (dword_134 >> 16)
+                lwc1    $f4, $LC1
+                lwc1    $f2, 8($a0)
+                lui     $v0, ($LC2 >> 16)
+                lwc1    $f0, 0x14($a0)
+                mul.s   $f2, $f4, $f2
+                lwc1    $f4, dword_134
+                lwc1    $f1, 0x10($a0)
+                lwc1    $f5, $LC2
+                cvt.d.s $f2, $f2
+                mul.d   $f0, $f4, $f0
+                lw      $t9, (printf & 0xFFFF)($gp)
+                lui     $a0, ($LC0 >> 16)  # "%f\n"
+                add.d   $f4, $f2, $f0
+                mfc1    $a2, $f5
+                mfc1    $a3, $f4
+                jalr    $t9
+                la      $a0, ($LC0 & 0xFFFF)  # "%f\n"
+                lw      $gp, 0x20+var_10($sp)
+                lbu     $a2, 0x19($s0)
+                lb      $a1, 0x18($s0)
+                lui     $a0, ($LC3 >> 16)  # "%c, %d\n"
+                lw      $t9, (printf & 0xFFFF)($gp)
+                lw      $ra, 0x20+var_4($sp)
+                lw      $s0, 0x20+var_8($sp)
+                la      $a0, ($LC3 & 0xFFFF)  # "%c, %d\n"
+                jr      $t9
+                addiu   $sp, 0x20
+loc_AC:                                  # CODE XREF: f+38
+                lui     $a0, ($LC4 >> 16)  # "error #2"
+                lw      $t9, (puts & 0xFFFF)($gp)
+                lw      $ra, 0x20+var_4($sp)
+                lw      $s0, 0x20+var_8($sp)
+                la      $a0, ($LC4 & 0xFFFF)  # "error #2"
+                jr      $t9
+                addiu   $sp, 0x20
+loc_C8:                                  # CODE XREF: f+24
+                lui     $a0, ($LC5 >> 16)  # "error #1"
+                lw      $t9, (puts & 0xFFFF)($gp)
+                lw      $ra, 0x20+var_4($sp)
+                lw      $s0, 0x20+var_8($sp)
+                la      $a0, ($LC5 & 0xFFFF)  # "error #1"
+                jr      $t9
+                addiu   $sp, 0x20
+
+$LC0:           .ascii "%f\n"<0>         
+$LC3:           .ascii "%c, %d\n"<0>     
+$LC4:           .ascii "error #2"<0>     
+$LC5:           .ascii "error #1"<0>     
+
+                .data # .rodata.cst4
+$LC1:           .word 0x43DE0000         
+
+                .data # .rodata.cst8
+$LC2:           .word 0x405EC000         
+dword_134:      .word 0                  

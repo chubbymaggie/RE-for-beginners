@@ -2,22 +2,27 @@
 \label{sec:npad}
 
 \RU{Это макрос в ассемблере, для выравнивания некоторой метки по некоторой границе.}
-\EN{It is an assembly language macro for label aligning by a specific border.}
+\EN{It is an assembly language macro for aligning labels on a specific boundary.}
 
 \RU{Это нужно для тех \IT{нагруженных} меток, куда чаще всего передается управление, например, 
 начало тела цикла. 
 Для того чтобы процессор мог эффективнее вытягивать данные или код из памяти, через шину с памятью, 
-кэширование, и т.д.}
-\EN{That's often need for the busy labels to where control flow is often passed, e.g., loop body begin.
-So the CPU will effectively load data or code from the memory, through memory bus, cache lines, etc.}
+кэширование,\etc{}.}
+\EN{That's often needed for the busy labels to where the control flow is often passed, e.g., loop body starts.
+So the CPU can load the data or code from the memory effectively, through the memory bus, cache lines, \etc{}.}
 
 \RU{Взято из}\EN{Taken from} \TT{listing.inc} (MSVC):
 
 \index{x86!\Instructions!NOP}
 \RU{Это, кстати, любопытный пример различных вариантов \NOP{}-ов. 
 Все эти инструкции не дают никакого эффекта, но отличаются разной длиной.}
-\EN{By the way, it is curious example of different \NOP variations.
-All these instructions has no effects whatsoever, but has different size.}
+\EN{By the way, it is a curious example of the different \NOP variations.
+All these instructions have no effects whatsoever, but have a different size.}
+
+\RU{Цель в том, чтобы была только одна инструкция, а не набор NOP-ов, 
+считается что так лучше для производительности CPU.}
+\EN{Having a single idle instruction instead of couple of NOP-s,
+is accepted to be better for CPU performance.}
 
 \begin{lstlisting}
 ;; LISTING.INC

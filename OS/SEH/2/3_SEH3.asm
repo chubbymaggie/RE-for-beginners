@@ -33,8 +33,7 @@ $L74605:
     ret    0
 _filter_user_exceptions ENDP
 
-; scope table
-
+; scope table:
 CONST    SEGMENT
 $T74644   DD    0ffffffffH   ; previous try level for outer block
           DD    FLAT:$L74634 ; outer block filter
@@ -81,8 +80,7 @@ _main    PROC NEAR
     mov    DWORD PTR __$SEHRec$[ebp+20], 0 ; inner try block exited. set previous try level back to 0
     jmp    SHORT $L74615
 
-    ; inner block filter
-
+; inner block filter:
 $L74638:
 $L74650:
     mov    ecx, DWORD PTR __$SEHRec$[ebp+4]
@@ -98,8 +96,7 @@ $L74640:
 $L74648:
     ret    0
 
-    ; inner block handler
-
+; inner block handler:
 $L74639:
     mov    esp, DWORD PTR __$SEHRec$[ebp]
     push   OFFSET FLAT:$SG74621 ; 'access violation, can''t recover'
@@ -111,8 +108,7 @@ $L74615:
     mov    DWORD PTR __$SEHRec$[ebp+20], -1 ; outer try block exited, set previous try level back to -1
     jmp    SHORT $L74633
 
-    ; outer block filter
-
+; outer block filter:
 $L74634:
 $L74651:
     mov    ecx, DWORD PTR __$SEHRec$[ebp+4]
@@ -129,8 +125,7 @@ $L74636:
 $L74649:
     ret    0
 
-    ; outer block handler
-
+; outer block handler:
 $L74635:
     mov    esp, DWORD PTR __$SEHRec$[ebp]
     push   OFFSET FLAT:$SG74623 ; 'user exception caught'

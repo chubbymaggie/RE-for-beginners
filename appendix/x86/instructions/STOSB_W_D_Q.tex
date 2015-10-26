@@ -1,4 +1,3 @@
-% to be proofreaded
 \index{\CStandardLibrary!memset()}
 \index{x86!\Instructions!STOSB}
 \index{x86!\Instructions!STOSW}
@@ -8,24 +7,26 @@
 16-\RU{битное слово}\EN{bit word}/
 32-\RU{битное слово}\EN{bit word}/
 64-\RU{битное слово}\EN{bit word} \RU{из}\EN{from} AX/EAX/RAX \RU{в место, адрес которого находится
-в}\EN{into the place address of which is in the} DI/EDI/RDI.
+в}\EN{into the address which is in} DI/EDI/RDI.
 
 \label{REP_STOSx}
+\index{x86!\Prefixes!REP}
 \RU{Вместе с префиксом REP, инструкция будет исполняться в цикле, счетчик будет
 находится в регистре CX/ECX/RCX}
-\EN{Together with REP prefix, it will repeated in loop, count is stored in the CX/ECX/RCX register}:
+\EN{Together with the REP prefix, it is to be repeated in a loop, the counter is in the CX/ECX/RCX register}:
 \RU{это работает как}\EN{it works like} memset() \RU{в Си}\EN{in C}.
 \RU{Если размер блока известен компилятору на стадии компиляции,
 memset() часто компилируется в короткий фрагмент кода использующий
 REP STOSx, иногда даже несколько инструкций}
-\EN{If block size is known to compiler on compile stage, 
-memset() is often inlined into short code fragment
+\EN{If the block size is known to the compiler on compile stage, 
+memset() is often inlined into a short code fragment
 using REP MOVSx, sometimes even as several instructions}.
 
+\index{\CStandardLibrary!memset()}
 \RU{Эквивалент }memset(EDI, 0xAA, 15)\EN{ equivalent is}:
 
-\lstinputlisting{appendix/x86/instructions/STOSB_ex1_\LANG.asm}
+\lstinputlisting{appendix/x86/instructions/STOSB_ex1.asm.\LANG}
 
-(\RU{Вероятно, так быстрее чем заполнять 15 байт используя просто одну}
-\EN{Supposedly, it will work faster then storing 15 bytes using just one} REP STOSB).
+(\RU{Вероятно, так быстрее чем заполнять 15 байт используя просто одну REP STOSB}
+\EN{Supposedly, it works faster than storing 15 bytes using just one REP STOSB}).
 

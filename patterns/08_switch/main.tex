@@ -1,24 +1,25 @@
 \chapter{\SwitchCaseDefaultSectionName}
 \index{\CLanguageElements!switch}
 
-\section{\RU{Если вариантов мало}\EN{Few number of cases}}
+% sections
+\input{patterns/08_switch/1_few/main}
+\input{patterns/08_switch/2_lot/main}
+% TODO What's the difference between 3 and 4? Seems to be the same...
+% it is fallthrough from 3 to 4 :) --DY
+\input{patterns/08_switch/3_several_cases/main}
+\input{patterns/08_switch/4_fallthrough/main}
 
-\lstinputlisting{patterns/08_switch/8_1.c}
+\ifdefined\IncludeExercises
+\section{\Exercises}
 
-\input{patterns/08_switch/few_x86}
+\subsection{\Exercise \#1}
+\label{exercise_switch_1}
 
-\input{patterns/08_switch/few_ARM}
+\RU{Вполне возможно переделать пример на Си в листинге \myref{switch_lot_c} так, чтобы при компиляции
+получалось даже ещё меньше кода, но работать всё будет точно так же.}
+\EN{It's possible to rework the C example in \myref{switch_lot_c} in such way that the compiler
+can produce even smaller code, but will work just the same.}
+\RU{Попробуйте этого добиться}\EN{Try to achieve it}.
 
-\section{\RU{И если много}\EN{A lot of cases}}
-
-\RU{А если ветвлений слишком много, то конечно генерировать слишком длинный код с многочисленными \JE/\JNE 
-уже не так удобно.}
-\EN{If \TT{switch()} statement contain a lot of case's, it is not very convenient for compiler to emit too large code
-with a lot \JE/\JNE instructions.}
-
-\lstinputlisting{patterns/08_switch/8_4.c}
-
-\input{patterns/08_switch/lot_x86}
-
-\input{patterns/08_switch/lot_ARM}
-
+\RU{Подсказка}\EN{Hint}: \myref{exercise_solutions_switch_1}.
+\fi

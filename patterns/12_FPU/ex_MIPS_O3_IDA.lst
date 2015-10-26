@@ -1,0 +1,33 @@
+f:
+
+arg_10          =  0x10
+arg_14          =  0x14
+arg_18          =  0x18
+arg_1C          =  0x1C
+arg_20          =  0x20
+arg_24          =  0x24
+
+                lwc1    $f0, arg_14($sp)
+                add.d   $f2, $f12, $f14
+                lwc1    $f1, arg_10($sp)
+                lui     $v0, ($LC0 >> 16)
+                add.d   $f0, $f2, $f0
+                lwc1    $f2, arg_1C($sp)
+                or      $at, $zero
+                lwc1    $f3, arg_18($sp)
+                or      $at, $zero
+                add.d   $f0, $f2
+                lwc1    $f2, arg_24($sp)
+                or      $at, $zero
+                lwc1    $f3, arg_20($sp)
+                or      $at, $zero
+                add.d   $f0, $f2
+                lwc1    $f2, dword_6C
+                or      $at, $zero
+                lwc1    $f3, $LC0
+                jr      $ra
+                div.d   $f0, $f2
+
+$LC0:           .word 0x40140000         # DATA XREF: f+C
+                                         # f+44
+dword_6C:       .word 0                  # DATA XREF: f+3C

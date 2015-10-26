@@ -1,15 +1,17 @@
 \section{Windows NT: \RU{Критические секции}\EN{Critical section}}
+\index{Windows}
 
 \label{critical_sections}
 
 \RU{Критические секции в любой \ac{OS} очень важны в мультитредовой среде, используются в основном
-для обеспечения гарантии что только один тред будет иметь доступ к данным,
-блокируя остальные треды и прерывания}
+для обеспечения гарантии что только один тред будет иметь доступ к данным в один момент времени,
+блокируя остальные треды и прерывания.}
 \EN{Critical sections in any \ac{OS} are very important in multithreaded environment,
-mostly used for issuing a guarantee
-that only one thread will access some data, while blocking other threads and interrupts}. \\
+mostly for giving a guarantee
+that only one thread can access some data in a single moment of time, 
+while blocking other threads and interrupts.}\ESph{}\PTBRph{}\PLph{} \\
 \\
-\RU{Вот как объявлена структура}\EN{That is how} \TT{CRITICAL\_SECTION} 
+\RU{Вот как объявлена структура}\EN{That is how a} \TT{CRITICAL\_SECTION} 
 \RU{объявлена в линейке OS}\EN{structure is declared in} \gls{Windows NT}\EN{ line OS}:
 
 \begin{lstlisting}[caption=(Windows Research Kernel v1.2) public/sdk/inc/nturtl.h]
@@ -29,7 +31,7 @@ typedef struct _RTL_CRITICAL_SECTION {
 } RTL_CRITICAL_SECTION, *PRTL_CRITICAL_SECTION;
 \end{lstlisting}
 
-\RU{Вот как работает ф-ция}\EN{That's is how} EnterCriticalSection()\EN{ function works}:
+\RU{Вот как работает функция}\EN{That's is how} EnterCriticalSection()\EN{ function works}:
 
 \index{x86!\Instructions!LOCK}
 \begin{lstlisting}[caption=Windows 2008/ntdll.dll/x86 (begin)]
@@ -68,24 +70,25 @@ loc_7DE922DD:
 \end{lstlisting}
 
 \index{x86!\Instructions!BTR}
-\RU{Самая важная инструкция в этом фрагменте кода это}
+\index{x86!\Prefixes!LOCK}
+\RU{Самая важная инструкция в этом фрагменте кода\EMDASH{}это}
 \EN{The most important instruction in this code fragment is} \TT{BTR} 
 (\RU{с префиксом}\EN{prefixed with} \TT{LOCK}): 
 \RU{нулевой бит сохраняется в флаге CF и очищается в памяти}
-\EN{the zeroth bit is stored in CF flag and cleared in memory}.
-\RU{Это \glslink{atomic operation}{атомарная операция}}\EN{This is \gls{atomic operation}}, 
+\EN{the zeroth bit is stored in the CF flag and cleared in memory}.
+\RU{Это \glslink{atomic operation}{атомарная операция}}\EN{This is an \gls{atomic operation}}, 
 \RU{блокирующая доступ всех остальных процессоров
 к этому значению в памяти (обратите внимание на префикс \TT{LOCK} перед инструкцией \TT{BTR}.}
-\EN{blocking all other CPUs to access this piece of memory 
-(take a notice of \TT{LOCK} prefix before \TT{BTR} instruction).}
-\RU{Если бит в}\EN{If the bit at} \TT{LockCount} \RU{был}\EN{was} 1, 
-\RU{хорошо, сбросить его и вернуться из ф-ции: мы в критической секции}
-\EN{fine, reset it and return from the function: we are in critical section}.
-\RU{Если нет ~--- критическая секция уже занята другим тредом, тогда ждем}
-\EN{If not~---critical section is already occupied by other thread, then wait}. \\
-\RU{Ожидание там сделано через вызов}\EN{Wait is done there using} WaitForSingleObject(). \\
+\EN{blocking all other CPUs' access to this piece of memory 
+(see the \TT{LOCK} prefix before the \TT{BTR} instruction).}
+\RU{Если бит в}\EN{If the bit at} \TT{LockCount} \RU{является}\EN{is} 1, 
+\RU{хорошо, сбросить его и вернуться из функции: мы в критической секции}
+\EN{fine, reset it and return from the function: we are in a critical section}.
+\RU{Если нет\EMDASH{}критическая секция уже занята другим тредом, тогда ждем}
+\EN{If not\EMDASH{}the critical section is already occupied by other thread, so wait}. \\
+\RU{Ожидание там сделано через вызов}\EN{The wait is done there using} WaitForSingleObject(). \\
 \\
-\RU{А вот как работает ф-ция}\EN{And here is how} LeaveCriticalSection()\EN{ function works}:
+\RU{А вот как работает функция}\EN{And here is how the} LeaveCriticalSection()\EN{ function works}:
 
 \begin{lstlisting}[caption=Windows 2008/ntdll.dll/x86 (begin)]
 _RtlLeaveCriticalSection@4 proc near
@@ -124,23 +127,23 @@ loc_7DE922B2:
 \end{lstlisting}
 
 \index{x86!\Instructions!XADD}
-\TT{XADD} \RU{это ``обменять и прибавить''}\EN{is ``exchange and add''}. 
+\TT{XADD} \RU{это \q{обменять и прибавить}}\EN{is \q{exchange and add}}.
 \RU{В данном случае, это значит прибавить 1 к значению в \TT{LockCount}, сохранить результат
 в регистре \TT{EBX}, и в то же время 1 записывается в \TT{LockCount}}
-\EN{In this case, it summing \TT{LockCount} value and 1 and stores result in \TT{EBX} register, 
+\EN{In this case, it adds 1 to \TT{LockCount} and stores the result in the \TT{EBX} register, 
 and at the same time 1 goes to \TT{LockCount}}.
-\RU{Эта операция также атомарная, потому что также имеет префикс \TT{LOCK}, что означает что другие CPU
+\RU{Эта операция также атомарная, потому что также имеет префикс \TT{LOCK}, что означает, что другие CPU
 или ядра CPU в системе не будут иметь доступа к этой ячейке памяти}
 \EN{This operation is atomic since it is prefixed by \TT{LOCK} as well,
-meaning that all other CPUs or CPU cores in system are blocked from accessing this point of memory}.
+meaning that all other CPUs or CPU cores in system are blocked from accessing this point in memory}.
 
-\RU{Префикс }\TT{LOCK} \RU{очень важен}\EN{prefix is very important}: 
+\EN{The}\RU{Префикс} \TT{LOCK} \RU{очень важен}\EN{prefix is very important}: 
 \RU{два треда, каждый из которых работает на разных CPU или ядрах CPU, могут попытаться одновременно
 войти в критическую секцию, одновременно модифицируя значение в памяти, и это может привести к
-непредсказуемым результатам}
-\EN{two threads, each of which working on separate CPUs or CPU cores may try to
-enter critical section and to modify the value in memory simultaneously,
-this will result in unpredictable behaviour}.
+непредсказуемым результатам.}
+\EN{without it two threads, each of which works on separate CPU or CPU core can try to
+enter a critical section and to modify the value in memory,
+which will result in non-deterministic behaviour.}
 
 % TODO linux
 

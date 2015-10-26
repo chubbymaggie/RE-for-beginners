@@ -1,0 +1,35 @@
+﻿\chapter{CPU}
+
+\section{\RU{Предсказатели переходов}\EN{Branch predictors}}
+\label{branch_predictors}
+
+\RU{Некоторые современные компиляторы пытаются избавиться от инструкций условных переходов}\EN{Some modern 
+compilers try to get rid of conditional jump instructions}.
+\RU{Примеры в этой книге}\EN{Examples in this book are}: 
+\myref{subsec:jcc_ARM}, \myref{chap:cond}, \myref{subsec:popcnt}.
+
+\RU{Это потому что предсказатель переходов далеко не всегда работает идеально, поэтому, компиляторы и стараются
+реже использовать переходы, если возможно.}
+\EN{This is because the branch predictor is not always perfect, so the compilers try to do 
+without conditional jumps, if possible.}
+
+\index{x86!\Instructions!CMOVcc}
+\index{ARM!\Instructions!ADRcc}
+\RU{Одна из возможностей --- это условные инструкции в ARM (как ADRcc), а еще инструкция CMOVcc в x86.}
+\EN{Conditional instructions in ARM (like ADRcc) are one way, another one is the CMOVcc x86 instruction.}
+
+\section{\RU{Зависимости между данными}\EN{Data dependencies}}
+
+\EN{Modern CPUs are able to execute instructions simultaneously (\ac{OOE}), but in order to do so,
+the results of one instruction in a group must not influence the execution of others.}
+\RU{Современные процессоры способны исполнять инструкции одновременно (\ac{OOE}), но для этого,
+внутри такой группы, результат одних не должен влиять на работу других.}
+\EN{Hence, the compiler endeavors to use instructions with minimal influence to the CPU state.}
+\RU{Следовательно, компилятор старается использовать инструкции с наименьшим влиянием на
+состояние процессора.}
+
+\EN{That's why the \LEA instruction is so popular, because it does not modify CPU flags, while
+other arithmetic instructions does.}
+\RU{Вот почему инструкция \LEA в x86 такая популярная --- 
+потому что она не модифицирует флаги процессора,
+а прочие арифметические инструкции --- модифицируют.}

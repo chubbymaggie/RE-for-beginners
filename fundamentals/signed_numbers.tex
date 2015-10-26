@@ -2,12 +2,15 @@
 \label{sec:signednumbers}
 \index{Signed numbers}
 
-\newcommand{\URLS}{\url{http://en.wikipedia.org/wiki/Signed_number_representations}}
+\newcommand{\URLS}{\href{http://go.yurichev.com/17117}{wikipedia}}
 
-\RU{Методов представления чисел с знаком ``плюс'' или ``минус'' несколько\footnote{\URLS}, 
-а в x86 применяется метод ``дополнительный код'' или ``two's complement''.}
-\EN{There are several methods of representing signed numbers\footnote{\URLS}, 
-but in x86 architecture used ``two's complement''.}
+\RU{Методов представления чисел с знаком \q{плюс} или \q{минус} несколько\footnote{\URLS}, 
+но в компьютерах обычно применяется метод \q{дополнительный код} или \q{two's complement}.}
+\EN{There are several methods for representing signed numbers\footnote{\URLS}, 
+but \q{two's complement} is the most popular one in computers.}
+
+\EN{Here is a table for some byte values:}
+\RU{Вот таблица некоторые значений байтов:}
 
 \begin{center}
 \begin{tabular}{ | l | l | l | l | }
@@ -23,6 +26,14 @@ but in x86 architecture used ``two's complement''.}
 \hline
 \multicolumn{4}{ |c| }{...} \\
 \hline
+00000110 & 0x6 & 6 & 6 \\
+\hline
+00000101 & 0x5 & 5 & 5 \\
+\hline
+00000100 & 0x4 & 4 & 4 \\
+\hline
+00000011 & 0x3 & 3 & 3 \\
+\hline
 00000010 & 0x2 & 2 & 2 \\
 \hline
 00000001 & 0x1 & 1 & 1 \\
@@ -32,6 +43,14 @@ but in x86 architecture used ``two's complement''.}
 11111111 & 0xff & 255 & -1 \\
 \hline
 11111110 & 0xfe & 254 & -2 \\
+\hline
+11111101 & 0xfd & 253 & -3 \\
+\hline
+11111100 & 0xfc & 252 & -4 \\
+\hline
+11111011 & 0xfb & 251 & -5 \\
+\hline
+11111010 & 0xfa & 250 & -6 \\
 \hline
 \multicolumn{4}{ |c| }{...} \\
 \hline
@@ -49,42 +68,82 @@ but in x86 architecture used ``two's complement''.}
 \index{x86!\Instructions!JL}
 \index{x86!\Instructions!JG}
 \RU{Разница в подходе к знаковым/беззнаковым числам, собственно, нужна потому что, например, 
-если представить \TT{0xFFFFFFFE} и \TT{0x0000002} как беззнаковое, то первое число ($4294967294$) больше второго ($2$). 
-Если их оба представить как знаковые, то первое будет $-2$, которое, разумеется, меньше чем второе ($2$).
-Вот почему инструкции для условных переходов~(\ref{sec:Jcc}) представлены в обоих версиях ~--- 
-и для знаковых сравнений (например \JG, \JL) и для беззнаковых (\JA, \JB).}
+если представить \TT{0xFFFFFFFE} и \TT{0x0000002} как беззнаковое, то первое число (4294967294) больше второго (2). 
+Если их оба представить как знаковые, то первое будет $-2$, которое, разумеется, меньше чем второе (2).
+Вот почему инструкции для условных переходов~(\myref{sec:Jcc}) представлены в обоих версиях ~--- 
+и для знаковых сравнений (например, \JG, \JL) и для беззнаковых (\JA, \JB).}
 \EN{The difference between signed and unsigned numbers is that if we represent \TT{0xFFFFFFFE} and \TT{0x0000002} 
-as unsigned, then first number ($4294967294$) is bigger than second ($2$). 
-If to represent them both as signed, first will be $-2$, and it is lesser than second ($2$). 
-That is the reason why conditional jumps~(\ref{sec:Jcc}) are present both for signed (e.g. \JG, \JL) 
-and unsigned (\JA, \JB) operations.} \\
+as unsigned, then the first number (4294967294) is bigger than the second one (2). 
+If we represent them both as signed, the first one is to be $-2$, and it is smaller than the second (2). 
+That is the reason why conditional jumps~(\myref{sec:Jcc}) are present both for signed (e.g. \JG, \JL) 
+and unsigned (\JA, \JB) operations.}\PTBRph{}\ESph{}\PLph{} \\
 \\
 \RU{Для простоты, вот что нужно знать}\EN{For the sake of simplicity, that is what one need to know}:
 \begin{itemize}
-\item \RU{Числа бывают знаковые и беззнаковые}\EN{Number can be signed or unsigned}.
+\item \RU{Числа бывают знаковые и беззнаковые}\EN{Numbers can be signed or unsigned}.
+
 \item \RU{Знаковые типы в \CCpp}\EN{\CCpp signed types}:
-	\Tint (-2147483646..2147483647 \OrENRU \TT{0x80000000..0x7FFFFFFF}),
-	\Tchar (-127..128 \OrENRU \TT{0x7F..0x80}).
-	\RU{Беззнаковые}\EN{Unsigned}: \TT{unsigned int} (0..4294967295 \OrENRU \TT{0..0xFFFFFFFF}),
-	\TT{unsigned char} (0..255 \OrENRU \TT{0..0xFF}),
-	\TT{size\_t}.
-\item \RU{У знаковых чисел знак определяется самым старшим битом: 1 означает ``минус'', 0 означает ``плюс''}
-	\EN{Signed types has sign in the most significant bit: 1 mean ``minus'', 0 mean ``plus''}.
+  \begin{itemize}
+    \item \TT{int64\_t} (-9,223,372,036,854,775,808..9,223,372,036,854,775,807) (-~9.2..~9.2 \EN{quintillions}\RU{квинтиллионов}) \OrENRU \\
+                \TT{0x8000000000000000..0x7FFFFFFFFFFFFFFF}),
+    \item \Tint (-2,147,483,648..2,147,483,647 (-~2.15..~2.15Gb) \OrENRU \TT{0x80000000..0x7FFFFFFF}),
+    \item \Tchar (-128..127 \OrENRU \TT{0x80..0x7F}),
+    \item \TT{ssize\_t}.
+   \end{itemize}
+
+	\RU{Беззнаковые}\EN{Unsigned}: 
+  \begin{itemize}
+	  \item \TT{uint64\_t} (0..18,446,744,073,709,551,615 (~18 \EN{quintillions}\RU{квинтиллионов}) \OrENRU \TT{0..0xFFFFFFFFFFFFFFFF}),
+   \item \TT{unsigned int} (0..4,294,967,295 (~4.3Gb) \OrENRU \TT{0..0xFFFFFFFF}),
+   \item \TT{unsigned char} (0..255 \OrENRU \TT{0..0xFF}), 
+   \item \TT{size\_t}.
+  \end{itemize}
+
+\item \RU{У знаковых чисел знак определяется самым старшим битом: 1 означает \q{минус}, 0 означает \q{плюс}}
+	\EN{Signed types have the sign in the most significant bit: 1 mean \q{minus}, 0 mean \q{plus}}.
+
+\item \EN{Promoting to a larger data types is simple:}
+      \RU{Преобразование в б\'{о}льшие типы данных обходится легко:} \myref{subsec:sign_extending_32_to_64}.
+
+\label{sec:signednumbers:negation}
+\item \EN{Negation is simple: just invert all bits and add 1.}
+\RU{Изменить знак легко: просто инвертируйте все биты и прибавьте 1.}
+\EN{We can remember that a number of inverse sign is located 
+on the opposite side at the same proximity from zero.}
+\RU{Мы можем заметить, что число другого знака находится на другой стороне на том же расстоянии от нуля.}
+\RU{Прибавление единицы необходимо из-за присутствия нуля посредине.}
+\EN{The addition of one is needed because zero is present in the middle.}
+
+\index{x86!\Instructions!IDIV}
+\index{x86!\Instructions!DIV}
+\index{x86!\Instructions!IMUL}
+\index{x86!\Instructions!MUL}
+\index{x86!\Instructions!CBW}
+\index{x86!\Instructions!CWD}
+\index{x86!\Instructions!CWDE}
+\index{x86!\Instructions!CDQ}
+\index{x86!\Instructions!CDQE}
+\index{x86!\Instructions!MOVSX}
+\index{x86!\Instructions!SAR}
 \item \RU{Инструкции сложения и вычитания работают одинаково хорошо и для знаковых и для беззнаковых значений}
-	\EN{Addition and subtraction operations are working well for both signed and unsigned values}.
+	\EN{The addition and subtraction operations work well for both signed and unsigned values}.
 	\RU{Но для операций умножения и деления, в x86 имеются разные инструкции}
 	\EN{But for multiplication and division operations, x86 has different instructions}:
 	\TT{IDIV}/\TT{IMUL} \RU{для знаковых}\EN{for signed}
 	\AndENRU \TT{DIV}/\TT{MUL} \RU{для беззнаковых}\EN{for unsigned}.
-\item \RU{Еще инструкции работающие с знаковыми числами}\EN{More instructions working with signed numbers}:
-	\TT{CBW/CWD/CWDE/CDQ/CDQE} (\ref{ins:CBW_CWD_etc}), \TT{MOVSX} (\ref{MOVSX}), \TT{SAR} (\ref{ins:SAR}).
+\ifx\LITE\undefined
+\item \RU{Еще инструкции работающие с знаковыми числами}\EN{Here are some more instructions that work with signed numbers}:
+	\TT{CBW/CWD/CWDE/CDQ/CDQE} (\myref{ins:CBW_CWD_etc}), \TT{MOVSX} (\myref{MOVSX}), \TT{SAR} (\myref{ins:SAR}).
+\fi
 \end{itemize}
 
+\iffalse
+% TODO rework!
 \section{\RU{Переполнение integer}\EN{Integer overflow}}
 
 \RU{Бывает так, что ошибки представления знаковых/беззнаковых могут привести к уязвимости 
 \IT{переполнение integer}.}
-\EN{It is worth noting that incorrect representation of number can lead integer overflow vulnerability.}
+\EN{It is worth noting that the incorrect representation of a number can lead to integer overflow vulnerabilities.}
 
 \RU{Например, есть некий сервис, который принимает по сети некие пакеты. 
 В пакете есть заголовок где указана длина пакета. Это 32-битное значение. 
@@ -92,20 +151,21 @@ and unsigned (\JA, \JB) operations.} \\
 сервис проверяет это значение и сверяет, больше ли оно чем максимальный размер пакета, скажем, константа
 \TT{MAX\_PACKET\_SIZE} (например, 10 килобайт), и если да, то пакет отвергается как некорректный. 
 Сравнение знаковое. Злоумышленник подставляет значение \TT{0xFFFFFFFF}. Это число трактуется как знаковое $-1$ 
-и оно меньше чем $10000$. Проверка проходит. Продолжаем дальше и копируем этот пакет куда-нибудь себе 
+и оно меньше чем 10000. Проверка проходит. Продолжаем дальше и копируем этот пакет куда-нибудь себе 
 в сегмент данных\dots вызов функции \TT{memcpy (dst, src, 0xFFFFFFFF)} скорее всего, 
 затрет много чего внутри процесса.}
-\EN{For example, we have a network service, it receives network packets. 
-In the packets there is also a field where subpacket length is coded. 
-It is 32-bit value. 
-After network packet received, service checking the field, and if it is larger than, 
-e.g. some \TT{MAX\_PACKET\_SIZE} (let's say, 10 kilobytes), the packet is rejected as incorrect.
-Comparison is signed. Intruder set this value to the \TT{0xFFFFFFFF}.
-While comparison, this number is considered as signed $-1$ and it is lesser than 10 kilobytes. 
+\EN{For example, we have a network service and it receives network packets. 
+In the packets there is a field where the subpacket length is encoded. 
+It is a 32-bit value. 
+After the receiving of the network packet, the service checks the field and if it is larger than 
+some \TT{MAX\_PACKET\_SIZE} (let's say, 10 kilobytes), the packet is rejected as incorrect.
+The comparison is signed. The intruder set this value to \TT{0xFFFFFFFF}.
+While comparing, this number is considered as signed $-1$ and it is less than 10 kilobytes. 
 No error here. 
-Service would like to copy the subpacket to another place in memory and call 
-\TT{memcpy (dst, src, 0xFFFFFFFF)} function: this operation, rapidly garbling a lot of 
-inside of process memory.}
+The service would then like to copy the subpacket to another place in memory and calls the 
+\TT{memcpy (dst, src, 0xFFFFFFFF)} function: this operation, rapidly garbles a lot of 
+of process memory.}
 
 \RU{Немного подробнее}\EN{More about it}: \cite{Phrack3C0A}.
-
+% TODO example!
+\fi

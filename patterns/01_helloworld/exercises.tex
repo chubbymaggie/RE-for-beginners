@@ -1,0 +1,35 @@
+\section{\Exercises}
+
+\subsection{\Exercise \#1}
+\label{exercise_hw_1}
+
+\begin{lstlisting}
+main:
+    push 0xFFFFFFFF
+    call MessageBeep
+    xor  eax,eax
+    retn
+\end{lstlisting}
+
+\RU{Что делает эта win32-функция}\EN{What does this win32-function do}?
+
+\Answer{}: \myref{exercise_solutions_hw_1}.
+
+\subsection{\Exercise \#2}
+\label{exercise_hw_2}
+
+\begin{lstlisting}
+main:
+        pushq   %rbp
+        movq    %rsp, %rbp
+        movl    $2, %edi
+        call    sleep
+        popq    %rbp
+        ret
+\end{lstlisting}
+
+\RU{Что делает эта Linux-функция}\EN{What does this Linux-function do}?
+\EN{AT\&T assembly language syntax is used here.}
+\RU{Здесь используется AT\&T-синтаксис ассемблера.}
+
+\Answer{}: \myref{exercise_solutions_hw_2}.

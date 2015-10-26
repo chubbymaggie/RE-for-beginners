@@ -1,0 +1,346 @@
+\section{\Exercises}
+
+\subsection{\Exercise \#1}
+% matrix addition
+\label{exercise_array_1}
+
+\WhatThisCodeDoes\
+
+\lstinputlisting[caption=MSVC 2010 + \TT{/O1}]{patterns/13_arrays/exercises/1_msvc.asm}
+
+(/O1: \RU{оптимизация по размеру кода}\EN{minimize space}).
+
+\lstinputlisting[caption=\OptimizingKeilVI (\ARMMode)]{patterns/13_arrays/exercises/1_ARM.s}
+
+\lstinputlisting[caption=\OptimizingKeilVI (\ThumbMode)]{patterns/13_arrays/exercises/1_thumb.s}
+
+\lstinputlisting[caption=\NonOptimizing GCC 4.9 (ARM64)]{patterns/13_arrays/exercises/1_GCC49_ARM64_O0.s}
+
+\lstinputlisting[caption=\Optimizing GCC 4.4.5 (MIPS) (IDA)]{patterns/13_arrays/exercises/1_MIPS_O3_IDA.lst}
+
+\Answer\: \myref{exercise_solutions_arrays_1}.
+
+\subsection{\Exercise \#2}
+% matrix multiplication
+\label{exercise_array_2}
+
+\WhatThisCodeDoes\
+
+\lstinputlisting[caption=MSVC 2010 + \TT{/O1}]{patterns/13_arrays/exercises/2_msvc.asm}
+
+(/O1: \RU{оптимизация по размеру кода}\EN{minimize space}).
+
+\lstinputlisting[caption=\OptimizingKeilVI (\ARMMode)]{patterns/13_arrays/exercises/2_ARM.s}
+
+\lstinputlisting[caption=\OptimizingKeilVI (\ThumbMode)]{patterns/13_arrays/exercises/2_thumb.s}
+
+\lstinputlisting[caption=\NonOptimizing GCC 4.9 (ARM64)]{patterns/13_arrays/exercises/2_GCC49_ARM64_O0.s}
+
+\lstinputlisting[caption=\Optimizing GCC 4.4.5 (MIPS) (IDA)]{patterns/13_arrays/exercises/2_MIPS_O3_IDA.lst}
+
+\Answer\: \myref{exercise_solutions_arrays_2}.
+
+\subsection{\Exercise \#3}
+\label{exercise_array_3}
+
+\WhatThisCodeDoes\
+
+\EN{Try to determine the dimensions of the array, at least partially.}
+\RU{Попробуйте определить размеры массива, хотя бы частично.}
+
+\begin{lstlisting}[caption=\Optimizing MSVC 2010]
+_array$ = 8
+_x$ = 12
+_y$ = 16
+_f	PROC
+	mov	eax, DWORD PTR _x$[esp-4]
+	mov	edx, DWORD PTR _y$[esp-4]
+	mov	ecx, eax
+	shl	ecx, 4
+	sub	ecx, eax
+	lea	eax, DWORD PTR [edx+ecx*8]
+	mov	ecx, DWORD PTR _array$[esp-4]
+	fld	QWORD PTR [ecx+eax*8]
+	ret	0
+_f	ENDP
+\end{lstlisting}
+
+\begin{lstlisting}[caption=\NonOptimizingKeilVI (\ARMMode)]
+f PROC
+        RSB      r1,r1,r1,LSL #4
+        ADD      r0,r0,r1,LSL #6
+        ADD      r1,r0,r2,LSL #3
+        LDM      r1,{r0,r1}
+        BX       lr
+        ENDP
+\end{lstlisting}
+
+\begin{lstlisting}[caption=\NonOptimizingKeilVI (\ThumbMode)]
+f PROC
+        MOVS     r3,#0xf
+        LSLS     r3,r3,#6
+        MULS     r1,r3,r1
+        ADDS     r0,r1,r0
+        LSLS     r1,r2,#3
+        ADDS     r1,r0,r1
+        LDM      r1,{r0,r1}
+        BX       lr
+        ENDP
+\end{lstlisting}
+
+\begin{lstlisting}[caption=\Optimizing GCC 4.9 (ARM64)]
+f:
+	sxtw	x1, w1
+	add	x0, x0, x2, sxtw 3
+	lsl	x2, x1, 10
+	sub	x1, x2, x1, lsl 6
+	ldr	d0, [x0,x1]
+	ret
+\end{lstlisting}
+
+\lstinputlisting[caption=\Optimizing GCC 4.4.5 (MIPS) (IDA)]{patterns/13_arrays/exercises/3_MIPS_O3_IDA.lst}
+
+\Answer\: \myref{exercise_solutions_arrays_3}
+
+\subsection{\Exercise \#4}
+\label{exercise_array_4}
+
+\WhatThisCodeDoes\
+
+\EN{Try to determine the dimensions of the array, at least partially.}
+\RU{Попробуйте определить размеры массива, хотя бы частично.}
+
+\begin{lstlisting}[caption=\Optimizing MSVC 2010]
+_array$ = 8	
+_x$ = 12	
+_y$ = 16	
+_z$ = 20	
+_f	PROC
+	mov	eax, DWORD PTR _x$[esp-4]
+	mov	edx, DWORD PTR _y$[esp-4]
+	mov	ecx, eax
+	shl	ecx, 4
+	sub	ecx, eax
+	lea	eax, DWORD PTR [edx+ecx*4]
+	mov	ecx, DWORD PTR _array$[esp-4]
+	lea	eax, DWORD PTR [eax+eax*4]
+	shl	eax, 4
+	add	eax, DWORD PTR _z$[esp-4]
+	mov	eax, DWORD PTR [ecx+eax*4]
+	ret	0
+_f	ENDP
+\end{lstlisting}
+
+\begin{lstlisting}[caption=\NonOptimizingKeilVI (\ARMMode)]
+f PROC
+        RSB      r1,r1,r1,LSL #4
+        ADD      r1,r1,r1,LSL #2
+        ADD      r0,r0,r1,LSL #8
+        ADD      r1,r2,r2,LSL #2
+        ADD      r0,r0,r1,LSL #6
+        LDR      r0,[r0,r3,LSL #2]
+        BX       lr
+        ENDP
+\end{lstlisting}
+
+\begin{lstlisting}[caption=\NonOptimizingKeilVI (\ThumbMode)]
+f PROC
+        PUSH     {r4,lr}
+        MOVS     r4,#0x4b
+        LSLS     r4,r4,#8
+        MULS     r1,r4,r1
+        ADDS     r0,r1,r0
+        MOVS     r1,#0xff
+        ADDS     r1,r1,#0x41
+        MULS     r2,r1,r2
+        ADDS     r0,r0,r2
+        LSLS     r1,r3,#2
+        LDR      r0,[r0,r1]
+        POP      {r4,pc}
+        ENDP
+\end{lstlisting}
+
+\begin{lstlisting}[caption=\Optimizing GCC 4.9 (ARM64)]
+f:
+	sxtw	x2, w2
+	mov	w4, 19200
+	add	x2, x2, x2, lsl 2
+	smull	x1, w1, w4
+	lsl	x2, x2, 4
+	add	x3, x2, x3, sxtw
+	add	x0, x0, x3, lsl 2
+	ldr	w0, [x0,x1]
+	ret
+\end{lstlisting}
+
+\lstinputlisting[caption=\Optimizing GCC 4.4.5 (MIPS) (IDA)]{patterns/13_arrays/exercises/4_MIPS_O3_IDA.lst}
+
+\Answer\: \myref{exercise_solutions_arrays_4}
+
+\subsection{\Exercise \#5}
+\label{exercise_array_5}
+
+\WhatThisCodeDoes\
+
+\begin{lstlisting}[caption=\Optimizing MSVC 2012 /GS-]
+COMM	_tbl:DWORD:064H
+
+tv759 = -4	; size = 4
+_main	PROC
+	push	ecx
+	push	ebx
+	push	ebp
+	push	esi
+	xor	edx, edx
+	push	edi
+	xor	esi, esi
+	xor	edi, edi
+	xor	ebx, ebx
+	xor	ebp, ebp
+	mov	DWORD PTR tv759[esp+20], edx
+	mov	eax, OFFSET _tbl+4
+	npad	8 ; align next label
+$LL6@main:
+	lea	ecx, DWORD PTR [edx+edx]
+	mov	DWORD PTR [eax+4], ecx
+	mov	ecx, DWORD PTR tv759[esp+20]
+	add	DWORD PTR tv759[esp+20], 3
+	mov	DWORD PTR [eax+8], ecx
+	lea	ecx, DWORD PTR [edx*4]
+	mov	DWORD PTR [eax+12], ecx
+	lea	ecx, DWORD PTR [edx*8]
+	mov	DWORD PTR [eax], edx
+	mov	DWORD PTR [eax+16], ebp
+	mov	DWORD PTR [eax+20], ebx
+	mov	DWORD PTR [eax+24], edi
+	mov	DWORD PTR [eax+32], esi
+	mov	DWORD PTR [eax-4], 0
+	mov	DWORD PTR [eax+28], ecx
+	add	eax, 40
+	inc	edx
+	add	ebp, 5
+	add	ebx, 6
+	add	edi, 7
+	add	esi, 9
+	cmp	eax, OFFSET _tbl+404
+	jl	SHORT $LL6@main
+	pop	edi
+	pop	esi
+	pop	ebp
+	xor	eax, eax
+	pop	ebx
+	pop	ecx
+	ret	0
+_main	ENDP
+\end{lstlisting}
+
+\begin{lstlisting}[caption=\NonOptimizingKeilVI (\ARMMode)]
+main PROC
+        LDR      r12,|L0.60|
+        MOV      r1,#0
+|L0.8|
+        ADD      r2,r1,r1,LSL #2
+        MOV      r0,#0
+        ADD      r2,r12,r2,LSL #3
+|L0.20|
+        MUL      r3,r1,r0
+        STR      r3,[r2,r0,LSL #2]
+        ADD      r0,r0,#1
+        CMP      r0,#0xa
+        BLT      |L0.20|
+        ADD      r1,r1,#1
+        CMP      r1,#0xa
+        MOVGE    r0,#0
+        BLT      |L0.8|
+        BX       lr
+        ENDP
+
+|L0.60|
+        DCD      ||.bss||
+
+        AREA ||.bss||, DATA, NOINIT, ALIGN=2
+
+tbl
+        %        400
+\end{lstlisting}
+
+\begin{lstlisting}[caption=\NonOptimizingKeilVI (\ThumbMode)]
+main PROC
+        PUSH     {r4,r5,lr}
+        LDR      r4,|L0.40|
+        MOVS     r1,#0
+|L0.6|
+        MOVS     r2,#0x28
+        MULS     r2,r1,r2
+        MOVS     r0,#0
+        ADDS     r3,r2,r4
+|L0.14|
+        MOVS     r2,r1
+        MULS     r2,r0,r2
+        LSLS     r5,r0,#2
+        ADDS     r0,r0,#1
+        CMP      r0,#0xa
+        STR      r2,[r3,r5]
+        BLT      |L0.14|
+        ADDS     r1,r1,#1
+        CMP      r1,#0xa
+        BLT      |L0.6|
+        MOVS     r0,#0
+        POP      {r4,r5,pc}
+        ENDP
+
+        DCW      0x0000
+|L0.40|
+        DCD      ||.bss||
+
+        AREA ||.bss||, DATA, NOINIT, ALIGN=2
+
+tbl
+        %        400
+\end{lstlisting}
+
+\begin{lstlisting}[caption=\NonOptimizing GCC 4.9 (ARM64)]
+	.comm	tbl,400,8
+main:
+	sub	sp, sp, #16
+	str	wzr, [sp,12]
+	b	.L2
+.L5:
+	str	wzr, [sp,8]
+	b	.L3
+.L4:
+	ldr	w1, [sp,12]
+	ldr	w0, [sp,8]
+	mul	w3, w1, w0
+	adrp	x0, tbl
+	add	x2, x0, :lo12:tbl
+	ldrsw	x4, [sp,8]
+	ldrsw	x1, [sp,12]
+	mov	x0, x1
+	lsl	x0, x0, 2
+	add	x0, x0, x1
+	lsl	x0, x0, 1
+	add	x0, x0, x4
+	str	w3, [x2,x0,lsl 2]
+	ldr	w0, [sp,8]
+	add	w0, w0, 1
+	str	w0, [sp,8]
+.L3:
+	ldr	w0, [sp,8]
+	cmp	w0, 9
+	ble	.L4
+	ldr	w0, [sp,12]
+	add	w0, w0, 1
+	str	w0, [sp,12]
+.L2:
+	ldr	w0, [sp,12]
+	cmp	w0, 9
+	ble	.L5
+	mov	w0, 0
+	add	sp, sp, 16
+	ret
+\end{lstlisting}
+
+\lstinputlisting[caption=\NonOptimizing GCC 4.4.5 (MIPS) (IDA)]{patterns/13_arrays/exercises/5_MIPS_O0_IDA.lst}
+
+\Answer\: \myref{exercise_solutions_arrays_5}

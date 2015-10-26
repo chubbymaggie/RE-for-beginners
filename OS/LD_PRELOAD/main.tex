@@ -7,19 +7,19 @@
 такими как}
 \EN{This allows us to load our own dynamic libraries before others, even before system ones, like} libc.so.6.
 
-\RU{Что в свою очередь, позволяет ``подставлять'' написанные нами ф-ции перед оригинальными из системных библиотек.}
-\EN{What, in turn, allows to ``substitute'' our written functions before original ones in system libraries.}
-\RU{Например, легко перехватывать все вызовы к}\EN{For example, it is easy to intercept all calls to the} 
-time(), read(), write(), \RU{и т.д}\EN{etc}. \\
+\RU{Что в свою очередь, позволяет \q{подставлять} написанные нами функции перед оригинальными из системных библиотек.}
+\EN{This, in turn, allows us to \q{substitute} our written functions before the original ones in the system libraries.}
+\RU{Например, легко перехватывать все вызовы к}\EN{For example, it is easy to intercept all calls to} 
+time(), read(), write(), \etc{}. \\
 \\
 \index{uptime}
-\RU{Попробуем узнать, сможем ли мы обмануть утилиту \IT{uptime}}\EN{Let's see, if we are able to fool
+\RU{Попробуем узнать, сможем ли мы обмануть утилиту \IT{uptime}}\EN{Let's see if we can fool the
 \IT{uptime} utility}.
 \RU{Как известно, она сообщает, как долго компьютер работает}\EN{As we know, it tells how long the computer
-is working}.
+has been working}.
 \index{strace}
-\RU{При помощи}\EN{With the help of} strace(\ref{strace}), \RU{можно увидеть, что эту информацию утилита получает из файла}
-\EN{it is possible to see that this information the utility takes from the} \TT{/proc/uptime}
+\RU{При помощи}\EN{With the help of} strace(\myref{strace}), \RU{можно увидеть, что эту информацию утилита получает из файла}
+\EN{it is possible to see that the utility takes this information the} \TT{/proc/uptime}
 \EN{ file}:
 
 \begin{lstlisting}
@@ -33,7 +33,7 @@ read(3, "416166.86 414629.38\n", 2047)  = 20
 
 \RU{Это не реальный файл на диске, это виртуальный файл,
 содержимое которого генерируется на лету в ядре Linux.}
-\EN{It is not a real file on disk, it is a virtual one, its contents is generated on fly in Linux kernel.}
+\EN{It is not a real file on disk, it is a virtual one and its contents are generated on fly in the Linux kernel.}
 \RU{Там просто два числа}\EN{There are just two numbers}:
 
 \begin{lstlisting}
@@ -41,14 +41,15 @@ $ cat /proc/uptime
 416690.91 415152.03
 \end{lstlisting}
 
-\RU{Из wikipedia, можно узнать}\EN{What we can learn from wikipedia}:
+\RU{Из Wikipedia, можно узнать}\EN{What we can learn from Wikipedia}
+\footnote{\href{http://go.yurichev.com/17043}{wikipedia}}:
 
 \begin{framed}
 \begin{quotation}
 The first number is the total number of seconds the system has been up.
 The second number is how much of that time the machine has spent idle, in seconds.
 \end{quotation}
-\end{framed}\footnote{\url{https://en.wikipedia.org/wiki/Uptime}}
+\end{framed}
 
 \index{\CStandardLibrary!open()}
 \index{\CStandardLibrary!read()}
@@ -59,39 +60,40 @@ The second number is how much of that time the machine has spent idle, in second
 
 \RU{Во-первых, наш open() будет сравнивать имя открываемого файла с тем что нам нужно, и если да, 
 то будет запоминать дескриптор открытого файла.}
-\EN{At first, our open() will compare name of file to be opened with what we need and if it is so,
+\EN{At first, our open() will compare the name of the file to be opened with what we need and if it is so,
 it will write down the descriptor of the file opened.}
 \RU{Во-вторых, read(), если будет вызываться для этого дескриптора, будет подменять вывод,
 а в остальных случаях, будет вызывать настоящий}
-\EN{At second, read(), if it will be called for this file descriptor, will substitute output,
-and in other cases, will call original} read() \RU{из}\EN{from} libc.so.6.
+\EN{Second, read(), if called for this file descriptor, will substitute the output,
+and in the rest of the cases will call the original} read() \RU{из}\EN{from} libc.so.6.
 \RU{А также}\EN{And also} close(), \RU{будет следить, закрывается ли файл за которым мы следим.}
-\EN{will note, if the file we are currently follow is to be closed.}
+\EN{will note if the file we are currently following is to be closed.}
 
 \index{dlopen()}
 \index{dlsym()}
-\RU{Для того чтобы найти адреса настоящих ф-ций в libc.so.6, используем dlopen() и dlsym().}
-\EN{We will use the dlopen() and dlsym() functions to determine original addresses of functions in libc.so.6.}
+\RU{Для того чтобы найти адреса настоящих функций в libc.so.6, используем dlopen() и dlsym().}
+\EN{We are going to use the dlopen() and dlsym() functions to determine the original function addresses in libc.so.6.}
 
-\RU{Нам это нужно, потому что нам нужно передавать управление ``настоящим'' ф-циями.}
-\EN{We need them because we must pass control to ``real'' functions.}
+\RU{Нам это нужно, потому что нам нужно передавать управление \q{настоящим} функциями.}
+\EN{We need them because we must pass control to the \q{real} functions.}
 
 \index{\CStandardLibrary!strcmp()}
 \RU{С другой стороны, если бы мы перехватывали, скажем, strcmp(),
 и следили бы за всеми сравнениями строк в программе, 
 то, наверное, strcmp() можно было бы и самому реализовать, не
-пользуясь настоящей ф-цией}
-\EN{On the other hand, if we could intercept e.g. strcmp(), and follow each string
-comparisons in program, then strcmp() could be implemented easily on one's own, while not
-using original function}
+пользуясь настоящей функцией}
+\EN{On the other hand, if we intercepted strcmp() and monitored each string
+comparisons in the program, then we would have to implement a strcmp(), and not
+use the original function}
 \footnote{\RU{Например, посмотрите как обеспечивается простейший перехват strcmp()}
-\EN{For example, here is how simple strcmp() interception is works} \InENRU
-\RU{статье}\EN{article}
-\footnote{\url{http://yurichev.com/mirrors/LD\_PRELOAD/Yong\%20Huang\%20LD\_PRELOAD.txt}}
-\RU{от}\EN{from} Yong Huang}.
+\EN{For example, here is how simple strcmp() interception works} \InENRU
+\RU{статье}\EN{this article}
+\footnote{\href{http://go.yurichev.com/17143}{yurichev.com}}
+\RU{написанной}\EN{written by} Yong Huang}.
 
 \lstinputlisting{OS/LD_PRELOAD/fool_uptime.c}
-% FIXME: add URL to github source
+( \href{https://github.com/dennis714/RE-for-beginners/blob/master/OS/LD_PRELOAD/fool_uptime.c}{\EN{Source code at}\RU{Исходный код на} GitHub} )
+% FIXME go.yurichev.com...
 
 \RU{Компилируем как динамическую библиотеку}\EN{Let's compile it as common dynamic library}:
 
@@ -100,7 +102,7 @@ gcc -fpic -shared -Wall -o fool_uptime.so fool_uptime.c -ldl
 \end{lstlisting}
 
 \RU{Запускаем \IT{uptime}, подгружая нашу библиотеку перед остальными}\EN{Let's run \IT{uptime}
-while loading our library before others}:
+while loading our library before the others}:
 
 \begin{lstlisting}
 LD_PRELOAD=`pwd`/fool_uptime.so uptime
@@ -115,26 +117,26 @@ LD_PRELOAD=`pwd`/fool_uptime.so uptime
 \RU{Если переменная окружения}\EN{If the} \IT{LD\_PRELOAD} 
 \RU{будет всегда указывать на путь и имя файла нашей библиотеки, то она будет
 загружаться для всех запускаемых программ.}
-\EN{environment variable will always points to filename and path of our library, it will be loaded
-for all starting programs.} \\
+\EN{environment variable always points to the filename and path of our library, 
+it is to be loaded for all starting programs.} \\
 \\
 \RU{Еще примеры}\EN{More examples}:
 
 \begin{itemize}
 \RU{\item
-\RU{Перехват}\EN{Intercepting} time() \InENRU Sun Solaris \url{http://yurichev.com/mirrors/LD_PRELOAD/sun_hack.txt}
+\RU{Перехват}\EN{Intercepting} time() \InENRU Sun Solaris \href{http://go.yurichev.com/17144}{yurichev.com}
 }
 
 \item
 \RU{Очень простой перехват}\EN{Very simple interception of the} strcmp() (Yong Huang) 
-\url{http://yurichev.com/mirrors/LD\_PRELOAD/Yong\%20Huang\%20LD\_PRELOAD.txt}
+\url{http://go.yurichev.com/17043}
 
 \item
-Kevin Pulo --- Fun with LD\_PRELOAD. \RU{Много примеров и идей}\EN{A lot of examples and ideas}.
-\url{http://yurichev.com/mirrors/LD_PRELOAD/lca2009.pdf}
+Kevin Pulo\EMDASH{}Fun with LD\_PRELOAD. \RU{Много примеров и идей}\EN{A lot of examples and ideas}.
+\href{http://go.yurichev.com/17145}{yurichev.com}
 
 \item
-\RU{Перехват ф-ций работы с файлами для компрессии и декомпрессии файлов на лету}
-\EN{File functions interception for compression/decompression files on fly} (zlibc). \url{ftp://metalab.unc.edu/pub/Linux/libs/compression}
+\RU{Перехват функций работы с файлами для компрессии и декомпрессии файлов на лету}
+\EN{File functions interception for compression/decompression files on fly} (zlibc). \url{http://go.yurichev.com/17146}
 
 \end{itemize}

@@ -1,0 +1,12 @@
+f:
+                srl     $v0, $a0, 24
+                sll     $v1, $a0, 24
+                sll     $a1, $a0, 8
+                or      $v1, $v0
+                lui     $v0, 0xFF
+                and     $v0, $a1, $v0
+                srl     $a0, 8
+                or      $v0, $v1, $v0
+                andi    $a0, 0xFF00
+                jr      $ra
+                or      $v0, $a0

@@ -3,8 +3,7 @@ $SG74606 DB    'hello #2!', 0aH, 00H
 $SG74608 DB    'access violation, can''t recover', 0aH, 00H
 _DATA    ENDS
 
-; scope table
-
+; scope table:
 CONST     SEGMENT
 $T74622   DD    0ffffffffH    ; previous try level
           DD    FLAT:$L74617  ; filter
@@ -25,9 +24,10 @@ _main    PROC NEAR
     push   eax                             ; prev
     mov    DWORD PTR fs:__except_list, esp
     add    esp, -16
-    push   ebx   ; saved 3 registers
-    push   esi   ; saved 3 registers
-    push   edi   ; saved 3 registers
+; 3 registers to be saved:
+    push   ebx
+    push   esi
+    push   edi
     mov    DWORD PTR __$SEHRec$[ebp], esp
     mov    DWORD PTR _p$[ebp], 0
     mov    DWORD PTR __$SEHRec$[ebp+20], 0  ; previous try level
@@ -42,8 +42,7 @@ _main    PROC NEAR
     mov    DWORD PTR __$SEHRec$[ebp+20], -1  ; previous try level
     jmp    SHORT $L74616
         
-    ; filter code
-
+    ; filter code:
 $L74617:
 $L74627:
     mov    ecx, DWORD PTR __$SEHRec$[ebp+4]
@@ -59,8 +58,7 @@ $L74619:
 $L74626:
     ret    0
 
-    ; handler code
-
+    ; handler code:
 $L74618:
     mov    esp, DWORD PTR __$SEHRec$[ebp]
     push   OFFSET FLAT:$SG74608 ; 'access violation, can''t recover'

@@ -46,7 +46,7 @@
 
 ...
 
-; this name I gave to label:
+; this name we gave to label:
 .text:0000D9B6 decrypt_end_print_message:              ; CODE XREF: sync_sys+29Dj
 .text:0000D9B6                                         ; sync_sys+2ABj
 .text:0000D9B6                 mov     eax, [ebp+var_18]
@@ -70,7 +70,7 @@
 
 ...
 
-; this name I gave to label:
+; this name we gave to label:
 .data:00401736 encrypted_error_message2 db 74h, 72h, 78h, 43h, 48h, 6, 5Ah, 49h, 4Ch, 2 dup(47h)
 .data:00401736                 db 51h, 4Fh, 47h, 61h, 20h, 22h, 3Ch, 24h, 33h, 36h, 76h
 .data:00401736                 db 3Ah, 33h, 31h, 0Ch, 0, 0Bh, 1Fh, 7, 1Eh, 1Ah

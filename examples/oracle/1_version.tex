@@ -3,15 +3,15 @@
 \index{\oracle}
 \index{Linux}
 \index{Windows!ntoskrnl.exe}
-\RU{\oracle 11.2 это очень большая программа, основной модуль \TT{oracle.exe} содержит около 124 тысячи функций.}\EN{\oracle 11.2 is a huge program, main module \TT{oracle.exe} contain approx. 124,000 functions.} \RU{Для сравнения, ядро Windows 7 x64 (ntoskrnl.exe) ~--- около 11 тысяч функций, а ядро Linux 3.9.8 (с драйверами по умолчанию) ~--- 31 тысяч функций.}\EN{For comparison, Windows 7 x86 kernel (ntoskrnl.exe)~---approx. 11,000 functions and Linux 3.9.8 kernel (with default drivers compiled)~---31,000 functions.}
+\RU{\oracle 11.2 это очень большая программа, основной модуль \TT{oracle.exe} содержит около 124 тысячи функций.}\EN{\oracle 11.2 is a huge program, its main module \TT{oracle.exe} contain approx. 124,000 functions.} \RU{Для сравнения, ядро Windows 7 x64 (ntoskrnl.exe)\EMDASH{}около 11 тысяч функций, а ядро Linux 3.9.8 (с драйверами по умолчанию)\EMDASH{}31 тысяч функций.}\EN{For comparison, the Windows 7 x86 kernel (ntoskrnl.exe) contains approx. 11,000 functions and the Linux 3.9.8 kernel (with default drivers compiled)\EMDASH{}31,000 functions.}
 
-\RU{Начнем с одного простого вопроса. Откуда \oracle берет информацию, когда мы в SQL*Plus пишем вот такой вот простой запрос:}\EN{Let's start with an easy question. Where \oracle get all this information, when we execute such simple statement in SQL*Plus:}
+\RU{Начнем с одного простого вопроса. Откуда \oracle берет информацию, когда мы в SQL*Plus пишем вот такой вот простой запрос:}\EN{Let's start with an easy question. Where does \oracle get all this information, when we execute this simple statement in SQL*Plus:}
 
 \begin{lstlisting}
 SQL> select * from V$VERSION;
 \end{lstlisting}
 
-\RU{И получаем}\EN{And we've got}:
+\RU{И получаем}\EN{And we get}:
 
 \begin{lstlisting}
 BANNER
@@ -24,17 +24,17 @@ TNS for 32-bit Windows: Version 11.2.0.1.0 - Production
 NLSRTL Version 11.2.0.1.0 - Production
 \end{lstlisting}
 
-\RU{Начнем. Где в самом \oracle мы можем найти строку}\EN{Let's start. Where in the \oracle we may find a string} \TT{V\$VERSION}?
+\RU{Начнем. Где в самом \oracle мы можем найти строку}\EN{Let's start. Where in the \oracle can we find the string} \TT{V\$VERSION}?
 
 \RU{Для win32-версии, эта строка имеется в файле \TT{oracle.exe}, это легко увидеть.}
-\EN{As of win32-version, \TT{oracle.exe} file contain the string,
-which can be investigated easily.}
-\RU{Но мы также можем использовать объектные (.o) файлы от версии \oracle для Linux, потому что в них сохраняются имена функций и глобальных переменных, а в \TT{oracle.exe} для win32 этого нет.}\EN{But we can also use object (.o) files from Linux version of \oracle since, unlike win32 version \TT{oracle.exe}, function names (and global variables as well) are preserved there.}
+\EN{In the win32-version, \TT{oracle.exe} file contains the string,
+it's easy to see.}
+\RU{Но мы также можем использовать объектные (.o) файлы от версии \oracle для Linux, потому что в них сохраняются имена функций и глобальных переменных, а в \TT{oracle.exe} для win32 этого нет.}\EN{But we can also use the object (.o) files from the Linux version of \oracle since, unlike the win32 version \TT{oracle.exe}, the function names (and global variables as well) are preserved there.}
 
-\RU{Итак, строка \TT{V\$VERSION} имеется в файле \TT{kqf.o}, в самой главной Oracle-библиотеке \TT{libserver11.a}.}\EN{So, \TT{kqf.o} file contain \TT{V\$VERSION} string.
+\RU{Итак, строка \TT{V\$VERSION} имеется в файле \TT{kqf.o}, в самой главной Oracle-библиотеке \TT{libserver11.a}.}\EN{So, the \TT{kqf.o} file contains the \TT{V\$VERSION} string.
 The object file is in the main Oracle-library \TT{libserver11.a}.}
 
-\RU{Ссылка на эту текстовую строку имеется в таблице \TT{kqfviw}, размещенной в этом же файле \TT{kqf.o}}\EN{A reference to this text string we may find in the \TT{kqfviw} table stored in the same file, \TT{kqf.o}}:
+\RU{Ссылка на эту текстовую строку имеется в таблице \TT{kqfviw}, размещенной в этом же файле \TT{kqf.o}}\EN{A reference to this text string can find in the \TT{kqfviw} table stored in the same file, \TT{kqf.o}}:
 
 \begin{lstlisting}[caption=kqf.o]
 .rodata:0800C4A0 kqfviw          dd 0Bh                  ; DATA XREF: kqfchk:loc_8003A6D
@@ -88,24 +88,25 @@ The object file is in the main Oracle-library \TT{libserver11.a}.}
 .rodata:0800C55C                 dd 0
 \end{lstlisting}
 
-\RU{Кстати, нередко, при изучении внутренностей \oracle, появляется вопрос, почему имена функций и глобальных переменных такие странные}\EN{By the way, often, while analysing \oracle internals, you may ask yourself, why functions and global variable names are so weird}. \RU{Вероятно, дело в том, что \oracle очень старый продукт сам по себе и писался на Си еще в 1980-х}
-\EN{Supposedly, since \oracle is very old product and was developed in C in 1980-s}. \RU{А в те времена стандарт Си гарантировал поддержку имен переменных длиной только до шести символов включительно}
-\EN{And that was a time when C standard guaranteed function names/variables support only up to 6 characters inclusive}: <<6 significant initial characters in an external identifier>>\footnote{\href{http://yurichev.com/ref/Draft\%20ANSI\%20C\%20Standard\%20(ANSI\%20X3J11-88-090)\%20(May\%2013,\%201988).txt}{Draft ANSI C Standard (ANSI X3J11/88-090) (May 13, 1988)}}
+\RU{Кстати, нередко, при изучении внутренностей \oracle, появляется вопрос, почему имена функций и глобальных переменных такие странные}\EN{By the way, often, while analysing \oracle's internals, you may ask yourself, why are the names of the functions and global variable so weird}. \RU{Вероятно, дело в том, что \oracle очень старый продукт сам по себе и писался на Си еще в 1980-х}
+\EN{Probably, because \oracle is a very old product and was developed in C in the 1980s}. \RU{А в те времена стандарт Си гарантировал поддержку имен переменных длиной только до шести символов включительно}
+\EN{And that was a time when the C standard guaranteed that the function names/variables can support only up to 6 characters inclusive}: <<6 significant initial characters in an external identifier>>\footnote{\href{http://go.yurichev.com/17142}{Draft ANSI C Standard (ANSI X3J11/88-090) (May 13, 1988) (yurichev.com)}}
 
-\RU{Вероятно, таблица \TT{kqfviw} содержащая в себе многие (а может даже и все) view с префиксом V\$, это служебные view (fixed views), присутствующие всегда.}\EN{Probably, the table \TT{kqfviw} contain most (maybe even all) views prefixed with V\$, these are \IT{fixed views}, present all the time.}
-\RU{Бегло оценив цикличность данных, мы легко видим, что в каждом элементе таблицы \TT{kqfviw} 12 полей 32-битных полей.}\EN{Superficially, by noticing cyclic recurrence of data, we can easily see that each \TT{kqfviw} table element has 12 32-bit fields.}
+\RU{Вероятно, таблица \TT{kqfviw} содержащая в себе многие (а может даже и все) view с префиксом V\$, это служебные view (fixed views), присутствующие всегда.}\EN{Probably, the table \TT{kqfviw} contains most (maybe even all) views prefixed with V\$, these are \IT{fixed views}, present all the time.}
+\RU{Бегло оценив цикличность данных, мы легко видим, что в каждом элементе таблицы \TT{kqfviw} 12 полей 32-битных полей.}\EN{Superficially, by noticing the cyclic recurrence of data, we can easily see that each \TT{kqfviw} table element has 12 32-bit fields.}
 \RU{В \IDA легко создать структуру из 12-и элементов и применить её ко всем элементам таблицы.}\EN{It is very simple to create a 12-elements structure in \IDA and apply it to all table elements.}
-\RU{Для версии \oracle 11.2, здесь 1023 элемента в таблице, то есть, здесь описываются 1023 всех возможных \IT{fixed view}.}\EN{As of \oracle version 11.2, there are 1023 table elements, i.e., there are described 1023 of all possible \IT{fixed views}.}
-\RU{Позже, мы еще вернемся к этому числу.}\EN{We will return to this number later.}
+\RU{Для версии \oracle 11.2, здесь 1023 элемента в таблице, то есть, здесь описываются 1023 всех возможных \IT{fixed view}.}\EN{As of \oracle version 11.2, there are 1023 table elements, i.e., in it are described 1023 of all possible \IT{fixed views}.}
+\RU{Позже, мы еще вернемся к этому числу.}
+\EN{We are going to return to this number later.}
 
 \RU{Как видно, мы не очень много можем узнать чисел в этих полях. Самое первое число всегда равно длине строки-названия view (без терминирующего ноля).}
-\EN{As we can see, there is not much information in these numbers in fields. The very first number is always equals to name of view (without terminating zero.}
+\EN{As we can see, there is not much information in these numbers in the fields. The first number is always equals to the name of the view (without the terminating zero.}
 \RU{Это справедливо для всех элементов. Но эта информация не очень полезна.}\EN{This is correct for each element. But this information is not very useful.}
 
 \RU{Мы также знаем, что информацию обо всех fixed views можно получить из \IT{fixed view} под названием}
-\EN{We also know that information about all fixed views can be retrieved from \IT{fixed view} named} \TT{V\$FIXED\_VIEW\_DEFINITION}
-\RU{(кстати, информация для этого view также берется из таблиц \TT{kqfviw} и \TT{kqfvip}).}\EN{(by the way, the information for this view is also taken from \TT{kqfviw} and \TT{kqfvip} tables.)}
-\RU{Кстати, там тоже 1023 элемента.}\EN{By the way, there are 1023 elements too.}
+\EN{We also know that the information about all fixed views can be retrieved from a \IT{fixed view} named} \TT{V\$FIXED\_VIEW\_DEFINITION}
+\RU{(кстати, информация для этого view также берется из таблиц \TT{kqfviw} и \TT{kqfvip}).}\EN{(by the way, the information for this view is also taken from the \TT{kqfviw} and \TT{kqfvip} tables.)}
+\RU{Кстати, там тоже 1023 элемента. Совпадение? Нет.}\EN{By the way, there are 1023 elements in those too. Coincidence? No.}
 
 \begin{lstlisting}
 SQL> select * from V$FIXED_VIEW_DEFINITION where view_name='V$VERSION';
@@ -120,7 +121,7 @@ select  BANNER from GV$VERSION where inst_id = USERENV('Instance')
 \end{lstlisting}
 
 \RU{Итак, \TT{V\$VERSION} это как бы \IT{thunk view} для другого, с названием \TT{GV\$VERSION}, который, в свою очередь:}
-\EN{So, \TT{V\$VERSION} is some kind of \IT{thunk view} for another view, named \TT{GV\$VERSION}, which is, in turn:}
+\EN{So, \TT{V\$VERSION} is some kind of a \IT{thunk view} for another view, named \TT{GV\$VERSION}, which is, in turn:}
 
 \begin{lstlisting}
 SQL> select * from V$FIXED_VIEW_DEFINITION where view_name='GV$VERSION';
@@ -134,11 +135,14 @@ GV$VERSION
 select inst_id, banner from x$version
 \end{lstlisting}
 
-\RU{Таблицы с префиксом X\$ в \oracle ~--- это также служебные таблицы, они не документированы, не могут изменятся пользователем, и обновляются динамически.}\EN{Tables prefixed as X\$ in the \oracle -- is service tables too, undocumented, cannot be changed by user and refreshed dynamically.}
+\RU{Таблицы с префиксом X\$ в \oracle\EMDASH{}это также служебные таблицы, они не документированы, не могут изменятся пользователем, и обновляются динамически.}\EN{The tables prefixed with X\$ in the \oracle are service tables too, undocumented, cannot be changed by the user and are refreshed dynamically.}
 
-\RU{Попробуем поискать текст}\EN{Let's also try to search the text} \TT{select  BANNER from GV\$VERSION where inst\_id = USERENV('Instance')} \RU{в файле \TT{kqf.o} и находим ссылку на него в таблице \TT{kqfvip}}\EN{in the \TT{kqf.o} file and we find it in the \TT{kqfvip} table}:
+\RU{Попробуем поискать текст}\EN{If we search for the text} 
+\TT{select  BANNER from GV\$VERSION where inst\_id = USERENV('Instance')} 
+\RU{в файле \TT{kqf.o} и находим ссылку на него в таблице \TT{kqfvip}}
+\EN{in the \TT{kqf.o} file, we find it in the \TT{kqfvip} table}:
 
-.\begin{lstlisting}[caption=kqf.o]
+\begin{lstlisting}[caption=kqf.o]
 rodata:080185A0 kqfvip          dd offset _2__STRING_11126_0 ; DATA XREF: kqfgvcn+18
 .rodata:080185A0                                         ; kqfgvt+F
 .rodata:080185A0                                         ; "select inst_id,decode(indx,1,'data bloc"...
@@ -160,16 +164,15 @@ rodata:080185A0 kqfvip          dd offset _2__STRING_11126_0 ; DATA XREF: kqfgvc
 .rodata:08019594                 dd offset kqfv199_c_0
 \end{lstlisting}
 
-\RU{Таблица, по всей видимости, имеет 4 поля в каждом элементе. Кстати, здесь так же 1023 элемента.}
-\EN{The table appear to have 4 fields in each element.
-By the way, there are 1023 elements too.}
+\RU{Таблица, по всей видимости, имеет 4 поля в каждом элементе. Кстати, здесь так же 1023 элемента, уже знакомое нам число.}
+\EN{The table appear to have 4 fields in each element. By the way, there are 1023 elements in it, again, the number we already know.}
 \RU{Второе поле указывает на другую таблицу, содержащую поля этого \IT{fixed view}.}
-\EN{The second field pointing to another table, containing table fields for this \IT{fixed view}.}
-\RU{Для \TT{V\$VERSION}, эта таблица только из двух элементов, первый это $6$ и второй это строка 
-\TT{BANNER} (число это длина строки) и далее \IT{терминирующий} элемент содержащий $0$ и \IT{нулевую} 
-Си-строку:}\EN{As of \TT{V\$VERSION}, this table contain only two elements, first is $6$ and second is 
-\TT{BANNER} string (the number ($6$) is this string length) and after, \IT{terminating} element contain 
-$0$ and \IT{null} C-string:}
+\EN{The second field points to another table that contains the table fields for this \IT{fixed view}.}
+\RU{Для \TT{V\$VERSION}, эта таблица только из двух элементов, первый это 6 и второй это строка 
+\TT{BANNER} (число 6 это длина строки) и далее \IT{терминирующий} элемент содержащий 0 и \IT{нулевую} 
+Си-строку:}\EN{As for \TT{V\$VERSION}, this table contains only two elements, the first is 6 and the second is 
+the \TT{BANNER} string (the number 6 is this string's length) and after, a \IT{terminating} element that contains 
+0 and a \IT{null} C string:}
 
 \begin{lstlisting}[caption=kqf.o]
 .rodata:080BBAC4 kqfv133_c_0     dd 6                    ; DATA XREF: .rodata:08019574
@@ -178,10 +181,11 @@ $0$ and \IT{null} C-string:}
 .rodata:080BBAD0                 dd offset _2__STRING_0_0
 \end{lstlisting}
 
-\RU{Объединив данные из таблиц \TT{kqfviw} и \TT{kqfvip}, мы получим SQL-запросы, которые исполняются, когда пользователь хочет получить информацию из какого-либо \IT{fixed view}.}\EN{By joining data from both \TT{kqfviw} and \TT{kqfvip} tables, we may get SQL-statements which are executed when user wants to query information from specific \IT{fixed view}.}
+\RU{Объединив данные из таблиц \TT{kqfviw} и \TT{kqfvip}, мы получим SQL-запросы, которые исполняются, когда пользователь хочет получить информацию из какого-либо \IT{fixed view}.}\EN{By joining data from both \TT{kqfviw} and \TT{kqfvip} tables, we can get the SQL statements which are executed when the user wants to query information from a specific \IT{fixed view}.}
 
-\RU{Я написал программу \oracletables, которая собирает всю эту информацию из объектных файлов от \oracle под Linux.}\EN{So I wrote an \oracletables program, so to gather all this information from \oracle for Linux object files.}
-\RU{Для \TT{V\$VERSION}, мы можем найти следующее:}\EN{For \TT{V\$VERSION}, we may find this:}
+\RU{Напишем программу \oracletables, которая собирает всю эту информацию из объектных файлов от \oracle под Linux.}%
+\EN{So we can write an \oracletables program, to gather all this information from \oracle for Linux's object files.}
+\RU{Для \TT{V\$VERSION}, мы можем найти следующее:}\EN{For \TT{V\$VERSION}, we find this:}
 
 \begin{lstlisting}[caption=\RU{Результат работы}\EN{Result of} \OracleTablesName]
 kqfviw_element.viewname: [V$VERSION] ?: 0x3 0x43 0x1 0xffffc085 0x4
@@ -200,8 +204,9 @@ kqfvip_element.params:
 \end{lstlisting}
 
 \RU{\IT{Fixed view} \TT{GV\$VERSION} отличается от \TT{V\$VERSION} тем, что содержит еще и поле отражающее идентификатор \IT{instance}.}
-\EN{\TT{GV\$VERSION} \IT{fixed view} is distinct from \TT{V\$VERSION} in only that way that it contains one more field with \IT{instance} identifier.}
-\RU{Но так или иначе, мы теперь упираемся в таблицу \TT{X\$VERSION}. Как и прочие X\$-таблицы, она не документирована, однако, мы можем оттуда что-то прочитать}\EN{Anyway, we stuck at the table \TT{X\$VERSION}. Just like any other X\$-tables, it is undocumented, however, we can query it}:
+\EN{The \TT{GV\$VERSION} \IT{fixed view} is different from \TT{V\$VERSION} only in that it contains one more field with the identifier \IT{instance}.}
+\RU{Но так или иначе, мы теперь упираемся в таблицу \TT{X\$VERSION}. Как и прочие X\$-таблицы, она не документирована, однако, мы можем оттуда что-то прочитать}
+\EN{Anyway, we are going to stick with the \TT{X\$VERSION} table. Just like any other X\$-table, it is undocumented, however, we can query it}:
 
 \begin{lstlisting}
 SQL> select * from x$version;
@@ -217,9 +222,9 @@ Oracle Database 11g Enterprise Edition Release 11.2.0.1.0 - Production
 ...
 \end{lstlisting}
 
-\RU{Эта таблица содержит дополнительные поля вроде \TT{ADDR} и \TT{INDX}.}\EN{This table has additional fields like \TT{ADDR} and \TT{INDX}.}
+\RU{Эта таблица содержит дополнительные поля вроде \TT{ADDR} и \TT{INDX}.}\EN{This table has some additional fields, like \TT{ADDR} and \TT{INDX}.}
 
-\RU{Бегло листая содержимое файла \TT{kqf.o} в \IDA мы можем увидеть еще одну таблицу где есть ссылка на строку \TT{X\$VERSION}, это \TT{kqftab}:}\EN{While scrolling \TT{kqf.o} in \IDA we may spot another table containing pointer to the \TT{X\$VERSION} string, this is \TT{kqftab}:}
+\RU{Бегло листая содержимое файла \TT{kqf.o} в \IDA мы можем увидеть еще одну таблицу где есть ссылка на строку \TT{X\$VERSION}, это \TT{kqftab}:}\EN{While scrolling \TT{kqf.o} in \IDA we can spot another table that contains a pointer to the \TT{X\$VERSION} string, this is \TT{kqftab}:}
 
 \begin{lstlisting}[caption=kqf.o]
 .rodata:0803CAC0                 dd 9                    ; element number 0x1f6
@@ -249,17 +254,17 @@ Oracle Database 11g Enterprise Edition Release 11.2.0.1.0 - Production
 \end{lstlisting}
 
 \RU{Здесь очень много ссылок на названия X\$-таблиц, вероятно, на все те что имеются в \oracle этой версии.}
-\EN{There are a lot of references to X\$-table names, apparently, to all \oracle 11.2 X\$-tables.}
-\RU{Но мы снова упираемся в то что не имеем достаточно информации.}\EN{But again, we have not enough information.}
-\RU{У меня нет никакой идеи, что означает строка \TT{kqvt}.}
-\EN{I have no idea, what \TT{kqvt} string means.} 
+\EN{There are a lot of references to the X\$-table names, apparently, to all \oracle 11.2 X\$-tables.}
+\RU{Но мы снова упираемся в то что не имеем достаточно информации.}\EN{But again, we don't have enough information.}
+\RU{Не ясно, что означает строка \TT{kqvt}.}
+\EN{It's not clear what does the \TT{kqvt} string stands for.} 
 \RU{Вообще, префикс \TT{kq} может означать \IT{kernel} и \IT{query}.}
-\EN{\TT{kq} prefix may means \IT{kernel} and \IT{query}.} 
-\RU{\TT{v}, может быть, \IT{version}, а \TT{t} ~--- \IT{type}?}
-\EN{\TT{v}, apparently, means \IT{version} and \TT{t}~---\IT{type}?} 
-\RU{Я не знаю, честно говоря.}\EN{Frankly speaking, I do not know.}
+\EN{The \TT{kq} prefix may mean \IT{kernel} or \IT{query}.} 
+\RU{\TT{v}, может быть, \IT{version}, а \TT{t}\EMDASH{}\IT{type}?}
+\EN{\TT{v} apparently stands for \IT{version} and \TT{t}\EMDASH{}\IT{type}?} 
+\RU{Сказать трудно.}\EN{Hard to say.}
 
-\RU{Таблицу с очень похожим названием мы можем найти в}\EN{The table named similarly can be found in} \TT{kqf.o}:
+\RU{Таблицу с очень похожим названием мы можем найти в}\EN{A table with a similar name can be found in} \TT{kqf.o}:
 
 \begin{lstlisting}[caption=kqf.o]
 .rodata:0808C360 kqvt_c_0        kqftap_param <4, offset _2__STRING_19_0, 917h, 0, 0, 0, 4, 0, 0>
@@ -271,8 +276,8 @@ Oracle Database 11g Enterprise Edition Release 11.2.0.1.0 - Production
 .rodata:0808C3F0                 kqftap_param <0, offset _2__STRING_0_0, 0, 0, 0, 0, 0, 0, 0>
 \end{lstlisting}
 
-\RU{Она содержит информацию об именах полей в таблице \TT{X\$VERSION}.}\EN{It contain information about all fields in the \TT{X\$VERSION} table.}
-\RU{Единственная ссылка на эту таблицу имеется в таблице \TT{kqftap}:}\EN{The only reference to this table present in the \TT{kqftap} table:}
+\RU{Она содержит информацию об именах полей в таблице \TT{X\$VERSION}.}\EN{It contains information about all fields in the \TT{X\$VERSION} table.}
+\RU{Единственная ссылка на эту таблицу имеется в таблице \TT{kqftap}:}\EN{The only reference to this table is in the \TT{kqftap} table:}
 
 \begin{lstlisting}[caption=kqf.o]
 .rodata:08042680                 kqftap_element <0, offset kqvt_c_0, offset kqvrow, 0> ; element 0x1f6
@@ -280,15 +285,15 @@ Oracle Database 11g Enterprise Edition Release 11.2.0.1.0 - Production
 
 \RU{Интересно что здесь этот элемент проходит так же под номером \TT{0x1f6} (502-й), как и ссылка на строку 
 \TT{X\$VERSION} в таблице \TT{kqftab}.}
-\EN{It is interesting that this element here is \TT{0x1f6th} (502nd), just as a pointer to the \TT{X\$VERSION} string in 
+\EN{It is interesting that this element here is \TT{0x1f6th} (502nd), just like the pointer to the \TT{X\$VERSION} string in 
 the \TT{kqftab} table.}
 \RU{Вероятно, таблицы \TT{kqftap} и \TT{kqftab} дополняют друг друга, как и \TT{kqfvip} и \TT{kqfviw}.}
-\EN{Probably, \TT{kqftap} and \TT{kqftab} tables are complement each other, just like \TT{kqfvip} and \TT{kqfviw}.}
+\EN{Probably, the \TT{kqftap} and \TT{kqftab} tables complement each other, just like \TT{kqfvip} and \TT{kqfviw}.}
 \RU{Мы также видим здесь ссылку на функцию с названием \TT{kqvrow()}. А вот это уже кое-что!}
 \EN{We also see a pointer to the \TT{kqvrow()} function. Finally, we got something useful!}
 
-\RU{Я сделал так чтобы моя программа \oracletables могла дампить и эти таблицы. Для \TT{X\$VERSION} получается:}
-\EN{So I added these tables to my \oracletables utility too. For \TT{X\$VERSION} I've got:}
+\RU{Сделаем так чтобы наша программа \oracletables могла дампить и эти таблицы. Для \TT{X\$VERSION} получается:}
+\EN{So we will add these tables to our \oracletables utility too. For \TT{X\$VERSION} we get:}
 
 \begin{lstlisting}[caption=\RU{Результат работы}\EN{Result of} \OracleTablesName]
 kqftab_element.name: [X$VERSION] ?: [kqvt] 0x4 0x4 0x4 0xc 0xffffc075 0x3
@@ -301,9 +306,10 @@ kqftap_element.fn2=NULL
 \end{lstlisting}
 
 \index{tracer}
-\RU{При помощи \tracer, можно легко проверить, что эта ф-ция вызывается 6 раз кряду (из ф-ции \TT{qerfxFetch()}) при получении строк из \TT{X\$VERSION}.}\EN{With the help of \tracer, it is easy to check that this function called 6 times in row (from the \TT{qerfxFetch()} function) while querying \TT{X\$VERSION} table.}
+\RU{При помощи \tracer, можно легко проверить, что эта функция вызывается 6 раз кряду (из функции \TT{qerfxFetch()}) при получении строк из \TT{X\$VERSION}.}\EN{With the help of \tracer, it is easy to check that this function is called 6 times in row (from the \TT{qerfxFetch()} function) while querying the \TT{X\$VERSION} table.}
 
-\RU{Запустим \tracer в режиме \TT{cc} (он добавит комментарий к каждой исполненной инструкции):}\EN{Let's run \tracer in the \TT{cc} mode (it will comment each executed instruction):}
+\RU{Запустим \tracer в режиме \TT{cc} (он добавит комментарий к каждой исполненной инструкции):}
+\EN{Let's run \tracer in \TT{cc} mode (it comments each executed instruction):}
 
 \begin{lstlisting}
 tracer -a:oracle.exe bpf=oracle.exe!_kqvrow,trace:cc
@@ -311,8 +317,8 @@ tracer -a:oracle.exe bpf=oracle.exe!_kqvrow,trace:cc
 
 \lstinputlisting{examples/oracle/VERSION_kqvrow.asm}
 
-\RU{Так можно легко увидеть, что номер строки таблицы задается извне. Сама ф-ция возвращает строку, формируя её так:}
-\EN{Now it is easy to see that row number is passed from outside of function. The function returns the string constructing it as follows:}
+\RU{Так можно легко увидеть, что номер строки таблицы задается извне. Сама функция возвращает строку, формируя её так:}
+\EN{Now it is easy to see that the row number is passed from outside. The function returns the string, constructing it as follows:}
 
 \begin{center}
 \begin{tabular}{ | l | l | }
@@ -326,6 +332,6 @@ tracer -a:oracle.exe bpf=oracle.exe!_kqvrow,trace:cc
 \end{tabular}
 \end{center}
 
-\RU{Так вызываются соответствующие ф-ции для определения номеров версий отдельных модулей.}
-\EN{That's how corresponding functions are called for determining each module's version.}
+\RU{Так вызываются соответствующие функции для определения номеров версий отдельных модулей.}
+\EN{That's how the corresponding functions are called for determining each module's version.}
 

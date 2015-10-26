@@ -1,0 +1,29 @@
+sub_0:
+                li      $t3, 0x27100
+                move    $t2, $zero
+                li      $t1, 0x64  # 'd'
+
+loc_10:                                  # CODE XREF: sub_0+54
+                addu    $t0, $a1, $t2
+                addu    $a3, $a2, $t2
+                move    $v1, $a0
+                move    $v0, $zero
+
+loc_20:                                  # CODE XREF: sub_0+48
+                lwc1    $f2, 4($v1)
+                lwc1    $f0, 4($t0)
+                lwc1    $f3, 0($v1)
+                lwc1    $f1, 0($t0)
+                addiu   $v0, 1
+                add.d   $f0, $f2, $f0
+                addiu   $v1, 8
+                swc1    $f0, 4($a3)
+                swc1    $f1, 0($a3)
+                addiu   $t0, 8
+                bne     $v0, $t1, loc_20
+                addiu   $a3, 8
+                addiu   $t2, 0x320
+                bne     $t2, $t3, loc_10
+                addiu   $a0, 0x320
+                jr      $ra
+                or      $at, $zero

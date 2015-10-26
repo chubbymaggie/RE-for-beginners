@@ -40,7 +40,7 @@ $LN9:
 $LN6@main:
 	lea	rcx, OFFSET FLAT:$SG86279 ; 'access violation, can''t recover'
 	call	printf
-	npad	1
+	npad	1 ; align next label
 $LN8@main:
 	xor	eax, eax
 	add	rsp, 32

@@ -1,8 +1,9 @@
 \section{\CapitalPICcode}
 \index{\PICcode}
+\index{Linux}
 \label{sec:PIC}
 
-\RU{Во время анализа динамических библиотек (.so) в Linux, часто можно заметить такой шаблонный код}\EN{While analyzing Linux shared (.so) libraries, one may frequently spot such code pattern}:
+\RU{Во время анализа динамических библиотек (.so) в Linux, часто можно заметить такой шаблонный код}\EN{While analyzing Linux shared (.so) libraries, one may frequently spot this code pattern}:
 
 \begin{lstlisting}[caption=libc-2.17.so x86]
 .text:0012D5E3 __x86_get_pc_thunk_bx proc near         ; CODE XREF: sub_17350+3
@@ -39,21 +40,21 @@
 \end{lstlisting}
 
 \RU{Все указатели на строки корректируются при помощи некоторой константы из регистра \EBX, которая вычисляется в начале каждой функции.}
-\EN{All pointers to strings are corrected by a constant and by value in the \EBX,
-which calculated at the beginning of each function.}
+\EN{All pointers to strings are corrected by some constants and the value in \EBX,
+which is calculated at the beginning of each function.}
 \RU{Это так называемый адресно-независимый код (\ac{PIC}), он предназначен для исполнения будучи расположенным по любому адресу в памяти, вот почему он не содержит никаких абсолютных адресов в памяти}
-\EN{This is so-called \ac{PIC}, it is intended to execute placed at any random point of memory, that is why it cannot contain any absolute memory addresses}.
+\EN{This is the so-called \ac{PIC}, it is intended to be executable if placed at any random point of memory, that is why it cannot contain any absolute memory addresses}.
 
 \RU{\ac{PIC} был очень важен в ранних компьютерных системах и важен сейчас во встраиваемых\footnote{embedded}, не имеющих поддержки виртуальной памяти (все процессы расположены в одном непрерывном блоке памяти)}
 \EN{\ac{PIC} was 
-crucial in early computer systems and crucial now in embedded systems without 
-virtual memory support (where processes are all placed in single continous memory block)}.
+crucial in early computer systems and is crucial now in embedded systems without 
+virtual memory support (where all processes are placed in a single continuous memory block)}.
 \RU{Он до сих пор используется в *NIX системах для динамических библиотек, потому что динамическая библиотека может использоваться одновременно в нескольких процессах, будучи загружена в память только один раз}
-\EN{It is also still used in *NIX systems for shared libraries since shared libraries 
+\EN{It is also still used in *NIX systems for shared libraries, since they 
 are shared across many processes while loaded in memory only once}.
-\RU{Но все эти процессы могут загрузить одну и ту же динамическую библиотеку по разным адресам, вот почему динамическая библиотека должна работать корректно, не привязываясь к абсолютным адресам}\EN{But all these processes may 
-map the same shared library on different addresses, so that is why
-shared library should be working correctly without fixing on any absolute address}.
+\RU{Но все эти процессы могут загрузить одну и ту же динамическую библиотеку по разным адресам, вот почему динамическая библиотека должна работать корректно, не привязываясь к абсолютным адресам}\EN{But all these processes can 
+map the same shared library at different addresses, so that is why
+a shared library has to work correctly without using any absolute addresses}.
 
 \RU{Простой эксперимент}\EN{Let's do a simple experiment}:
 
@@ -70,7 +71,7 @@ int f1(int var)
 };
 \end{lstlisting}
 
-\RU{Скомпилируем в GCC 4.7.3 и посмотрим итоговый файл .so в}\EN{Let's compile it in GCC 4.7.3 and see resulting .so file in} \IDA:
+\RU{Скомпилируем в GCC 4.7.3 и посмотрим итоговый файл .so в}\EN{Let's compile it in GCC 4.7.3 and see the resulting .so file in} \IDA:
 
 \begin{lstlisting}
 gcc -fPIC -shared -O3 -o 1.so 1.c
@@ -118,14 +119,14 @@ gcc -fPIC -shared -O3 -o 1.so 1.c
 \newcommand{\retstring}{\IT{<<returning \%d\textbackslash{}n>>}}
 \newcommand{\globvar}{\IT{global\_variable}}
 
-\RU{Так и есть: указатели на строку \retstring{} и переменную \globvar{} корректируются при каждом исполнении функции}
-\EN{That's it: pointers to \retstring{} string and \globvar{} are to be corrected at each function execution.}
-\RU{Функция}\EN{The} \TT{\_\_x86\_get\_pc\_thunk\_bx()} \RU{возвращает адрес точки после вызова самой себя (здесь: \TT{0x57C}) в}\EN{function return address of the point after call to itself (\TT{0x57C} here) in the} \EBX.
+\RU{Так и есть: указатели на строку \retstring{} и переменную \globvar{} корректируются при каждом исполнении функции.}%
+\EN{That's it: the pointers to \retstring{} and \globvar{} are to be corrected at each function execution.}\ESph{}\PTBRph{}\PLph{}\\
+\RU{Функция}\EN{The} \TT{\_\_x86\_get\_pc\_thunk\_bx()} \RU{возвращает адрес точки после вызова самой себя (здесь: \TT{0x57C}) в \EBX}\EN{function returns in \EBX the address of the point after a call to itself (\TT{0x57C} here)}.
 \RU{Это очень простой способ получить значение указателя на текущую инструкцию (\EIP) в произвольном месте}
-\EN{That's the simple way to get value of program counter (\EIP) at some point}.
-\RU{Константа}\EN{The} \TT{0x1A84} \RU{связана с разницей между началом этой функции и так называемой}\EN{constant is related to the difference between this function begin and so-called}
-\IT{Global Offset Table Procedure Linkage Table} (GOT PLT), \RU{секцией, сразу же за}\EN{the section right after} \IT{Global Offset Table} (GOT), \RU{где находится указатель на \globvar{}}\EN{where pointer to \globvar{} is}.
-\IDA \RU{показывает смещения уже обработанными, чтобы их было проще понимать, но на самом деле код такой}\EN{shows these offset processed, so to understand them easily, but in fact the code is}:
+\EN{That's a simple way to get the value of the program counter (\EIP) at some point}.
+\RU{Константа}\EN{The} \TT{0x1A84} \RU{связана с разницей между началом этой функции и так называемой}\EN{constant is related to the difference between this function's start and the so-called}
+\IT{Global Offset Table Procedure Linkage Table} (GOT PLT), \RU{секцией, сразу же за}\EN{the section right after the} \IT{Global Offset Table} (GOT), \RU{где находится указатель на \globvar{}}\EN{where the pointer to \globvar{} is}.
+\IDA \RU{показывает смещения уже обработанными, чтобы их было проще понимать, но на самом деле код такой}\EN{shows these offsets in their processed form to make them easier to understand, but in fact the code is}:
 
 \begin{lstlisting}
 .text:00000577                 call    __x86_get_pc_thunk_bx
@@ -136,21 +137,22 @@ gcc -fPIC -shared -O3 -o 1.so 1.c
 .text:0000058E                 lea     eax, [ebx-1A30h]
 \end{lstlisting}
 
-\RU{Так что, \EBX указывает на секцию \TT{GOT PLT} и для вычисления указателя на \globvar{}, которая хранится в \TT{GOT}, нужно вычесть 0xC}\EN{So, \EBX pointing to the \TT{GOT PLT} section and to calculate pointer to \globvar{} which stored in 
-the \TT{GOT}, \TT{0xC} must be subtracted}.
+\RU{Так что, \EBX указывает на секцию \TT{GOT PLT} и для вычисления указателя на \globvar{}, которая хранится в \TT{GOT}, нужно вычесть 0xC}\EN{Here \EBX points to the \TT{GOT PLT} section and to calculate a pointer to \globvar{} (which is stored in 
+the \TT{GOT}), \TT{0xC} must be subtracted}.
 \RU{А чтобы вычислить указатель на \retstring{}, нужно вычесть \TT{0x1A30}}
 \EN{To calculate pointer to the \retstring{} string, \TT{0x1A30} must be subtracted}.
 
 \index{x86-64}
 \index{x86!\Registers!RIP}
 \RU{Кстати, вот зачем в AMD64 появилась поддержка адресации относительно RIP\footnote{указатель инструкций в AMD64}, просто для упрощения PIC-кода}
-\EN{By the way, that is the reason why AMD64 instruction set supports RIP\footnote{program counter in AMD64}-relative addressing, just to simplify PIC-code}.
+\EN{By the way, that is the reason why the AMD64 instruction set supports RIP\footnote{program counter in AMD64}-relative addressing\EMDASH{}to simplify PIC-code}.
 
-\RU{Скомпилируем тот же код на Си при помощи той же версии GCC, но для x64}\EN{Let's compile the same C code in the same GCC version, but for x64}.
+\RU{Скомпилируем тот же код на Си при помощи той же версии GCC, но для x64}\EN{Let's compile the same C code using the same GCC version, but for x64}.
 
 \index{objdump}
-\IDA \RU{упростит код на выходе убирая упоминания RIP, так что я буду использовать \IT{objdump} вместо}
-\EN{would simplify output code but suppressing RIP-relative addressing details, so I will run \IT{objdump} instead to see the details}:
+\RU{\IDA упростит код на выходе убирая упоминания RIP, так что будем использовать \IT{objdump} вместо нее}%
+\EN{\IDA would simplify the resulting code but would suppress the RIP-relative addressing details, 
+so we are going to use \IT{objdump} instead of IDA to see the everything}:
 
 \begin{lstlisting}
 0000000000000720 <f1>:
@@ -170,7 +172,7 @@ the \TT{GOT}, \TT{0xC} must be subtracted}.
 
 \TT{0x2008b9} \RU{это разница между адресом инструкции по \TT{0x720} и \globvar{}, 
 а \TT{0x20} это разница между инструкцией по \TT{0x72A} и строкой \retstring{}}
-\EN{is the difference between address of instruction at \TT{0x720} and \globvar{} and 
+\EN{is the difference between the address of the instruction at \TT{0x720} and \globvar{}, and 
 \TT{0x20} is the difference between the address of the instruction at 
 \TT{0x72A} and the \retstring{} string}.
 
@@ -180,17 +182,19 @@ the \TT{GOT}, \TT{0xC} must be subtracted}.
 (it is better in x64, though)}.
 \RU{Так что если вы заботитесь о скорости исполнения, то, наверное, нужно задуматься о статической
 компоновке (static linking)}
-\EN{So it is probably better to link statically if you aware of performance} (\cite{AgnerFogCPP}).
+\EN{So it is probably better to link statically if you care about performance} \cite{AgnerFogCPP}.
 
 \subsection{Windows}
+\index{Windows!Win32}
 
 \RU{Такой механизм не используется в Windows DLL. Если загрузчику в Windows приходится загружать DLL 
-в другое место, он ``патчит'' DLL прямо в памяти (на местах \IT{FIXUP}-ов) чтобы скорректировать 
-все адреса.}\EN{The PIC mechanism is not used in Windows DLLs. If Windows loader needs to load DLL 
-on another base address, it ``patches'' DLL in memory (at the \IT{FIXUP} places) in order to correct 
+в другое место, он \q{патчит} DLL прямо в памяти (на местах \IT{FIXUP}-ов) чтобы скорректировать 
+все адреса.}\EN{The PIC mechanism is not used in Windows DLLs. If the Windows loader needs to load DLL 
+on another base address, it \q{patches} the DLL in memory (at the \IT{FIXUP} places) in order to correct 
 all addresses.}
 \RU{Это приводит к тому что загруженную один раз DLL нельзя использовать одновременно в разных 
-процессах, желающих расположить её по разным адресам ~--- потому что каждый загруженный в память 
-экземпляр DLL \IT{доводится} до того чтобы работать только по этим адресам.}\EN{This means, several 
-Windows processes cannot share once loaded DLL on different addresses in different process' memory 
-blocks~---since each loaded into memory DLL instance \IT{fixed} to be work only at these addresses..}
+	процессах, желающих расположить её по разным адресам\EMDASH{}потому что каждый загруженный в память 
+экземпляр DLL \IT{доводится} до того чтобы работать только по этим адресам.}
+\EN{This implies that several Windows processes cannot share an once loaded DLL 
+at different addresses in different process' memory 
+blocks\EMDASH{}since each instance that's loaded in memory is \IT{fixed} to work only at these addresses..}

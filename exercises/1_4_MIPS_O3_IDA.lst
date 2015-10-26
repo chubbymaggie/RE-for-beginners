@@ -1,0 +1,56 @@
+f:
+                lb      $v1, 0($a1)
+                or      $at, $zero
+                bnez    $v1, loc_18
+                move    $v0, $a0
+
+locret_10:                               # CODE XREF: f+50
+                                         # f+78
+                jr      $ra
+                or      $at, $zero
+
+loc_18:                                  # CODE XREF: f+8
+                lb      $a0, 0($a0)
+                or      $at, $zero
+                beqz    $a0, locret_94
+                move    $a2, $v0
+
+loc_28:                                  # CODE XREF: f+8C
+                lb      $a0, 0($a2)
+                or      $at, $zero
+                beqz    $a0, loc_80
+                or      $at, $zero
+                bne     $v1, $a0, loc_80
+                move    $a3, $a1
+                b       loc_60
+                addiu   $a2, 1
+
+loc_48:                                  # CODE XREF: f+68
+                lb      $t1, 0($a3)
+                or      $at, $zero
+                beqz    $t1, locret_10
+                or      $at, $zero
+                bne     $t0, $t1, loc_80
+                addiu   $a2, 1
+
+loc_60:                                  # CODE XREF: f+40
+                lb      $t0, 0($a2)
+                or      $at, $zero
+                bnez    $t0, loc_48
+                addiu   $a3, 1
+                lb      $a0, 0($a3)
+                or      $at, $zero
+                beqz    $a0, locret_10
+                or      $at, $zero
+
+loc_80:                                  # CODE XREF: f+30
+                                         # f+38 ...
+                addiu   $v0, 1
+                lb      $a0, 0($v0)
+                or      $at, $zero
+                bnez    $a0, loc_28
+                move    $a2, $v0
+
+locret_94:                               # CODE XREF: f+20
+                jr      $ra
+                move    $v0, $zero

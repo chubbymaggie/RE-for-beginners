@@ -1,0 +1,33 @@
+main:
+
+var_18          = -0x18
+var_C           = -0xC
+var_8           = -8
+var_4           = -4
+
+                lui     $gp, (__gnu_local_gp >> 16)
+                addiu   $sp, -0x28
+                la      $gp, (__gnu_local_gp & 0xFFFF)
+                sw      $ra, 0x28+var_4($sp)
+                sw      $s1, 0x28+var_8($sp)
+                sw      $s0, 0x28+var_C($sp)
+                sw      $gp, 0x28+var_18($sp)
+                la      $s1, $LC0        # "%d\n"
+                li      $s0, 0x64  # 'd'
+
+loc_28:                                  # CODE XREF: main+40
+                lw      $t9, (printf & 0xFFFF)($gp)
+                move    $a1, $s0
+                move    $a0, $s1
+                jalr    $t9
+                addiu   $s0, -1
+                lw      $gp, 0x28+var_18($sp)
+                bnez    $s0, loc_28
+                or      $at, $zero
+                lw      $ra, 0x28+var_4($sp)
+                lw      $s1, 0x28+var_8($sp)
+                lw      $s0, 0x28+var_C($sp)
+                jr      $ra
+                addiu   $sp, 0x28
+
+$LC0:           .ascii "%d\n"<0>         # DATA XREF: main+1C

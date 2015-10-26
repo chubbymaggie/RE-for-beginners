@@ -21,13 +21,13 @@ of selecting from this table should be carefully kept since it cannot be retriev
 \end{framed}
 
 \RU{Однако, как можно легко убедиться, эта системная таблица очищается всякий раз, когда кто-то делает запрос 
-к ней.}\EN{However, as it can be easily checked, this table's contents is cleared each time table querying.}
+к ней.}\EN{However, as it can be easily checked, the contents of this table are cleared each time it's queried.}
 \RU{Сможем ли мы найти причину, почему это происходит?}\EN{Are we able to find why?}
 \RU{Если вернуться к уже рассмотренным таблицам \TT{kqftab} и \TT{kqftap} полученных при помощи \oracletables, 
 содержащим информацию о X\$-таблицах, мы узнаем что для того чтобы подготовить строки этой таблицы, 
-вызывается ф-ция \TT{ksmlrs()}:}\EN{Let's back to tables we already know: \TT{kqftab} and \TT{kqftap} 
-which were generated with \oracletables help, containing all information about X\$-tables, now we can see here, 
-the \TT{ksmlrs()} function is called to prepare this table's elements:}
+вызывается функция \TT{ksmlrs()}:}\EN{Let's get back to tables we already know: \TT{kqftab} and \TT{kqftap} 
+which were generated with \oracletables's help, that contain all information about the X\$-tables. We can see here 
+that the \TT{ksmlrs()} function is called to prepare this table's elements:}
 
 \begin{lstlisting}[caption=\RU{Результат работы}\EN{Result of} \OracleTablesName]
 kqftab_element.name: [X$KSMLRU] ?: [ksmlr] 0x4 0x64 0x11 0xc 0xffffc0bb 0x5
@@ -53,15 +53,16 @@ kqftap_element.fn2=NULL
 \end{lstlisting}
 
 \index{tracer}
-\RU{Действительно, при помощи \tracer легко убедиться что эта ф-ция вызывается каждый раз, когда мы обращаемся 
-к таблице \TT{X\$KSMLRU}.}\EN{Indeed, with the \tracer help it is easy to see this function is called each 
+\RU{Действительно, при помощи \tracer легко убедиться, что эта функция вызывается каждый раз, когда мы обращаемся 
+к таблице \TT{X\$KSMLRU}.}\EN{Indeed, with \tracer's help it is easy to see that this function is called each 
 time we query the \TT{X\$KSMLRU} table.}
 
-\RU{Здесь есть ссылки на ф-ции \TT{ksmsplu\_sp()} и \TT{ksmsplu\_jp()}, каждая из которых в итоге вызывает 
+\index{\CStandardLibrary!memset()}
+\RU{Здесь есть ссылки на функции \TT{ksmsplu\_sp()} и \TT{ksmsplu\_jp()}, каждая из которых в итоге вызывает 
 \TT{ksmsplu()}.}\EN{Here we see a references to the \TT{ksmsplu\_sp()} and \TT{ksmsplu\_jp()} functions, each of 
-them call the \TT{ksmsplu()} finally.}
-\RU{В конце ф-ции \TT{ksmsplu()} мы видим вызов \TT{memset()}:}\EN{At the end of the \TT{ksmsplu()} function we see 
-a call to the \TT{memset()}:}
+them calls the \TT{ksmsplu()} in the end.}
+\RU{В конце функции \TT{ksmsplu()} мы видим вызов \TT{memset()}:}\EN{At the end of the \TT{ksmsplu()} function we see 
+a call to \TT{memset()}:}
 
 \begin{lstlisting}[caption=ksm.o]
 ...
@@ -91,26 +92,29 @@ a call to the \TT{memset()}:}
 .text:00434C8D _ksmsplu        endp
 \end{lstlisting}
 
-\index{\CStandardLibrary!memset()}
 \RU{Такие конструкции (\TT{memset (block, 0, size)}) очень часто используются для простого обнуления блока памяти.}\EN{Constructions like \TT{memset (block, 0, size)} are often used just to zero memory block.}
-\RU{Мы можем попробовать рискнуть, заблокировав вызов \TT{memset()} и посмотреть, что будет?}\EN{What if we would take a risk, block \TT{memset()} call and see what will happen?}
+\RU{Мы можем попробовать рискнуть, заблокировав вызов \TT{memset()} и посмотреть, что будет?}\EN{What if we take a risk, block the \TT{memset()} call and see what happens?}
 
 \index{tracer}
-\RU{Запускаем \tracer со следующей опцией: поставить точку останова на \TT{0x434C7A} (там где начинается передача 
-параметров для ф-ции \TT{memset()}) так, чтобы \tracer в этом месте установил указатель инструкций процессора (\TT{EIP}) на место, где уже произошла очистка переданных параметров в \TT{memset()} (по адресу \TT{0x434C8A}):}
-\EN{Let's run \tracer with the following options: set breakpoint at \TT{0x434C7A} (the point where \TT{memset()} arguments are to be passed), thus, that \tracer set program counter \TT{EIP} at this point to the point where passed to the \TT{memset()} arguments are to be cleared (at \TT{0x434C8A})}
-\RU{Можно сказать, при помощи этого, мы симулируем безусловный переход с адреса}\EN{It can be said, we just simulate an unconditional jump from the address} \TT{0x434C7A} \RU{на}\EN{to} \TT{0x434C8A}.
+\RU{Запускаем \tracer со следующей опцией: поставить точку останова на \TT{0x434C7A} 
+(там, где начинается передача параметров для функции \TT{memset()}) так, 
+чтобы \tracer в этом месте установил указатель инструкций процессора (\TT{EIP}) на место, где уже произошла очистка переданных параметров в \TT{memset()} (по адресу \TT{0x434C8A}):}
+\EN{Let's run \tracer with the following options: set breakpoint at \TT{0x434C7A} 
+(the point where the arguments to \TT{memset()} are to be passed), 
+so that \tracer will set program counter \TT{EIP} to the point where the arguments passed to \TT{memset()} are to be cleared (at \TT{0x434C8A})}
+\RU{Можно сказать, при помощи этого, мы симулируем безусловный переход с адреса}\EN{It can be said that we just simulate an unconditional jump from address} \TT{0x434C7A} \RU{на}\EN{to} \TT{0x434C8A}.
 
 \begin{lstlisting}
 tracer -a:oracle.exe bpx=oracle.exe!0x00434C7A,set(eip,0x00434C8A)
 \end{lstlisting}
 
-\RU{(Важно: все эти адреса справедливы только для win32-версии \oracle 11.2)}\EN{(Important: all these addresses are valid only for win32-version of \oracle 11.2)}
+\RU{(Важно: все эти адреса справедливы только для win32-версии \oracle 11.2)}\EN{(Important: all these addresses are valid only for the win32 version of \oracle 11.2)}
 
-\RU{Действительно, после этого мы можем обращаться к таблице \TT{X\$KSMLRU} сколько угодно, и она уже не очищается!}\EN{Indeed, now we can query \TT{X\$KSMLRU} table as many times as we want and it is not clearing anymore!}
+\RU{Действительно, после этого мы можем обращаться к таблице \TT{X\$KSMLRU} сколько угодно, и она уже не очищается!}\EN{Indeed, now we can query the \TT{X\$KSMLRU} table as many times as we want and it is not being cleared anymore!}
 
-\RU{\sout{Не делайте этого дома ("Разрушители легенд")} Не делайте этого на своих production-серверах.}\EN{\sout{Do not try this at home ("MythBusters")} Do not try this on your production servers.}
+\RU{\sout{Не делайте этого дома ("Разрушители легенд")} Не делайте этого на своих production-серверах.}
+\EN{\sout{Do not try this at home ("MythBusters")} Do not try this on your production servers.}
 
 \RU{Впрочем, это не обязательно полезное или желаемое поведение системы, но как эксперимент по поиску нужного кода, нам это подошло!}
-\EN{It is probably not a very useful or desired system behaviour, but as an experiment of locating piece of code we need, that is perfectly suit our needs!}
+\EN{It is probably not a very useful or desired system behaviour, but as an experiment for locating a piece of code that we need, it perfectly suits our needs!}
 

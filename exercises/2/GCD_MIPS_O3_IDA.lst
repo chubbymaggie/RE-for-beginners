@@ -1,0 +1,101 @@
+f:
+
+var_20          = -0x20
+var_18          = -0x18
+var_14          = -0x14
+var_10          = -0x10
+var_C           = -0xC
+var_8           = -8
+var_4           = -4
+
+                lui     $gp, (__gnu_local_gp >> 16)
+                addiu   $sp, -0x30
+                la      $gp, (__gnu_local_gp & 0xFFFF)
+                sw      $ra, 0x30+var_4($sp)
+                sw      $s4, 0x30+var_8($sp)
+                sw      $s3, 0x30+var_C($sp)
+                sw      $s2, 0x30+var_10($sp)
+                sw      $s1, 0x30+var_14($sp)
+                sw      $s0, 0x30+var_18($sp)
+                sw      $gp, 0x30+var_20($sp)
+                move    $s0, $a0
+                beqz    $a0, loc_154
+                move    $s1, $a1
+                bnez    $a1, loc_178
+                or      $s2, $a1, $a0
+                move    $s1, $a0
+
+loc_154:                                 # CODE XREF: f+2C
+                lw      $ra, 0x30+var_4($sp)
+                move    $v0, $s1
+                lw      $s4, 0x30+var_8($sp)
+                lw      $s3, 0x30+var_C($sp)
+                lw      $s2, 0x30+var_10($sp)
+                lw      $s1, 0x30+var_14($sp)
+                lw      $s0, 0x30+var_18($sp)
+                jr      $ra
+                addiu   $sp, 0x30
+
+loc_178:                                 # CODE XREF: f+34
+                lw      $t9, (__clzsi2 & 0xFFFF)($gp)
+                negu    $a0, $s2
+                jalr    $t9
+                and     $a0, $s2
+                lw      $gp, 0x30+var_20($sp)
+                bnez    $s2, loc_20C
+                li      $s4, 0x1F
+                move    $s4, $v0
+
+loc_198:                                 # CODE XREF: f:loc_20C
+                lw      $t9, (__clzsi2 & 0xFFFF)($gp)
+                negu    $a0, $s0
+                jalr    $t9
+                and     $a0, $s0
+                nor     $v0, $zero, $v0
+                lw      $gp, 0x30+var_20($sp)
+                srlv    $s0, $v0
+                li      $s3, 0x1F
+                li      $s2, 1
+
+loc_1BC:                                 # CODE XREF: f+F0
+                lw      $t9, (__clzsi2 & 0xFFFF)($gp)
+                negu    $a0, $s1
+                jalr    $t9
+                and     $a0, $s1
+                lw      $gp, 0x30+var_20($sp)
+                beqz    $s1, loc_1DC
+                or      $at, $zero
+                subu    $v0, $s3, $v0
+
+loc_1DC:                                 # CODE XREF: f+BC
+                srlv    $s1, $v0
+                xor     $v1, $s1, $s0
+                beq     $s0, $s1, loc_214
+                sltu    $v0, $s1, $s0
+                beqz    $v0, loc_1FC
+                or      $at, $zero
+                xor     $s1, $v1
+                xor     $s0, $s1, $v1
+
+loc_1FC:                                 # CODE XREF: f+D8
+                beq     $s0, $s2, loc_214
+                subu    $s1, $s0
+                b       loc_1BC
+                or      $at, $zero
+
+loc_20C:                                 # CODE XREF: f+78
+                b       loc_198
+                subu    $s4, $v0
+
+loc_214:                                 # CODE XREF: f+D0
+                                         # f:loc_1FC
+                lw      $ra, 0x30+var_4($sp)
+                sllv    $s1, $s0, $s4
+                move    $v0, $s1
+                lw      $s4, 0x30+var_8($sp)
+                lw      $s3, 0x30+var_C($sp)
+                lw      $s2, 0x30+var_10($sp)
+                lw      $s1, 0x30+var_14($sp)
+                lw      $s0, 0x30+var_18($sp)
+                jr      $ra
+                addiu   $sp, 0x30

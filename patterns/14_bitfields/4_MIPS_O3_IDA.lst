@@ -1,0 +1,28 @@
+mult:
+                beqz    $a1, loc_40
+                move    $a3, $zero
+                move    $a2, $zero
+                addu    $t0, $a3, $a0
+
+loc_10:                                  # CODE XREF: mult+38
+                sltu    $t1, $t0, $a3
+                move    $v1, $t0
+                andi    $t0, $a1, 1
+                addu    $t1, $a2
+                beqz    $t0, loc_30
+                srl     $a1, 1
+                move    $a3, $v1
+                move    $a2, $t1
+
+loc_30:                                  # CODE XREF: mult+20
+                beqz    $a1, loc_44
+                sll     $a0, 1
+                b       loc_10
+                addu    $t0, $a3, $a0
+loc_40:                                  # CODE XREF: mult
+                move    $a2, $zero
+
+loc_44:                                  # CODE XREF: mult:loc_30
+                move    $v0, $a2
+                jr      $ra
+                move    $v1, $a3

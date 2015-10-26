@@ -1,16 +1,19 @@
 \index{x86!\Instructions!RET}
-\item[RET]: \RU{возврат из процедуры}\EN{return from subroutine}: \TT{POP tmp; JMP tmp}.
+\index{MS-DOS}
+\item[RET] \RU{возврат из процедуры}\EN{return from subroutine}: \TT{POP tmp; JMP tmp}.
 
 \RU{В реальности}\EN{In fact}, RET 
 \RU{это макрос ассемблера, в среде Windows и *NIX транслирующийся в}
-\EN{is a assembly language macro, in Windows and *NIX environment is translating into}
-RETN (``return near'') 
+\EN{is an assembly language macro, in Windows and *NIX environment it is translated into}
+RETN (\q{return near}) 
 \RU{ибо, во времена MS-DOS, где память адресовалась немного иначе}
-\EN{or, in MS-DOS times, where memory was addressed differently}
-(\ref{8086_memory_model}), \RU{в}\EN{into} RETF (``return far'').
+\EN{or, in MS-DOS times, where the memory was addressed differently}
+(\myref{8086_memory_model}), \RU{в}\EN{into} RETF (\q{return far}).
 
-\TT{RET} \RU{может иметь операнд}\EN{may have operand}.
-\RU{Тогда его работа будет такой}\EN{Its algorithm then will be}: \TT{POP tmp; ADD ESP op1; JMP tmp}.
-\TT{RET} \RU{с операндом обычно завершает ф-ции с соглашением о вызовах \IT{stdcall}, см. также}
-\EN{with operand usually end functions with \IT{stdcall} calling convention, see also}: \ref{sec:stdcall}.
+\RU{\TT{RET} может иметь операнд.}
+\EN{\TT{RET} can have an operand.}
+\RU{Тогда его работа будет такой}
+\EN{Then it works like this}: \TT{POP tmp; ADD ESP op1; JMP tmp}.
+\TT{RET} \RU{с операндом обычно завершает функции с соглашением о вызовах \IT{stdcall}, см. также}
+\EN{with an operand usually ends functions in the \IT{stdcall} calling convention, see also}: \myref{sec:stdcall}.
 

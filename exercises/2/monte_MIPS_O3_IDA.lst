@@ -1,0 +1,88 @@
+f:
+                lui     $v0, ($LC0 >> 16)
+                lui     $t3, (val1 >> 16)
+                lwc1    $f4, $LC0
+                lui     $v0, (dword_32C >> 16)
+                lwc1    $f6, $LC1
+                lui     $a3, 0x3C6E
+                lui     $a2, 0x7F
+                lui     $t2, 0xF
+                lw      $v0, val1
+                li      $a3, 0x3C6EF35F
+                li      $a2, 0x7FFFFF
+                li      $t2, 0xF4240
+                move    $a0, $zero
+                move    $t1, $zero
+                lui     $a1, 0x4000
+                sll     $t0, $v0, 2
+
+loc_B4:                                  # CODE XREF: f:loc_158
+                sll     $v1, $v0, 4
+                addu    $v1, $t0, $v1
+                sll     $t0, $v1, 6
+                subu    $v1, $t0, $v1
+                addu    $v1, $v0
+                sll     $t0, $v1, 5
+                addu    $v1, $t0
+                sll     $v1, 3
+                addu    $v0, $v1, $v0
+                sll     $v1, $v0, 2
+                addu    $v0, $v1
+                addu    $v1, $v0, $a3
+                sll     $t0, $v1, 2
+                sll     $v0, $v1, 4
+                addu    $v0, $t0, $v0
+                sll     $t0, $v0, 6
+                subu    $v0, $t0, $v0
+                addu    $v0, $v1
+                sll     $t0, $v0, 5
+                addu    $v0, $t0
+                sll     $v0, 3
+                addu    $v0, $v1
+                sll     $t0, $v0, 2
+                addu    $v0, $t0
+                addu    $v0, $a3
+                and     $v1, $a2
+                and     $t0, $v0, $a2
+                or      $v1, $a1
+                or      $t0, $a1
+                mtc1    $v1, $f0
+                mtc1    $t0, $f8
+                sub.s   $f2, $f0, $f4
+                sub.s   $f0, $f8, $f4
+                mul.s   $f2, $f2
+                mul.s   $f0, $f0
+                add.s   $f0, $f2, $f0
+                c.lt.s  $f0, $f6
+                or      $at, $zero
+                bc1f    loc_158
+                addiu   $a0, 1
+                addiu   $t1, 1
+
+loc_158:                                 # CODE XREF: f+D8
+                bne     $a0, $t2, loc_B4
+                sll     $t0, $v0, 2
+                mtc1    $t1, $f0
+                lui     $v1, (unk_334 >> 16)
+                cvt.s.w $f2, $f0
+                lwc1    $f0, dword_32C
+                cvt.d.s $f2, $f2
+                lwc1    $f1, $LC2
+                sw      $v0, (val1 & 0xFFFF)($t3)
+                mul.d   $f2, $f0
+                lui     $v0, ($LC3 >> 16)
+                lwc1    $f0, unk_334
+                or      $at, $zero
+                lwc1    $f1, $LC3
+                or      $at, $zero
+                div.d   $f0, $f2, $f0
+                jr      $ra
+                cvt.s.d $f0, $f0
+
+$LC0:           .float 3.0
+$LC1:           .float 1.0
+$LC2:           .word 0x40100000
+$LC3:           .word 0x412E8480
+val1:		.word 0x12345678
+dword_32C:      .word 0
+unk_334:        .byte    0

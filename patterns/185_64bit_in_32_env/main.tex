@@ -1,111 +1,16 @@
 \chapter{\RU{64-битные значения в 32-битной среде}\EN{64-bit values in 32-bit environment}}
 \label{sec:64bit_in_32_env}
 
-\RU{В среде, где \ac{GPR}-ы 32-битные, 64-битные значения передаются как пары 32-битных значений}
-\EN{In the 32-bit environment \ac{GPR}'s are 32-bit, so 64-bit values are passed as 32-bit value pairs}
+\ifx\LITE\undefined
+\RU{В среде, где \ac{GPR}-ы 32-битные, 64-битные значения хранятся и передаются как пары 32-битных значений}
+\EN{In a 32-bit environment, \ac{GPR}'s are 32-bit, so 64-bit values are stored and passed as 32-bit value pairs}
 \footnote{\RU{Кстати, в 16-битной среде, 32-битные значения передаются 16-битными парами точно так же}
-\EN{By the way, 32-bit values are passed as pairs in 16-bit environment just as the same}}.
+\EN{By the way, 32-bit values are passed as pairs in 16-bit environment in the same way}: 
+\myref{win16_32bit_values}}.
+\fi
 
-\section{\RU{Передача аргументов, сложение, вычитание}\EN{Arguments passing, addition, subtraction}}
-
-\lstinputlisting{patterns/185_64bit_in_32_env/1.c}
-
-\lstinputlisting[caption=MSVC 2012 /Ox /Ob1]{patterns/185_64bit_in_32_env/1_MSVC.asm}
-
-\RU{В}\EN{We may see in the} \TT{f1\_test()} \RU{видно как каждое 64-битное число передается двумя 32-битными значениями,
-сначала старшая часть, затем младшая}\EN{function as each 64-bit value is passed by two 32-bit values,
-high part first, then low part}. \\
-\\
-\RU{Сложение и вычитание происходит также парами}\EN{Addition and subtraction occurring by pairs as well}. \\
-\\
-\index{x86!\Instructions!ADC}
-\RU{При сложении, в начале складываются младшие 32 бита}\EN{While addition, low 32-bit part are added first}.
-\RU{Если при сложении был перенос, выставляется флаг CF}\EN{If carry was occurred while addition, CF flag is set}.
-\RU{Следующая инструкция \TT{ADC} складывает старшие части чисел, но также прибавляет единицу если CF=1}
-\EN{The next \TT{ADC} instruction adds high parts of values, but also adding 1 if CF=1}. \\
-\\
-\index{x86!\Instructions!SBB}
-\RU{Вычитание также происходит парами}\EN{Subtraction is also occurred by pairs}.
-\RU{Первый}\EN{The very first} \SUB \RU{может также включить флаг переноса CF, который затем будет проверяться в \TT{SBB}}
-\EN{may also turn CF flag on, which will be checked in the subsequent \TT{SBB} instruction}:
-\RU{если флаг переноса включен, то от результата отнимется единица}\EN{if carry flag is on, then 1 will also be subtracted
-from the result}. \\
-\\
-\RU{64-битные значения в 32-битной среде возвращаются из ф-ций в паре регистров \EDX{}:\EAX{}}
-\EN{In a 32-bit environment, 64-bit values are returned from a functions in \EDX{}:\EAX{} registers pair}.
-\RU{Легко увидеть, как результат работы \TT{f1()} затем передается в \printf{}}\EN{It is easily can be seen how
-\TT{f1()} function is then passed to \printf{}}.
-
-\lstinputlisting[caption=GCC 4.8.1 -O1 -fno-inline]{patterns/185_64bit_in_32_env/1_GCC.asm}
-
-\RU{Код GCC почти такой же}\EN{GCC code is the same}.
-
-\section{\RU{Умножение, деление}\EN{Multiplication, division}}
-
-\lstinputlisting{patterns/185_64bit_in_32_env/2.c}
-
-\lstinputlisting[caption=MSVC 2012 /Ox /Ob1]{patterns/185_64bit_in_32_env/2_MSVC.asm}
-
-\RU{Умножение и деление это более сложная операция, так что обычно, компилятор встраивает вызовы библиотечных ф-ций,
-делающих это}\EN{Multiplication and division is more complex operation, so usually, the compiler embedds calls to
-the library functions doing that}. \\
-\\
-\RU{Значение этих библиотечных ф-ций, здесь}\EN{These functions meaning are here}: \ref{sec:MSVC_library_func}.
-
-\lstinputlisting[caption=GCC 4.8.1 -O3 -fno-inline]{patterns/185_64bit_in_32_env/2_GCC.asm}
-
-\RU{GCC делает почти то же самое, тем не менее,
-встраивает код умножения прямо в ф-цию, посчитав что так будет эффективнее}\EN{GCC doing almost the same, but multiplication
-code is inlined right in the function, thinking it could be more efficient}.
-\RU{У GCC другие имена библиотечных ф-ций}\EN{GCC has different library function names}: \ref{sec:GCC_library_func}.
-
-\section{\RU{Сдвиг вправо}\EN{Shifting right}}
-
-\lstinputlisting{patterns/185_64bit_in_32_env/3.c}
-
-\lstinputlisting[caption=MSVC 2012 /Ox /Ob1]{patterns/185_64bit_in_32_env/3_MSVC.asm}
-
-\lstinputlisting[caption=GCC 4.8.1 -O3 -fno-inline]{patterns/185_64bit_in_32_env/3_GCC.asm}
-
-\index{x86!\Instructions!SHRD}
-\RU{Сдвиг происходит также в две операции: в начале сдвигается младшая часть, затем старшая}
-\EN{Shifting also occurring in two passes: first lower part is shifting, then higher part}.
-\RU{Но младшая часть сдвигается
-при помощи инструкции \TT{SHRD}, она сдвигает значение в \EDX{} на 7 бит, но подтягивает новые биты из \EAX{}, т.е., из старшей части}
-\EN{But the lower part is shifting with the help of \TT{SHRD} instruction, it shifting \EDX{} value by 7 bits, but pulling new bits
-from \EAX{}, i.e., from the higher part}.
-\RU{Старшая часть сдвигается более известной инструкцией \SHR{}: действительно, ведь освободившиеся биты в старшей части нужно
-просто заполнить нулями}\EN{Higher part is shifting using more popular \SHR{} instruction: indeed, freed bits in the higher part
-should be just filled with zeroes}.
-
-\section{\RU{Конвертирование 32-битного значения в 64-битное}\EN{Converting of 32-bit value into 64-bit one}}
-\label{subsec:sign_extending_32_to_64}
-
-\lstinputlisting{patterns/185_64bit_in_32_env/4.c}
-
-\lstinputlisting[caption=MSVC 2012 /Ox /Ob1]{patterns/185_64bit_in_32_env/4_MSVC.asm}
-
-\RU{Здесь появляется необходимость расширить 32-битное знаковое значение из $c$ в 64-битное знаковое}
-\EN{Here we also run into necessity to extend 32-bit signed value from $c$ into 64-bit signed}.
-\RU{Конвертировать беззнаковые значения очень просто: нужно просто выставить в 0 все биты в старшей части}
-\EN{Unsigned values are converted straightforwardly: all bits in higher part should be set to 0}.
-\RU{Но для знаковых типов это не подходит: знак числа должен быть скопирован в старшую часть числа-результата}
-\EN{But it is not appropriate for signed data types: sign should be copied into higher part of resulting number}.
-\index{x86!\Instructions!CDQ}
-\RU{Здесь это делает инструкция \TT{CDQ}, она берет входное значение в \EAX{}, расширяет число до 64-битного,
-и оставляет его в паре регистров \EDX{}:\EAX{}}
-\EN{An instruction \TT{CDQ} doing that here, it takes input value in \EAX{}, extending value to 64-bit and leaving it
-in the \EDX{}:\EAX{} registers pair}.
-\RU{Иными словами, инструкция \TT{CDQ} узнает знак числа в \EAX{} (просто берет самый старший бит в \EAX{}) и в зависимости от этого,
-выставляет все 32 бита в \EDX{} в 0 или в 1}\EN{In other words, \TT{CDQ} instruction getting number sign in \EAX{} (by getting just
-most significant bit in \EAX{}), and depending of it, setting all 32-bits in \EDX{} to 0 or 1}.
-\RU{Её работа в каком-то смысле напоминает работу инструкции \MOVSX{}}\EN{Its operation is somewhat
-similar to the \MOVSX{} instruction}.
-
-\lstinputlisting[caption=GCC 4.8.1 -O3 -fno-inline]{patterns/185_64bit_in_32_env/4_GCC.asm}
-
-\RU{GCC генерирует такой же код как и MSVC, но обходится без вызова библиотечной ф-ции для перемножения значений.}
-\EN{GCC generates just the same code as MSVC, but inlines multiplication code right in the function.}
-
-\RU{См.также: 32-битные значения в 16-битной среде}
-\EN{See also: 32-bit values in 16-bit environment}: \ref{win16_32bit_values}.
+\input{patterns/185_64bit_in_32_env/ret/main}
+\input{patterns/185_64bit_in_32_env/passing_add_sub/main}
+\input{patterns/185_64bit_in_32_env/multdiv/main}
+\input{patterns/185_64bit_in_32_env/shifting/main}
+\input{patterns/185_64bit_in_32_env/conversion/main}

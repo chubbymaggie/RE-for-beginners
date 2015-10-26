@@ -1,0 +1,13 @@
+f:
+                andi    $a0, 0xFFFF
+                srl     $v1, $a0, 2
+                srl     $v0, $a0, 3
+                xor     $v0, $v1, $v0
+                xor     $v0, $a0, $v0
+                srl     $v1, $a0, 5
+                xor     $v0, $v1
+                andi    $v0, 1
+                srl     $a0, 1
+                sll     $v0, 15
+                jr      $ra
+                or      $v0, $a0

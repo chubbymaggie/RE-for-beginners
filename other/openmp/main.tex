@@ -3,33 +3,32 @@
 \index{OpenMP}
 
 OpenMP \RU{это один из простейших способов распараллелить работу простого алгоритма}
-\EN{is one of the simplest ways to parallelize simple algorithm}.
+\EN{is one of the simplest ways to parallelize simple algorithms}.
 
 \index{Bitcoin}
 \RU{В качестве примера, попытаемся написать программу для вычисления криптографического \IT{nonce}}
-\EN{As an example, let's try to build a program to compute cryptographic \IT{nonce}}.
+\EN{As an example, let's try to build a program to compute a cryptographic \IT{nonce}}.
 \RU{В моем простейшем примере, \IT{nonce} это число, добавляемое к нешифрованному тексту, чтобы получить
 хэш с какой-то особенностью}
 \EN{In my simplistic example, 
-\IT{nonce} is a number added to the plain unencrypted text in order to produce hash with some specific 
-feature}.
+the \IT{nonce} is a number added to the plain unencrypted text in order to produce a hash with some specific 
+features}.
 \RU{Например, на одной из стадии, протокол Bitcoin требует найти такую \IT{nonce}, чтобы в результате
-хэширования подряд шли определенное количество нулей}
-\EN{For example, at some step, Bitcoin protocol require to find a such \IT{nonce} so resulting hash
-will contain specific number of running zeroes}. 
-\RU{Это еще называется}\EN{This is also called} ``proof of work''
-\footnote{\RU{\url{https://ru.wikipedia.org/wiki/Proof-of-work}}
-\EN{\url{https://en.wikipedia.org/wiki/Proof-of-work_system}}} 
-(\RU{т.е., система доказывает, что она произвела какие-то очень ресурсоёмкие вычисления и затратила
+хэширования подряд шли определенное количество нулей.}
+\EN{For example, at some step, the Bitcoin protocol requires to find such \IT{nonce} so the resulting hash
+contains a specific number of consecutive zeroes.}
+\RU{Это еще называется}\EN{This is also called} \q{proof of work}
+\footnote{\RU{\href{http://go.yurichev.com/17100}{wikipedia}}\EN{\href{http://go.yurichev.com/17101}{wikipedia}}} 
+(\RU{т.е. система доказывает, что она произвела какие-то очень ресурсоёмкие вычисления и затратила
 время на это}
-\EN{i.e., system prove it did some intensive calculations and spent some time for it}).
+\EN{i.e., the system proves that it did some intensive calculations and spent some time for it}).
 
 \index{SHA512}
-\RU{Мой пример не связан с}\EN{My example is not related to} Bitcoin, 
-\RU{он будет пытаться добавлять числа к строке}\EN{it will try to add a numbers to the} ``hello, world!\_''
-\RU{чтобы найти такое число, при котором строка вида}\EN{string in order to find such number when} 
-``hello, world!\_<number>'' \RU{после хеширования алгоритмом SHA512 будет содержать как минимум 3 нулевых
-байта в начале}\EN{will contain at least 3 zero bytes after hashing this string by SHA512 algorithm}.
+\RU{Мой пример не связан с}\EN{My example is not related to} Bitcoin\EN{ in any way}, 
+\RU{он будет пытаться добавлять числа к строке}\EN{it will try to add numbers to the} \q{hello, world!\_}
+\RU{чтобы найти такое число, при котором строка вида}\EN{string in order to find such number that when} 
+\q{hello, world!\_<number>} \RU{после хеширования алгоритмом SHA512 будет содержать как минимум 3 нулевых
+байта в начале}\EN{is hashed with the SHA512 algorithm, it will contain at least 3 zero bytes}.
 
 \RU{Ограничимся перебором всех чисел в интервале}\EN{Let's limit our brute-force to the interval in}
 0..INT32\_MAX-1 (\RU{т.е.}\EN{i.e.}, \TT{0x7FFFFFFE} \OrENRU 2147483646).
@@ -38,11 +37,11 @@ will contain specific number of running zeroes}.
 
 \lstinputlisting{other/openmp/openmp_example.c}
 
-\TT{check\_nonce()} \RU{просто добавляет число к строке, хеширует алгоритмом SHA512 и проверяет 
-3 нулевых байта в начале}\EN{function is just add a number to the string, 
-hashes it by SHA512 and checks for 3 zero bytes in the result}.
+\EN{The }\TT{check\_nonce()} \RU{просто добавляет число к строке, хеширует алгоритмом SHA512 и проверяет 
+3 нулевых байта в начале}\EN{function just adds a number to the string, 
+hashes it with the SHA512 algorithm and checks for 3 zero bytes in the result}.
 
-\RU{Очень важная часть кода это}\EN{Very important part of the code is}:
+\RU{Очень важная часть кода --- это}\EN{A very important part of the code is}:
 
 \begin{lstlisting}
 	#pragma omp parallel for
@@ -54,19 +53,19 @@ hashes it by SHA512 and checks for 3 zero bytes in the result}.
 \EN{we just call} \TT{check\_nonce()} \RU{для каждого числа от 0 до}\EN{for each number from 0 to} 
 \TT{INT32\_MAX} (\TT{0x7fffffff} \OrENRU 2147483647).
 \RU{С}\EN{With} \TT{\#pragma}, \RU{компилятор добавляет специальный код, который разрежет интервал цикла
-на меньшие интервалы, чтобы запустить их на доступных ядрах \ac{CPU}}\EN{a compiler adds a special 
-code which will slice the loop interval to smaller intervals,
-to run them by all \ac{CPU} cores available}
-\footnote{N.B.: \RU{Я намеренно использовал простейший пример, но на практике, 
-применение OpenMP может быть труднее и сложнее}\EN{I intentionally demonstrate here simplest possible
-example, but in practice, usage of OpenMP may be harder and more complex}}.
+на меньшие интервалы, чтобы запустить их на доступных ядрах \ac{CPU}}\EN{the compiler adds some special 
+code which slices the loop interval into smaller ones,
+to run them on all \ac{CPU} cores available}
+\footnote{N.B.: \RU{Это намеренно упрощенный пример, но на практике, 
+применение OpenMP может быть труднее и сложнее}\EN{This is intentionally simplest possible
+example, but in practice, the usage of OpenMP can be harder and more complex}}.
 
-\RU{Пример может быть скомпилирован}\EN{The example may be compiled}
+\RU{Пример может быть скомпилирован}\EN{The example can be compiled}
 \footnote{\RU{файлы }sha512.(c|h) \AndENRU u64.h \RU{можно взять из библиотеки OpenSSL}
 \EN{files can be taken from the OpenSSL library}:
-\url{http://www.openssl.org/source/}}
+\url{http://go.yurichev.com/17324}}
 \InENRU MSVC 2012:
-% FIXME: \footnote{other source code files can be downloaded here: ...} 
+% FIXME1: \footnote{other source code files can be downloaded here: ...} 
 
 \begin{lstlisting}
 cl openmp_example.c sha512.obj /openmp /O1 /Zi /Faopenmp_example.asm
@@ -80,42 +79,42 @@ gcc -fopenmp 2.c sha512.c -S -masm=intel
 
 \section{MSVC}
 
-\RU{Вот как}\EN{Now that's how} MSVC 2012 \RU{генерирует главный цикл}\EN{generates main loop}:
+\RU{Вот как}\EN{Now this is how} MSVC 2012 \RU{генерирует главный цикл}\EN{generates the main loop}:
 
 \lstinputlisting[caption=MSVC 2012]{other/openmp/MSVC_loop.asm}
 
-\RU{Ф-ции с префиксом}\EN{All functions prefixed by} \TT{vcomp} 
-\RU{связаны с}\EN{are} OpenMP\RU{ и находятся в файле}\EN{-related and stored in the} 
+\RU{Функции с префиксом}\EN{All functions prefixed by} \TT{vcomp} 
+\RU{связаны с}\EN{are} OpenMP\RU{ и находятся в файле}\EN{-related and are stored in the} 
 vcomp*.dll\EN{ file}.
-\RU{Так что тут запускается группа тредов}\EN{So here is a group of threads are started}.
+\RU{Так что тут запускается группа тредов}\EN{So here a group of threads is started}.
 
 \RU{Посмотрим на}\EN{Let's take a look on} \TT{\_main\$omp\$1}:
 
 \lstinputlisting[caption=MSVC 2012]{other/openmp/MSVC_1.asm}
 
-\RU{Эта ф-ция будет запущена}\EN{This function will be started} $n$ \RU{раз параллельно, где}
-\EN{times in parallel, where} $n$ \RU{это число ядер \ac{CPU}}\EN{is number of \ac{CPU} cores}.
+\RU{Эта функция будет запущена}\EN{This function is to be started} $n$ \RU{раз параллельно, где}
+\EN{times in parallel, where} $n$ \RU{это число ядер \ac{CPU}}\EN{is the number of \ac{CPU} cores}.
 \TT{vcomp\_for\_static\_simple\_init()} \RU{вычисляет интервал для конструкта}
-\EN{is calculating interval for the} for() \RU{для текущего треда, в зависимости от текущего номера треда}
+\EN{calculates the interval for the} for() \RU{для текущего треда, в зависимости от текущего номера треда}
 \EN{construct for the current
-thread, depending on the current thread number}.
+thread, depending on the current thread's number}.
 \RU{Значения начала и конца цикла записаны в локальных переменных}
-\EN{Loop begin and end values are stored in} \TT{\$T1} \AndENRU \TT{\$T2}\EN{ local variables}.
+\EN{The loop's start and end values are stored in the} \TT{\$T1} \AndENRU \TT{\$T2}\EN{ local variables}.
 \RU{Вы также можете заметить}\EN{You may also notice} \TT{7ffffffeh} (\OrENRU 2147483646) 
-\RU{как аргумент для ф-ции}\EN{as an argument to the} 
+\RU{как аргумент для функции}\EN{as an argument to the} 
 \TT{vcomp\_for\_static\_simple\_init()}
 \RU{это количество итераций всего цикла, оно будет поделено на равные части}
-\EN{function---this is a number of iterations of the whole loop to by divided evenly}.
+\EN{function---this is the number of iterations for the whole loop, to be divided evenly}.
 
-\RU{Потом мы видим новый цикл с вызовом ф-ции}\EN{Then we see a new loop with a call to} 
-\TT{check\_nonce()} \RU{делающей всю работу}\EN{function which do all work}.
+\RU{Потом мы видим новый цикл с вызовом функции}\EN{Then we see a new loop with a call to the} 
+\TT{check\_nonce()} \RU{делающей всю работу}\EN{function, which does all the work}.
 
-\RU{Я также добавил немного кода в начале ф-ции}
-\EN{I also added some code in the beginning of} \TT{check\_nonce()} \RU{для сбора статистики,
-с какими аргументами эта ф-ция вызывалась}\EN{function to gather statistics, with which
-arguments the function was called}.
+\RU{Добавил также немного кода в начале функции}%
+\EN{Let's also add some code in the beginning of the} \TT{check\_nonce()} \RU{для сбора статистики,
+с какими аргументами эта функция вызывалась}\EN{function to gather statistics about
+the arguments with which the function was called}.
 
-\RU{Вот что мы видим если запустим}\EN{This is what we see while run it}:
+\RU{Вот что мы видим если запустим}\EN{This is what we see when we run it}:
 
 \begin{lstlisting}
 threads=4
@@ -131,30 +130,29 @@ __min[2]=0x40000000 __max[2]=0x5fffffff
 __min[3]=0x60000000 __max[3]=0x7ffffffe
 \end{lstlisting}
 
-\RU{Да, результат правильный, первые 3 байта это нули}\EN{Yes, result is correct, first 3 bytes are zeroes}:
+\RU{Да, результат правильный, первые 3 байта это нули}\EN{Yes, the result is correct, the first 3 bytes are zeroes}:
 
 \begin{lstlisting}
 C:\...\sha512sum test
-000000f4a8fac5a4ed38794da4c1e39f54279ad5d9bb3c5465cdf57adaf60403df6e3fe6019f5764fc9975e505a7395fed78
-0fee50eb38dd4c0279cb114672e2 *test
+000000f4a8fac5a4ed38794da4c1e39f54279ad5d9bb3c5465cdf57adaf60403
+df6e3fe6019f5764fc9975e505a7395fed780fee50eb38dd4c0279cb114672e2 *test
 \end{lstlisting}
 
-\RU{Оно требует}\EN{Running time is} $\approx2..3$ 
-\RU{секунды на моем 4-х ядерном}\EN{seconds on my 4-core} 
-Intel Xeon E3-1220 3.10 GHz.
-\RU{В}\EN{In the} task manager \RU{я вижу 5 тредов}\EN{I see 5 threads}: \RU{один главный тред + 4 запущенных}
-\EN{1 main thread + 4 more started}.
-\RU{Я не делал никаких оптимизаций, чтобы оставить пример в как можно более простом виде}
-\EN{I did not any further optimizations to keep my example as small and clear as possible}.
+\RU{Оно требует $\approx2..3$ секунды на 4-х ядерном Intel Xeon E3-1220 3.10 GHz.}%
+\EN{The running time is $\approx2..3$ seconds on 4-core Intel Xeon E3-1220 3.10 GHz.}
+\RU{В}\EN{In the} task manager \RU{мы видим 5 тредов}\EN{we see 5 threads}: \RU{один главный тред + 4 запущенных}
+\EN{1 main thread + 4 more}.
+\RU{Никаких оптимизаций не было сделано, чтобы оставить этот пример в как можно более простом виде}%
+\EN{No further optimizations are done to keep this example as small and clear as possible}.
 \RU{Но, наверное, этот алгоритм может работать быстрее}\EN{But probably it can be done much faster}.
 \RU{У моего}\EN{My} \ac{CPU} \RU{4 ядра, вот почему}\EN{has 4 cores, that is why} OpenMP 
 \RU{запустил именно 4 треда}\EN{started exactly 4 threads}.
 
 \RU{Глядя на таблицу статистики, можно легко увидеть, что цикл был разделен очень точно на 4 равных 
-части}\EN{By looking at the statistics table we can clearly see how loop was finely sliced by 4 even 
+части}\EN{By looking at the statistics table we can clearly see how the loop was sliced in 4 even 
 parts}.
 \RU{Ну хорошо, почти равных, если не учитывать последний бит}\EN{Oh well, almost even, 
-if not to consider the last bit}.
+if we don't consider the last bit}.
 
 \RU{Имеются также прагмы и для}\EN{There are also pragmas for} 
 \glslink{atomic operation}{\RU{атомарных операций}\EN{atomic operations}}.
@@ -172,23 +170,23 @@ if not to consider the last bit}.
 
 \lstinputlisting[caption=MSVC 2012]{other/openmp/MSVC_2.asm}
 
-\RU{Как выясняется, ф-ция}\EN{As it turns out,} \TT{vcomp\_atomic\_add\_i4()} 
-\RU{в}\EN{function in the} vcomp*.dll \RU{это просто крохотная ф-ция имеющая инструкцию}
-\EN{is just a a tiny function
-having} \TT{LOCK XADD}\EN{ instruction}\footnote{\RU{О префиксе LOCK читайте больше}
-\EN{Read more about LOCK prefix}: \ref{x86_lock}}.
+\RU{Как выясняется, функция}\EN{As it turns out, the} \TT{vcomp\_atomic\_add\_i4()} 
+\RU{в}\EN{function in the} vcomp*.dll \RU{это просто крохотная функция имеющая инструкцию}
+\EN{is just a tiny function
+with the} \TT{LOCK XADD}\EN{ instruction}\footnote{\RU{О префиксе LOCK читайте больше}
+\EN{Read more about LOCK prefix}: \myref{x86_lock}}\EN{ in it}.
 
-\TT{vcomp\_enter\_critsect()} \RU{в конце концов вызывает ф-цию win32 \ac{API}}
+\TT{vcomp\_enter\_critsect()} \RU{в конце концов вызывает функцию win32 \ac{API}}
 \EN{eventually calling win32 \ac{API} function} \TT{EnterCriticalSection()}
-\footnote{\RU{О критических секциях читайте больше тут}\EN{Read more about critical sections 
-here}: \ref{critical_sections}}.
+\footnote{\RU{О критических секциях читайте больше тут}\EN{You can read more about critical sections 
+here}: \myref{critical_sections}}.
 
 \section{GCC}
 
 GCC 4.8.1 \RU{выдает программу показывающую точно такую же таблицу со статистикой}
-\EN{produces the program which shows exactly the same statistics table}, 
+\EN{produces a program which shows exactly the same statistics table}, 
 \RU{так что, реализация GCC делит цикл на части точно так же}
-\EN{so, GCC implementation divides the loop by parts in the same fashion}.
+\EN{so, GCC's implementation divides the loop in parts in the same fashion}.
 
 \begin{lstlisting}[caption=GCC 4.8.1]
 	mov	edi, OFFSET FLAT:main._omp_fn.0
@@ -199,30 +197,30 @@ GCC 4.8.1 \RU{выдает программу показывающую точн�
 \end{lstlisting}
 
 \RU{В отличие от реализации MSVC, то, что делает код GCC, это запускает 3 треда, но также запускает 
-четвертый прямо в текущем треде}\EN{Unlike MSVC implementation, what GCC code is doing is starting 3 threads,
-but also runs fourth in the current thread}. \RU{Так что здесь всего 4 треда а не 5 как в случае
-с MSVC}\EN{So there will be 4 threads instead of 5 as in MSVC}.
+четвертый прямо в текущем треде}\EN{Unlike MSVC's implementation, what GCC code does is to start 3 threads,
+and run the fourth in the current thread}. \RU{Так что здесь всего 4 треда а не 5 как в случае
+с MSVC}\EN{So there are 4 threads instead of the 5 in MSVC}.
 
-\RU{Вот ф-ция}\EN{Here is a} \TT{main.\_omp\_fn.0}\EN{ function}:
+\RU{Вот функция}\EN{Here is the} \TT{main.\_omp\_fn.0}\EN{ function}:
  
 \lstinputlisting[caption=GCC 4.8.1]{other/openmp/GCC_1.asm}
 
-\RU{Здесь мы видим это деление явно: вызывая}\EN{Here we see that division clearly: by calling to} 
+\RU{Здесь мы видим это деление явно: вызывая}\EN{Here we see the division clearly: by calling} 
 \TT{omp\_get\_num\_threads()} \AndENRU \TT{omp\_get\_thread\_num()}
 \RU{мы получаем количество запущенных тредов, а также номер текущего треда}
-\EN{we got number of threads running, and also current thread number}, \RU{и затем определяем
-интервал цикла}\EN{and then determine loop interval}.
-\RU{И затем запускаем}\EN{Then run} \TT{check\_nonce()}.
+\EN{we get the number of threads running, and also the current thread's number}, \RU{и затем определяем
+интервал цикла}\EN{and then determine the loop's interval}.
+\RU{И затем запускаем}\EN{Then we run} \TT{check\_nonce()}.
 
-GCC \RU{также вставляет инструкцию}\EN{also inserted} \TT{LOCK ADD} 
-\RU{прямо в том месте кода, где MSVC сгенерировал вызов отдельной ф-ции в DLL}
-\EN{instruction right in the code, where MSVC generated call to separate DLL function}:
+GCC \RU{также вставляет инструкцию}\EN{also inserted the} \TT{LOCK ADD} 
+\RU{прямо в том месте кода, где MSVC сгенерировал вызов отдельной функции в DLL}
+\EN{instruction right in the code, unlike MSVC, which generated a call to a separate DLL function}:
 
 \lstinputlisting[caption=GCC 4.8.1]{other/openmp/GCC_2.asm}
 
-\RU{Ф-ции с префиксом}\EN{Functions prefixed with} GOMP \RU{это часть библиотеки}\EN{are from} 
+\RU{Функции с префиксом}\EN{The functions prefixed with} GOMP \RU{это часть библиотеки}\EN{are from} 
 GNU OpenMP\EN{ library}.
 \RU{В отличие от}\EN{Unlike} vcomp*.dll, \RU{её исходный код свободно доступен}
-\EN{its sources are freely available}: 
-\url{https://github.com/mirrors/gcc/tree/master/libgomp}.
+\EN{its source code is freely available}: 
+\href{http://go.yurichev.com/17102}{GitHub}.
 

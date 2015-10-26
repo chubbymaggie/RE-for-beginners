@@ -2,11 +2,12 @@
 \label{sec:endianness}
 
 \RU{Endianness (порядок байт) это способ представления чисел в памяти}
-\EN{Endianness is a way of representing values in memory}.
+\EN{The endianness is a way of representing values in memory}.
 
 \section{Big-endian\RU{ (от старшего к младшему)}}
 
-\RU{Число}\EN{A} \TT{0x12345678} \RU{будет представлено в памяти так}\EN{value will be represented in memory as}:
+\RU{Число}\EN{The} \TT{0x12345678} \RU{представляется в памяти так}
+\EN{value is represented in memory as}:
 
 \begin{center}
 \begin{tabular}{ | l | l | }
@@ -28,7 +29,9 @@
 
 \section{Little-endian\RU{ (от младшего к старшему)}}
 
-\RU{Число}\EN{A} \TT{0x12345678} \RU{будет представлено в памяти так}\EN{value will be represented in memory as}:
+\RU{Число}\EN{The} \TT{0x12345678} 
+\RU{представляется в памяти так}
+\EN{value is represented in memory as}:
 
 \begin{center}
 \begin{tabular}{ | l | l | }
@@ -48,24 +51,80 @@
 
 \RU{CPU с таким порядком байт включают в себя}\EN{Little-endian CPUs include} Intel x86.
 
+\section{\Example}
+
+\RU{Возьмем big-endian Linux для MIPS заинсталированный в QEMU}%
+\EN{Let's take big-endian MIPS Linux installed and ready in QEMU}
+\footnote{\RU{Доступен для скачивания здесь}\EN{Available for download here}: \url{http://go.yurichev.com/17008}}.
+
+\RU{И скомпилируем этот простой пример}\EN{And let's compile this simple example}:
+
+\begin{lstlisting}
+#include <stdio.h>
+
+int main()
+{
+	int v, i;
+
+	v=123;
+
+	printf ("%02X %02X %02X %02X\n", 
+		*(char*)&v,
+		*(((char*)&v)+1),
+		*(((char*)&v)+2),
+		*(((char*)&v)+3));
+};
+\end{lstlisting}
+
+\RU{И запустим его}\EN{And after running it we get}:
+
+\begin{lstlisting}
+root@debian-mips:~# ./a.out 
+00 00 00 7B
+\end{lstlisting}
+
+\RU{Это оно и есть}\EN{That is it}.
+0x7B \RU{это}\EN{is} 123 \RU{в десятичном виде}\EN{in decimal}.
+\RU{В little-endian-архитектуре, 7B это первый байт (вы можете это проверить в x86 или x86-64),
+но здесь он последний, потому что старший байт идет первым.}
+\EN{In little-endian architectures, 7B is the first byte (you can check on x86 or x86-64), 
+but here it is the last one, because the highest byte goes first.}
+
+\RU{Вот почему имеются разные дистрибутивы Linux для MIPS}
+\EN{That's why there are separate Linux distributions for MIPS} 
+(\q{mips} (big-endian) \AndENRU \q{mipsel} (little-endian)).
+\RU{Программа скомпилированная для одного соглашения об endiannes, не сможет работать в OS использующей
+другое соглашение.}
+\EN{It is impossible for a binary compiled for one endianness to work on an OS with different endianness.}\\
+\\
+\RU{Еще один пример связанный с big-endian в MIPS в этой книге:}
+\EN{There is another example of MIPS big-endiannes in this book:} \myref{MIPS_structure_big_endian}.
+
 \section{Bi-endian\RU{ (переключаемый порядок)}}
 
 \RU{CPU поддерживающие оба порядка, и его можно переключать, включают в себя}
-\EN{CPUs which may switch between endianness are} ARM, PowerPC, SPARC, MIPS, \ac{IA64}, \RU{итд}\EN{etc}.
+\EN{CPUs that may switch between endianness are} ARM, PowerPC, SPARC, MIPS, \ac{IA64}, \etc{}.
 
 \section{\RU{Конвертирование}\EN{Converting data}}
 
+\index{x86!\Instructions!BSWAP}
+\RU{Инструкция }{The }\TT{BSWAP} \RU{может использоваться для конвертирования}
+\EN{instruction can be used for conversion}.
+
 \index{TCP/IP}
-\RU{Сетевые пакеты TCP/IP используют соглашение big-endian, вот почему программа работающая на little-endian архитектуре
-должна конвертировать значения используя ф-ции}
-\EN{TCP/IP network data packets use big-endian conventions, so that is why a program working on little-endian architecture
-should convert values using} \TT{htonl()} \AndENRU \TT{htons()}\EN{ functions}.
+\RU{Сетевые пакеты TCP/IP используют соглашение big-endian, вот почему программа, работающая на little-endian архитектуре
+должна конвертировать значения.}
+\EN{TCP/IP network data packets use the big-endian conventions, so that is why a program working on a little-endian architecture
+has to convert the values.} 
+
+\RU{Обычно, используются функции}\EN{The} \TT{htonl()} \AndENRU \TT{htons()}\EN{ functions are usually used}.
 
 \RU{Порядок байт big-endian в среде TCP/IP также называется}
-\EN{In TCP/IP, big-endian is also called} ``network byte order'',
-\RU{а}\EN{while} little-endian\EMDASH{}``host byte order''.
-
-\index{x86!\Instructions!BSWAP}
-\RU{Инструкция }{The }\TT{BSWAP} \RU{также может использоваться для конвертирования}
-\EN{instruction can also be used for conversion}.
-
+\EN{In TCP/IP, big-endian is also called} \q{network byte order},
+\RU{а порядок байт на компьютере}\EN{while byte order on the computer}\EMDASH{}\q{host byte order}.
+\RU{На архитектуре Intel x86, и других little-endian архитектурах, \q{host byte order} это little-endian, 
+а вот на IBM POWER это может быть big-endian, так что на последней, 
+\TT{htonl()} и \TT{htons()} не меняют порядок байт.}
+\EN{\q{host byte order} is little-endian on Intel x86 and other little-endian architectures,
+but it is big-endian on IBM POWER, so \TT{htonl()} and \TT{htons()} are not shuffle any bytes
+on latter.}

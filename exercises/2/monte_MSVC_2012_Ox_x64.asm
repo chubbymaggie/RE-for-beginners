@@ -11,7 +11,7 @@ f	PROC
 	mov	edx, DWORD PTR ?RNG_state@?1??get_rand@@9@9
 	xor	ecx, ecx
 	mov	r8d, 200000				; 00030d40H
-	npad	2
+	npad	2 ; align next label
 $LL4@f:
 	imul	edx, 1664525				; 0019660dH
 	add	edx, 1013904223				; 3c6ef35fH

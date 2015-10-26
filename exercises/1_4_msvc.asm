@@ -15,7 +15,7 @@ _f    PROC
     test   dl, dl
     je     SHORT $LN4@f
     sub    esi, edi
-    npad   6
+    npad   6 ; align next label
 $LL5@f:
     mov    ecx, edi
     test   dl, dl

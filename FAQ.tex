@@ -1,0 +1,61 @@
+\subsection*{mini-\RU{ЧаВО}\EN{FAQ}}
+
+\newcommand{\HACKINGMdURL}{https://github.com/dennis714/RE-for-beginners/blob/master/HACKING.md}
+\newcommand{\FNURLREDDIT}{\footnote{\href{http://go.yurichev.com/17027}{reddit.com/r/ReverseEngineering/}}}
+
+Q: \EN{Why should one learn assembly language these days?}\RU{Зачем в наше время нужно изучать язык ассемблера?}\\
+A: \EN{Unless you are an \ac{OS} developer, you probably don't need to code in assembly\EMDASH{}modern compilers 
+are much better at performing optimizations than humans}
+\RU{Если вы не разработчик \ac{OS}, вам наверное не нужно писать на ассемблере:
+современные компиляторы оптимизируют код намного лучше человека}%
+\footnote{\RU{Очень хороший текст на эту тему}\EN{A very good text about this topic}: \cite{AgnerFog}}.
+\EN{Also, modern \ac{CPU}s are very complex devices and assembly knowledge doesn't really help one to understand their internals.}
+\RU{К тому же, современные \ac{CPU} это крайне сложные устройства и знание ассемблера вряд ли
+поможет узнать их внутренности.}
+\EN{That being said, there are at least two areas where a good understanding of assembly can be helpful: 
+First and foremost, security/malware research. It is also a good way to gain a better understanding of your compiled code whilst debugging.}
+\RU{Но все-таки остается по крайней мере две области, где знание ассемблера может хорошо
+помочь:
+1) исследование malware (\IT{зловредов}) с целью анализа; 2) лучшее понимание
+вашего скомпилированного кода в процессе отладки.}
+\EN{This book is therefore intended for those who want to understand assembly language rather 
+than to code in it, which is why there are many examples of compiler output contained within.}
+\RU{Таким образом, эта книга предназначена для тех, кто хочет скорее понимать ассемблер,
+нежели писать на нем, и вот почему здесь масса примеров, связанных с результатами
+работы компиляторов.}\\
+\\
+Q: \RU{Я кликнул на ссылку внутри PDF-документа, как теперь вернуться назад?}\EN{I clicked on a hyperlink inside a PDF-document, how do I go back?}\\
+A: \RU{В Adobe Acrobat Reader нажмите сочетание Alt+LeftArrow.}\EN{In Adobe Acrobat Reader click Alt+LeftArrow.}\\
+\\
+\ifx\LITE\undefined
+Q: \RU{Ваша книга слишком большая! Нет ли чего покороче?}\EN{Your book is huge! Is there anything shorter?}\\
+A: \RU{Есть сокращенная lite-версия}\EN{There is shortened, lite version found here}: \url{http://beginners.re/\#lite}.\\
+\\
+\fi
+Q: \RU{Я не могу понять, стоит ли мне заниматься reverse engineering-ом}\EN{I'm not sure if I should try to learn reverse engineering or not}.\\
+A: \RU{Наверное, среднее время для освоения сокращенной LITE-версии\EMDASH{}1-2 месяца.}%
+\EN{Perhaps, the average time to become familiar with the contents of the shortened LITE-version is 1-2 month(s).}\\
+\\
+Q: \RU{Могу ли я распечатать эту книгу? Использовать её для обучения?}\EN{May I print this book? Use it for teaching?}\\
+A: \RU{Конечно, поэтому книга и лицензирована под лицензией Creative Commons.}\EN{Of course! That's why the book is licensed under the Creative Commons license.}
+\EN{One might also want to build one's own version of book\EMDASH{}read \href{\HACKINGMdURL}{here} to find out more.}
+\RU{Кто-то может захотеть скомпилировать свою собственную версию книги, читайте \href{\HACKINGMdURL}{здесь} об этом.}\\
+\\
+Q: \RU{Я хочу перевести вашу книгу на другой язык}\EN{I want to translate your book to some other language}.\\
+A: \RU{Прочитайте}\EN{Read} \href{https://github.com/dennis714/RE-for-beginners/blob/master/Translation.md}{\RU{мою заметку для переводчиков}\EN{my note to translators}}.\\
+\\
+Q: \RU{Как можно найти работу reverse engineer-а}\EN{How does one get a job in reverse engineering}? \\
+A: \RU{На reddit, посвященному RE\FNURLREDDIT, время от времени бывают hiring thread}
+\EN{There are hiring threads that appear from time to time on reddit, devoted to RE\FNURLREDDIT}
+(\href{http://go.yurichev.com/17333}{2013 Q3}, 
+\href{http://go.yurichev.com/17334}{2014}).
+\RU{Посмотрите там}\EN{Try looking there}.
+\EN{A somewhat related hiring thread can be found in the \q{netsec} subreddit}\RU{В смежном субреддите \q{netsec} имеется похожий тред}:
+\href{http://go.yurichev.com/17335}{2014 Q2}.\\
+\\
+\RU{Q: Куда пойти учиться в Украине?\\
+A: \href{http://go.yurichev.com/17336}{НТУУ \q{КПИ}: \q{Аналіз програмного коду та бінарних вразливостей}};
+\href{http://go.yurichev.com/17337}{факультативы}.\\
+\\}
+Q: \EN{I have a question}\RU{У меня есть вопрос}...\\
+A: \EN{Send it to me by email}\RU{Напишите мне его емейлом} (\EMAIL).

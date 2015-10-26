@@ -1,67 +1,103 @@
+\newcommand{\NormalScale}{0.66} % FIXME?
 \ifdefined\ebook
 \documentclass[a5paper,oneside]{book}
 \newcommand{\FigScale}{0.4}
 \else
-\documentclass[a4paper,oneside]{book} % oneside: do not put blank page after each chapter. a4paper?
-\newcommand{\FigScale}{0.66} % FIXME
+\documentclass[a4paper,oneside]{book}
+\newcommand{\FigScale}{\NormalScale} 
 \fi
 
-\usepackage{cmap}
-\usepackage{fancyhdr}
+\usepackage{fontspec}
+% fonts
+\setmonofont{Droid Sans Mono}
+\setmainfont[Ligatures=TeX]{PT Sans}
+\usepackage{polyglossia}
+\defaultfontfeatures{Scale=MatchLowercase} % ensure all fonts have the same 1ex
+\usepackage{ucharclasses}
+\usepackage{csquotes}
+
+\ifdefined\ENGLISH
+\setmainlanguage{english}
+\setotherlanguage{russian}
+\fi
 
 \ifdefined\RUSSIAN
-\usepackage[english,russian]{babel}
-\usepackage[T2A]{fontenc}
-
-% if to turn this font on, copy&paste from Adobe Acrobat to clipboard will not work
-%\usepackage{paratype}
-%\renewcommand*\familydefault{\sfdefault}
-
-% http://www.emerson.emory.edu/services/latex/latex_169.html
-% too small!
-%\newcommand{\lstlistingsize}{\scriptsize}
-
-\else
-\usepackage[english]{babel}
-%\usepackage[T2A]{fontenc}
-\usepackage[T1]{fontenc}
-\usepackage[default]{sourcesanspro}
-% too small!
-%\newcommand{\lstlistingsize}{\footnotesize}
+\setmainlanguage{russian}
+\newfontfamily\cyrillicfonttt{Droid Sans Mono}
+\setotherlanguage{english}
 \fi
 
-\usepackage[utf8]{inputenc} % but not utf8x - glossary package will grizzle
+\ifdefined\SPANISH
+\setmainlanguage{spanish}
+\setotherlanguage{english}
+\fi
+
+\ifdefined\BRAZILIAN
+\setmainlanguage{portuges}
+\setotherlanguage{english}
+\fi
+
+\ifdefined\POLISH
+\setmainlanguage{polish}
+\setotherlanguage{english}
+\fi
+
+\usepackage{microtype}
+\usepackage{fancyhdr}
 \usepackage{listings}
 \usepackage{ulem}
 \usepackage{url}
 \usepackage{graphicx}
-\usepackage{listingsutf8}
 \usepackage{makeidx}
-\usepackage{cite}
+\usepackage[backend=biber,style=alphabetic]{biblatex}
+%\usepackage{cite}
 \usepackage[cm]{fullpage}
 \usepackage{color}
 \usepackage{fancyvrb}
 \usepackage{xspace}
-\usepackage{float}
 \usepackage{tabularx}
 \usepackage{framed}
+\usepackage{parskip}
 \usepackage{epigraph}
 \usepackage{ccicons}
 \usepackage[nottoc]{tocbibind}
 \usepackage{longtable}
-\usepackage{amsmath}
 \usepackage[footnote,printonlyused,withpage]{acronym}
 \usepackage[table]{xcolor}% http://ctan.org/pkg/xcolor
 \usepackage[]{bookmark,hyperref} % must be last
+\usepackage[official]{eurosym}
+
+% ************** myref
+% http://tex.stackexchange.com/questions/228286/how-to-mix-ref-and-pageref#228292
+\ifdefined\RUSSIAN
+\newcommand{\myref}[1]{%
+  \ref{#1} 
+  (стр.~\pageref{#1})%
+  }
+% FIXME: I wasn't able to force varioref to output russian text...
+\else
+\usepackage{varioref}
+\newcommand{\myref}[1]{\vref{#1}}
+\fi
+% ************** myref
+
 \usepackage{glossaries}
 \usepackage{tikz}
 %\usepackage{fixltx2e}
 \usepackage{bytefield}
+
+\usepackage{amsmath}
 \usepackage{MnSymbol}
+\undef\mathdollar 
+
+\usepackage{float}
+
 \usepackage{shorttoc}
 \usetikzlibrary{calc,positioning,chains,arrows}
 \ifdefined\ebook
-\usepackage[margin=0.5in]{geometry}
+\usepackage[margin=0.5in,headheight=11pt]{geometry}
+\else
+\usepackage[margin=0.5in,headheight=12.5pt]{geometry}
 \fi
 
 \ifdefined\RUSSIAN
@@ -69,7 +105,8 @@
 \renewcommand\lstlistlistingname{Листинг}
 \fi
 
-% fancyhdr
+%\iffalse
+% fancyhdr ********************************************************
 \makeatletter
     \let\stdchapter\chapter
     \renewcommand*\chapter{%
@@ -85,6 +122,21 @@
     }
 \makeatother
 
+% taken from http://texblog.org/tag/fancyhdr-font-size/
+\newcommand{\changefont}{%
+\ifdefined\ebook
+    \fontsize{6}{7}\selectfont
+\else
+    \fontsize{8}{9.5}\selectfont
+\fi
+}
+\fancyhf{}
+\fancyhead[L,RO]{\changefont \slshape \rightmark} %section
+\fancyhead[R,LO]{\changefont \slshape \leftmark} %chapter
+\fancyfoot[C]{\changefont \thepage} %footer
+% *****************************************************************
+%\fi
+
 \newcommand{\footnoteref}[1]{\textsuperscript{\ref{#1}}}
 
 \definecolor{lstbgcolor}{rgb}{0.94,0.94,0.94}
@@ -97,97 +149,71 @@
 
 \makeglossaries
 
-\newcommand{\TITLE}{\RU{Reverse Engineering для начинающих}
-\EN{Reverse Engineering for Beginners}}
-\newcommand{\AUTHOR}{\RU{Денис Юричев}\EN{Dennis Yurichev}}
-\newcommand{\EMAIL}{dennis@yurichev.com}
+\newcommand{\TITLE}{\RU{Reverse Engineering для начинающих}\EN{Reverse Engineering for Beginners}\ESph{}\PTBRph{}\PLph{}}
+\newcommand{\AUTHOR}{\RU{Денис Юричев}\EN{Dennis Yurichev}\ESph{}\PTBRph{}\PLph{}}
+\newcommand{\EMAIL}{dennis(a)yurichev.com}
 
 \hypersetup{
-    pdftex,
     colorlinks=true,
     allcolors=blue,
     pdfauthor={\AUTHOR},
     pdftitle={\TITLE}
     }
 
+%\ifdefined\RUSSIAN
+\newcommand{\LstStyle}{\ttfamily\small}
+%\else
+%\newcommand{\LstStyle}{\ttfamily}
+%\fi 
+
 \lstset{
     backgroundcolor=\color{lstbgcolor},
-    basicstyle=\ttfamily,
-    %basicstyle=\ttfamily\lstlistingsize, 
+    basicstyle=\LstStyle,
     breaklines=true,
+    %prebreak=\raisebox{0ex}[0ex][0ex]{->},
+    %postbreak=\raisebox{0ex}[0ex][0ex]{->},
     prebreak=\raisebox{0ex}[0ex][0ex]{\ensuremath{\rhookswarrow}},
     postbreak=\raisebox{0ex}[0ex][0ex]{\ensuremath{\rcurvearrowse\space}},
     frame=single,
     columns=fullflexible,keepspaces,
+    escapeinside=§§,
+    inputencoding=utf8
 }
-\RU{\lstset{inputencoding=cp1251}}
 
 \DeclareMathSizes{12}{30}{16}{12}
+\EN{
+	\bibliography{C_book_en,books,articles,usenet,misc}
+}
+\PL{
+	\bibliography{C_book_pl,books,articles,usenet,misc}
+}
+\ES{
+	\bibliography{C_book_en,books,articles,usenet,misc}
+}
+\PTBR{
+	\bibliography{C_book_en,books,articles,usenet,misc}
+}
+\RU{
+	\bibliography{C_book_ru,books,articles,usenet,misc}
+}
 
 \begin{document}
-%\setlength{\headheight}{15.2pt}
-\setlength{\headheight}{20pt}
+
 \pagestyle{fancy}
 
 \VerbatimFootnotes
 
 \frontmatter
 
-\begin{titlepage}
-\ifdefined\ebook % FIXME
-\else
-%\input{cover}
-%\newpage
+\include{page_after_cover}
+\ifdefined\LITE
+\include{LITE_warning}
 \fi
+%\include{survey}
 
-\begin{center}
-\vspace*{\fill}
-\LARGE \TITLE
-
-\vspace*{\fill}
-
-\large \AUTHOR
-
-\large \TT{<\EMAIL>}
-\vspace*{\fill}
-\vfill
-
-\ccbyncnd
-
-\textcopyright 2013-2014, \AUTHOR. 
-
-\RU{Это произведение доступно по лицензии Creative Commons «Attribution-NonCommercial-NoDerivs» 
-(«Атрибуция — Некоммерческое использование — Без производных произведений») 3.0 Непортированная. 
-Чтобы увидеть копию этой лицензии, посетите}
-\EN{This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivs 3.0 Unported License. 
-To view a copy of this license, visit} \url{http://creativecommons.org/licenses/by-nc-nd/3.0/}.
-
-\RU{Версия этого текста}\EN{Text version} ({\large \today}).
-
-\RU{Возможно, более новая версии текста, а также англоязычная версия, также доступна по ссылке}
-\EN{There is probably a newer version of this text, and Russian language version also accessible at} 
-\url{http://yurichev.com/RE-book.html}.
-\ifdefined\ebook
-\RU{Версия формата A4 так же доступна по ссылке}
-\EN{A4-format version is also available on the page}.
-\else
-\RU{Версия для электронных читалок так же доступна по ссылке}
-\EN{E-book reader version is also available on the page}.
+\ifx\LITE\undefined
+\shorttoc{\RU{Краткое оглавление}\EN{Abridged contents}\PTBRph{}\ESph{}\PLph{}}{-1} % Only sections
 \fi
-
-\RU{Вы также можете подписаться на мой twitter для получения информации о новых версиях этого текста, 
-и т.д: \TT{@yurichev\_ru}\footnote{\url{https://twitter.com/yurichev_ru}}, 
-либо подписаться на список рассылки}
-\EN{You may also subscribe to my twitter, to get information about updates of this text, etc: 
-\TT{@yurichev}\footnote{\url{https://twitter.com/yurichev}}, or to subscribe to mailing list}
-\footnote{\url{http://yurichev.com/mailing_lists.html}}.
-
-\end{center}
-\end{titlepage}
-
-\include{ad}
-
-\shorttoc{\RU{Краткое оглавление}\EN{Short contents}}{-1} % Only sections
 \tableofcontents
 \cleardoublepage
 
@@ -196,35 +222,35 @@ To view a copy of this license, visit} \url{http://creativecommons.org/licenses/
 
 \mainmatter
 
-% only chapters here!
-\include{patterns/main}
-\include{fundamentals/main}
-\include{digging_into_code/main}
-\include{OS/main}
-\include{tools}
-\include{examples/examples}
-\include{other/main}
-\include{reading}
-\include{exercises/main}
-\include{afterword}
-\include{appendix/appendix}
+\ifx\LITE\undefined
+\include{contents}
+\fi
 
+\include{parts}
+
+\ifdefined\LITE
+\include{LITE_warning}
+\fi
+
+\ifx\LITE\undefined
+\include{appendix/appendix}
+\fi
 \include{acronyms}
 
 \bookmarksetup{startatroot}
 
-%\bibliographystyle{alpha}
-\bibliographystyle{plain} % FIXME
-\phantomsection
-\bibliography{C_book_\LANG,books,articles,usenet,misc}
-
 \clearpage
 \phantomsection
-\addcontentsline{toc}{chapter}{\RU{Глоссарий}\EN{Glossary}}
+\addcontentsline{toc}{chapter}{\RU{Глоссарий}\EN{Glossary}\PTBRph{}\ESph{}\PLph{}}
 \printglossaries
 
 \clearpage
 \phantomsection
 \printindex
+
+\clearpage
+\phantomsection
+\addcontentsline{toc}{chapter}{\RU{Библиография}\EN{Bibliography}\PTBRph{}\ESph{}\PLph{}}
+\printbibliography
 
 \end{document}

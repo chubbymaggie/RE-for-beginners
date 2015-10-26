@@ -1,0 +1,72 @@
+﻿\chapter{\RU{Память}\EN{Memory}}
+
+\RU{Есть три основных типа памяти:}
+\EN{There are 3 main types of memory:}
+
+\begin{itemize}
+\item \RU{Глобальная память}\EN{Global memory}.
+\ac{AKA} \q{static memory allocation}.
+\RU{Нет нужды явно выделять, выделение происходит просто при объявлении переменных/массивов 
+глобально.}
+\EN{No need to allocate explicitly, the allocation is done just by declaring variables/arrays 
+globally.}
+\RU{Это глобальные переменные расположенные в сегменте данных или констант.}
+\EN{These are global variables, residing in the data or constant segments.}
+\RU{Доступны глобально (поэтому считаются \glslink{anti-pattern}{анти-паттерном}).}
+\EN{The are available globally (hence, considered as an \gls{anti-pattern}).}
+\RU{Не удобны для буферов/массивов, потому что должны иметь фиксированный размер.}
+\EN{Not convenient for buffers/arrays, because they must have a fixed size.}
+\RU{Переполнения буфера, случающиеся здесь, обычно перезаписывают переменные или буферы
+расположенные рядом в памяти.}
+\EN{Buffer overflows that occur here usually overwrite variables or buffers reside next to them in memory.}
+\RU{Пример в этой книге}\EN{There's an example in this book}: \myref{scanf_global_variable}.
+
+\item \RU{Стек}\EN{Stack}.
+\ac{AKA} \q{allocate on stack}\RU{, \q{выделить память в/на стеке}}.
+\RU{Выделение происходит просто при объявлении переменных/массивов локально в функции.}
+\EN{The allocation is done just by declaring variables/arrays locally in the function.}
+\RU{Обычно это локальные для функции переменные}\EN{These are usually local variables for the function}.
+\RU{Иногда эти локальные переменные также доступны и для нисходящих функций (\gls{callee}-функциям, если функция-\gls{caller} передает
+указатель на переменную в функцию-\gls{callee}).}
+\EN{Sometimes these local variable are also available to descending functions 
+(to \gls{callee} functions, if caller passes a pointer to a variable to the \gls{callee} to be executed).}
+\RU{Выделение и освобождение очень быстрое, достаточно просто сдвига \ac{SP}.}
+\EN{Allocation and deallocation are very fast, it's just \ac{SP} needs to be shifted.}
+\index{\CStandardLibrary!alloca()}
+\EN{But they're also not convenient for buffers/arrays, because the buffer size has to be fixed,
+unless \TT{alloca()} (\myref{alloca}) (or a variable-length array) is used.}
+\RU{Но также не удобно для буферов/массивов, потому что размер буфера фиксирован,
+если только не используется \TT{alloca()} (\myref{alloca}) (или массив с переменной длиной).}
+\RU{Переполнение буфера обычно перезаписывает важные структуры стека}\EN{Buffer overflows usually 
+overwrite important stack structures}: \myref{subsec:bufferoverflow}.
+
+\index{\CStandardLibrary!malloc()}
+\index{\CStandardLibrary!free()}
+\item \RU{Куча (\IT{heap})}\EN{Heap}. 
+\ac{AKA} \q{dynamic memory allocation}\RU{, \q{выделить память в куче}}.
+\RU{Выделение происходит при помощи вызова}\EN{Allocation is done by calling} 
+\TT{malloc()/free()} \OrENRU \TT{new/delete} \InENRU \Cpp.
+\RU{Самый удобный метод: размер блока может быть задан во время исполнения}\EN{This is the most convenient 
+method: the block size may be set at runtime}.
+\index{\CStandardLibrary!realloc()}
+\RU{Изменение размера возможно (при помощи \TT{realloc()}), но может быть медленным.}
+\EN{Resizing is possible (using \TT{realloc()}), but can be slow.}
+\RU{Это самый медленный метод выделения памяти: аллокатор памяти должен поддерживать и обновлять
+все управляющие структуры во время выделения и освобождения.}
+\EN{This is the slowest way to allocate memory: 
+the memory allocator must support and update all control structures while
+allocating and deallocating.}
+\RU{Переполнение буфера обычно перезаписывает все эти структуры}\EN{Buffer overflows usually 
+overwrite these structures}.
+\RU{Выделения в куче также ведут к проблеме утечек памяти: каждый выделенный блок должен быть
+явно освобожден, но кто-то может забыть об этом, или делать это неправильно.}
+\EN{Heap allocations are also source of memory leak problems: each memory block has to be deallocated
+explicitly, but one may forget about it, or do it incorrectly.}
+\index{\CStandardLibrary!free()}
+\RU{Еще одна проблема --- это \q{использовать после освобождения} --- использовать блок памяти после
+того как \TT{free()} был вызван на нем, это тоже очень опасно.}
+\EN{Another problem is the \q{use after free}---using a memory block after \TT{free()} was called on it,
+which is very dangerous.}
+\RU{Пример в этой книге}\EN{Example in this book}: \myref{struct_malloc_example}.
+
+\end{itemize}

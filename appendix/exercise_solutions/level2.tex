@@ -2,76 +2,14 @@
 
 \subsection{\Exercise 2.1}
 
-\index{\CStandardLibrary!toupper()}
-\RU{Решение}\EN{Solution}: \TT{toupper()}.
+\EN{This function is calculates a square root by Newton's method, the algorithm is taken 
+from \cite{SICP}.}
+\RU{Это функция вычисления квадратного корня методом Ньютона, алгоритм взят из \cite{SICP}.}
 
-\RU{Исходник на Си}\EN{C source code}:
+\Sourcecode: \href{http://go.yurichev.com/17148}{beginners.re}
 
-\begin{lstlisting}
-char toupper ( char c )
-{
-    if( c >= 'a' && c <= 'z' ) {
-        c = c - 'a' + 'A';
-    }
-    return( c );
-}
-\end{lstlisting}
-
-\subsection{\Exercise 2.2}
-
-\index{\CStandardLibrary!atoi()}
-\RU{Ответ}\EN{Solution}: \TT{atoi()}
-
-\RU{Исходник на Си}\EN{C source code}:
-
-\begin{lstlisting}
-#include <stdio.h>
-#include <string.h>
-#include <ctype.h>
-
-int atoi ( const *p )  /* convert ASCII string to integer */
-{
-    int i;
-    char s;
-
-    while( isspace ( *p ) )
-        ++p;
-    s = *p;
-    if( s == '+' || s == '-' )
-        ++p;
-    i = 0;
-    while( isdigit(*p) ) {
-        i = i * 10 + *p - '0';
-        ++p;
-    }
-    if( s == '-' )
-        i = - i;
-    return( i );
-}
-\end{lstlisting}
-
-\subsection{\Exercise 2.3}
-
-\index{\CStandardLibrary!rand()}
-\index{\CStandardLibrary!srand()}
-\RU{Ответ}\EN{Solution}: \TT{srand()} / \TT{rand()}.
-
-\RU{Исходник на Си}\EN{C source code}:
-
-\begin{lstlisting}
-static unsigned int v;
-
-void srand (unsigned int s)
-{
-        v = s;
-}
-
-int rand ()
-{
-        return( ((v = v * 214013L
-            + 2531011L) >> 16) & 0x7fff );
-}
-\end{lstlisting}
+% 2.2
+% 2.3
 
 \subsection{\Exercise 2.4}
 
@@ -111,50 +49,16 @@ char * strstr (
 }
 \end{lstlisting}
 
-\subsection{\Exercise 2.5}
-
-\RU{Подсказка}\EN{Hint} \#1: \RU{Не забывайте, что}\EN{Keep in mind that} 
-\TT{\_\_v}\EMDASH\RU{глобальная переменная}\EN{global variable}.
-
-\RU{Подсказка}\EN{Hint} \#2: \RU{Эта функция вызывается startup-кодом перед вызовом \main}
-\EN{The function is called in \ac{CRT} startup code, before \main execution}.
-
-\index{x86!\Instructions!FDIV}
-\RU{Ответ: это проверка на наличие FDIV-ошибки в ранних процессорах Pentium}
-\EN{Solution: early Pentium CPU FDIV bug checking}\footnote{\url{http://en.wikipedia.org/wiki/Pentium_FDIV_bug}}.
-
-\RU{Исходник на Си}\EN{C source code}:
-
-\begin{lstlisting}
-unsigned _v; // _v
-
-enum e {
-    PROB_P5_DIV = 0x0001
-};
-
-void f( void ) // __verify_pentium_fdiv_bug
-{
-    /*
-        Verify we have got the Pentium FDIV problem.
-        The volatiles are to scare the optimizer away.
-    */
-    volatile double     v1     = 4195835;
-    volatile double     v2   = 3145727;
-
-    if( (v1 - (v1/v2)*v2) > 1.0e-8 ) {
-        _v |= PROB_P5_DIV;
-    }
-}
-\end{lstlisting}
+% 2.5
 
 \subsection{\Exercise 2.6}
 
 \RU{Подсказка: если погуглить применяемую здесь константу, это может помочь.}
-\EN{Hint: it might be helpful to google a constant used here.}
+\EN{Hint: it might be helpful to google the constant used here.}
 
 \RU{Ответ: шифрование алгоритмом \ac{TEA}}\EN{Solution: \ac{TEA} encryption algorithm}.
 
-\RU{Исходник на Си}\EN{C source code} (\RU{взято с}\EN{taken from} \url{http://en.wikipedia.org/wiki/Tiny_Encryption_Algorithm}):
+\RU{Исходник на Си}\EN{C source code} (\RU{взято с}\EN{taken from} \href{http://go.yurichev.com/17106}{wikipedia}):
 
 \begin{lstlisting}
 void f (unsigned int* v, unsigned int* k) {
@@ -170,166 +74,38 @@ void f (unsigned int* v, unsigned int* k) {
 }
 \end{lstlisting}
 
-\subsection{\Exercise 2.7}
-
-\RU{Подсказка: таблица содержит заранее вычисленные значения. 
-Можно было бы обойтись и без нее, но тогда функция работала бы чуть медленнее.}
-\EN{Hint: the table contain pre-calculated values.
-It is possible to implement the function without it, but it will work slower, though.}
-
-\RU{Ответ: эта функция переставляет все биты во входном 32-битном слове наоборот. 
-Это \TT{lib/bitrev.c} из ядра Linux.}
-\EN{Solution: this function reverse all bits in input 32-bit integer. 
-It is \TT{lib/bitrev.c} from Linux kernel.}
-
-\RU{Исходник на Си}\EN{C source code}:
-
-\begin{lstlisting}
-const unsigned char byte_rev_table[256] = {
-	0x00, 0x80, 0x40, 0xc0, 0x20, 0xa0, 0x60, 0xe0,
-	0x10, 0x90, 0x50, 0xd0, 0x30, 0xb0, 0x70, 0xf0,
-	0x08, 0x88, 0x48, 0xc8, 0x28, 0xa8, 0x68, 0xe8,
-	0x18, 0x98, 0x58, 0xd8, 0x38, 0xb8, 0x78, 0xf8,
-	0x04, 0x84, 0x44, 0xc4, 0x24, 0xa4, 0x64, 0xe4,
-	0x14, 0x94, 0x54, 0xd4, 0x34, 0xb4, 0x74, 0xf4,
-	0x0c, 0x8c, 0x4c, 0xcc, 0x2c, 0xac, 0x6c, 0xec,
-	0x1c, 0x9c, 0x5c, 0xdc, 0x3c, 0xbc, 0x7c, 0xfc,
-	0x02, 0x82, 0x42, 0xc2, 0x22, 0xa2, 0x62, 0xe2,
-	0x12, 0x92, 0x52, 0xd2, 0x32, 0xb2, 0x72, 0xf2,
-	0x0a, 0x8a, 0x4a, 0xca, 0x2a, 0xaa, 0x6a, 0xea,
-	0x1a, 0x9a, 0x5a, 0xda, 0x3a, 0xba, 0x7a, 0xfa,
-	0x06, 0x86, 0x46, 0xc6, 0x26, 0xa6, 0x66, 0xe6,
-	0x16, 0x96, 0x56, 0xd6, 0x36, 0xb6, 0x76, 0xf6,
-	0x0e, 0x8e, 0x4e, 0xce, 0x2e, 0xae, 0x6e, 0xee,
-	0x1e, 0x9e, 0x5e, 0xde, 0x3e, 0xbe, 0x7e, 0xfe,
-	0x01, 0x81, 0x41, 0xc1, 0x21, 0xa1, 0x61, 0xe1,
-	0x11, 0x91, 0x51, 0xd1, 0x31, 0xb1, 0x71, 0xf1,
-	0x09, 0x89, 0x49, 0xc9, 0x29, 0xa9, 0x69, 0xe9,
-	0x19, 0x99, 0x59, 0xd9, 0x39, 0xb9, 0x79, 0xf9,
-	0x05, 0x85, 0x45, 0xc5, 0x25, 0xa5, 0x65, 0xe5,
-	0x15, 0x95, 0x55, 0xd5, 0x35, 0xb5, 0x75, 0xf5,
-	0x0d, 0x8d, 0x4d, 0xcd, 0x2d, 0xad, 0x6d, 0xed,
-	0x1d, 0x9d, 0x5d, 0xdd, 0x3d, 0xbd, 0x7d, 0xfd,
-	0x03, 0x83, 0x43, 0xc3, 0x23, 0xa3, 0x63, 0xe3,
-	0x13, 0x93, 0x53, 0xd3, 0x33, 0xb3, 0x73, 0xf3,
-	0x0b, 0x8b, 0x4b, 0xcb, 0x2b, 0xab, 0x6b, 0xeb,
-	0x1b, 0x9b, 0x5b, 0xdb, 0x3b, 0xbb, 0x7b, 0xfb,
-	0x07, 0x87, 0x47, 0xc7, 0x27, 0xa7, 0x67, 0xe7,
-	0x17, 0x97, 0x57, 0xd7, 0x37, 0xb7, 0x77, 0xf7,
-	0x0f, 0x8f, 0x4f, 0xcf, 0x2f, 0xaf, 0x6f, 0xef,
-	0x1f, 0x9f, 0x5f, 0xdf, 0x3f, 0xbf, 0x7f, 0xff,
-};
-
-unsigned char bitrev8(unsigned char byte)
-{
-	return byte_rev_table[byte];
-}
-
-unsigned short bitrev16(unsigned short x)
-{
-	return (bitrev8(x & 0xff) << 8) | bitrev8(x >> 8);
-}
-
-/**
- * bitrev32 - reverse the order of bits in a unsigned int value
- * @x: value to be bit-reversed
- */
-
-unsigned int bitrev32(unsigned int x)
-{
-	return (bitrev16(x & 0xffff) << 16) | bitrev16(x >> 16);
-}
-\end{lstlisting}
-
-\subsection{\Exercise 2.8}
-
-\RU{Ответ: сложение двух матриц размером 100 на 200 элементов типа \Tdouble.}
-\EN{Solution: two 100*200 matrices of \Tdouble type addition.}
-
-\RU{Исходник на \CCpp}\EN{\CCpp source code}:
-
-\begin{lstlisting}
-#define M    100
-#define N    200
-
-void s(double *a, double *b, double *c)
-{
-  for(int i=0;i<N;i++)
-    for(int j=0;j<M;j++)
-      *(c+i*M+j)=*(a+i*M+j) + *(b+i*M+j);
-};
-\end{lstlisting}
-
-\subsection{\Exercise 2.9}
-
-\RU{Ответ: умножение двух матриц размерами 100*200 и 100*300 элементов типа \Tdouble, результат: матрица 100*300.}
-\EN{Solution: two matrices (one is 100*200, second is 100*300) of \Tdouble type multiplication, result: 100*300
-matrix.}
-
-\RU{Исходник на \CCpp}\EN{\CCpp source code}:
-
-\begin{lstlisting}
-#define M     100
-#define N     200
-#define P     300
-
-void m(double *a, double *b, double *c)
-{
-  for(int i=0;i<M;i++)
-    for(int j=0;j<P;j++)
-    {
-      *(c+i*M+j)=0;
-      for (int k=0;k<N;k++) *(c+i*M+j)+=*(a+i*M+j) * *(b+i*M+j);
-    }
-};
-\end{lstlisting}
-
-\subsection{\Exercise 2.11}
-
-\RU{Подсказка: Task Manager узнает количество процессоров/ядер используя вызов ф-ции \\
-\TT{NtQuerySystemInformation(SystemBasicInformation, ..., ..., ...)}, этот вызов можно найти и подставлять
-туда другое значение.}
-\EN{Hint: Task Manager get CPU/CPU cores count using function call \\
-\TT{NtQuerySystemInformation(SystemBasicInformation, ..., ..., ...)}, it is possible to find that
-call and to substitute resulting number.}
-
-\RU{И разумеется, Task Manager будет показывать некорректные результаты в графиках 
-истории загрузки процессоров/ядер}\EN{And of course, 
-the Task Manager will show incorrect results in CPU usage history}.
-
-\subsection{\Exercise 2.12}
-
-\RU{Это алгоритм примитивного шифрования ROT13, некогда популярный в UseNet и мейл-листах}
-\EN{This is a primitive cryptographic algorithm named ROT13, once popular in UseNet and mailing lists}
-\footnote{\url{https://en.wikipedia.org/wiki/ROT13}}.
-
-\Sourcecode: \url{http://yurichev.com/RE-exercise-solutions/2/12/ROT13.c}
+% 2.7
+% 2.8
+% 2.9
+% 2.10
+% 2.11
+% 2.12
 
 \subsection{\Exercise 2.13}
 
-\RU{Это криптоалгоритм}\EN{The cryptoalgorithm is} 
+\RU{Это криптоалгоритм}\EN{The cryptographic algorithm is a} 
 linear feedback shift register\RU{ (регистр сдвига с линейной обратной связью)}
-\footnote{\url{https://en.wikipedia.org/wiki/Linear_feedback_shift_register}}.
+\footnote{\href{http://go.yurichev.com/17000}{wikipedia}}.
 
-\Sourcecode: \url{http://yurichev.com/RE-exercise-solutions/2/13/LFSR.c}
+\Sourcecode: \href{http://go.yurichev.com/17149}{beginners.re}
 
 \subsection{\Exercise 2.14}
 
-\RU{Это алгоритм нахождения наименьшего общего делителя}\EN{This is algorithm of finding greater
+\RU{Это алгоритм нахождения наименьшего общего делителя}\EN{This is an algorithm for finding the greater
 common divisor (GCD)}.
 
-\Sourcecode: \url{http://yurichev.com/RE-exercise-solutions/2/14/GCD.c}
+\Sourcecode: \href{http://go.yurichev.com/17150}{beginners.re}
 
 \subsection{\Exercise 2.15}
 
-\RU{Это вычисление числа Пи методом Монте-Карло}\EN{Pi value calculation using Monte-Carlo method}.
+\RU{Это вычисление числа Пи методом Монте-Карло}\EN{Pi value calculation using the Monte-Carlo method}.
 
-\Sourcecode: \url{http://yurichev.com/RE-exercise-solutions/2/15/monte.c}
+\Sourcecode: \href{http://go.yurichev.com/17151}{beginners.re}
 
 \subsection{\Exercise 2.16}
 
-\RU{Это функция Аккермана}\EN{It is Ackermann function}
-\footnote{\url{https://en.wikipedia.org/wiki/Ackermann_function}}.
+\RU{Это функция Аккермана}\EN{It is the Ackermann function}
+\footnote{\href{http://go.yurichev.com/17001}{wikipedia}}.
 
 \begin{lstlisting}
 int ack (int m, int n)
@@ -344,17 +120,25 @@ int ack (int m, int n)
 
 \subsection{\Exercise 2.17}
 
-\RU{Это одномерный клеточный автомат по \IT{правилу 110}}\EN{This is 1D cellular automation working
+\RU{Это одномерный клеточный автомат по \IT{правилу 110}}\EN{This is 1D cellular automaton working
 by \IT{Rule 110}}:\\
-\url{https://en.wikipedia.org/wiki/Rule_110}.
+\href{http://go.yurichev.com/17002}{wikipedia}.
 
-\Sourcecode: \url{http://yurichev.com/RE-exercise-solutions/2/17/CA.c}
+\Sourcecode: \href{http://go.yurichev.com/17152}{beginners.re}
 
 \subsection{\Exercise 2.18}
 
-\Sourcecode: \url{http://yurichev.com/RE-exercise-solutions/2/18/}
+\Sourcecode: \href{http://go.yurichev.com/17153}{beginners.re}
 
 \subsection{\Exercise 2.19}
 
-\Sourcecode: \url{http://yurichev.com/RE-exercise-solutions/2/19/}
+\Sourcecode: \href{http://go.yurichev.com/17154}{beginners.re}
+
+\subsection{\Exercise 2.20}
+
+\RU{Подсказка}\EN{Hint}: the On-Line Encyclopedia of Integer Sequences (OEIS) \RU{(энциклопедия целочисленных последовательностей}) \RU{может помочь}\EN{may help}.
+
+\RU{Ответ}\EN{Answer}: \RU{это}\EN{these are} \IT{hailstone numbers}, \RU{имеющие отношения к гипотезе Коллатца}\EN{which relate to the Collatz conjecture}\footnote{\EN{\href{http://go.yurichev.com/17107}{wikipedia}}\RU{\href{http://go.yurichev.com/17108}{wikipedia}}}.
+
+\Sourcecode: \href{http://go.yurichev.com/17155}{beginners.re}
 

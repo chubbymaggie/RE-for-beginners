@@ -30,10 +30,10 @@
 \index{x86!\Instructions!JZ}
 
 \RU{Немало этих инструкций имеют синонимы (отмечены с AKA), это сделано для удобства}
-\EN{A lot of instructions has synonyms (denoted with AKA), this was done for convenience}.
+\EN{A lot of these instructions have synonyms (denoted with AKA), this was done for convenience}.
 \RU{Синонимичные инструкции транслируются в один и тот же опкод}
-\EN{Synonymous instructions are translating into the same opcode}.
-\RU{Опкод имеет т.н.}\EN{Opcode has} \gls{jump offset}.
+\EN{Synonymous instructions are translated into the same opcode}.
+\RU{Опкод имеет т.н.}\EN{The opcode has a} \gls{jump offset}.
 
 \label{Jcc}
 \begin{description}
@@ -61,8 +61,8 @@
 \item[JNS] \RU{переход если флаг SF сброшен}\EN{jump if SF flag is cleared}
 \item[JNZ] \ac{AKA} JNE: \RU{переход если не равно или не ноль}\EN{jump if not equal or not zero}: ZF=0
 \item[JO] \RU{переход если переполнение}\EN{jump if overflow}: OF=1
-\item[JPO] \RU{переход если сброшен флаг PF}\EN{jump if PF flag is cleared}
-\item[JP] \ac{AKA} JPE: \RU{переход если выставлен флаг PF}\EN{jump if PF flag is set}
+\item[JPO] \RU{переход если сброшен флаг PF}\EN{jump if PF flag is cleared} (Jump Parity Odd)
+\item[JP] \ac{AKA} \ac{JPE}: \RU{переход если выставлен флаг PF}\EN{jump if PF flag is set}
 \item[JS] \RU{переход если выставлен флаг SF}\EN{jump if SF flag is set}
 \item[JZ] \ac{AKA} JE: \RU{переход если равно или ноль}\EN{jump if equal or zero}: ZF=1
 \end{description}

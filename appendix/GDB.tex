@@ -2,7 +2,7 @@
 \index{GDB}
 \label{sec:GDB_cheatsheet}
 
-\RU{Некоторые команды, которые я использовал в книге}\EN{Some of commands I used in this book}:
+\RU{Некоторые команды, которые были использованы в книге}\EN{Some of commands we used in this book}:
 
 \begin{center}
 \begin{tabular}{ | l | l | }
@@ -10,10 +10,10 @@
 \cellcolor{blue!25} \RU{опция}\EN{option} & 
 \cellcolor{blue!25} \RU{значение}\EN{meaning} \\
 \hline
-break filename.c:number		& \RU{установить брякпойнт на номере строки в исходном файле}
+break filename.c:number		& \RU{установить точку останова на номере строки в исходном файле}
 					\EN{set a breakpoint on line number in source code} \\
-break function			& \RU{установить брякпойнт на ф-ции}\EN{set a breakpoint on function} \\
-break *address			& \RU{установить брякпойнт на адресе}\EN{set a breakpoint on address} \\
+break function			& \RU{установить точку останова на функции}\EN{set a breakpoint on function} \\
+break *address			& \RU{установить точку останова на адресе}\EN{set a breakpoint on address} \\
 b				& \dittoclosing \\
 p variable			& \RU{вывести значение переменной}\EN{print value of variable} \\
 run				& \RU{запустить}\EN{run} \\
@@ -23,10 +23,12 @@ c				& \dittoclosing \\
 bt				& \RU{вывести стек}\EN{print stack} \\
 set disassembly-flavor intel	& \RU{установить Intel-синтаксис}\EN{set Intel syntax} \\
 disas				& disassemble current function \\
-disas function			& \RU{дизассемблировать ф-цию}\EN{disassemble function} \\
+disas function			& \RU{дизассемблировать функцию}\EN{disassemble function} \\
 disas function,+50		& disassemble portion \\
 disas \$eip,+0x10		& \dittoclosing \\
+disas/r				& \EN{disassemble with opcodes}\RU{дизассемблировать с опкодами} \\
 info registers			& \RU{вывести все регистры}\EN{print all registers} \\
+info float			& \RU{вывести FPU-регистры}\EN{print FPU-registers} \\
 info locals			& \RU{вывести локальные переменные (если известны)}\EN{dump local variables (if known)} \\
 x/w ...				& \RU{вывести память как 32-битные слова}\EN{dump memory as 32-bit word} \\
 x/w \$rdi			& \RU{вывести память как 32-битные слова по адресу, на который указывает \TT{RDI}}\EN{dump memory as 32-bit word at address stored in \TT{RDI}} \\
@@ -37,14 +39,17 @@ x/10c ...			& \RU{вывести 10 символов}\EN{dump 10 characters} \\
 x/b ...				& \RU{вывести байты}\EN{dump bytes} \\
 x/h ...				& \RU{вывести 16-битные полуслова}\EN{dump 16-bit halfwords} \\
 x/g ...				& \RU{вывести 64-битные слова}\EN{dump giant (64-bit) words} \\
-finish				& \RU{исполнять до конца ф-ции}\EN{execute till the end of function} \\
-next				& \RU{следующая инструкция (не заходить в ф-ции)}
+finish				& \RU{исполнять до конца функции}\EN{execute till the end of function} \\
+next				& \RU{следующая инструкция (не заходить в функции)}
 					\EN{next instruction (don't dive into functions)} \\
-step				& \RU{следующая инструкция (заодить в ф-ции)}
+step				& \RU{следующая инструкция (заходить в функции)}
 					\EN{next instruction (dive into functions)} \\
+set step-mode on		& \RU{не использовать информацию о номерах строк при использовании команды step}
+					\EN{do not use line number information while stepping} \\
 frame n				& \RU{переключить фрейм стека}\EN{switch stack frame} \\
-info break			& \RU{список брякпойнтов}\EN{list of breakpoints} \\
-del n				& \RU{удалить брякпойнт}\EN{delete breakpoint} \\
+info break			& \RU{список точек останова}\EN{list of breakpoints} \\
+del n				& \RU{удалить точку установа}\EN{delete breakpoint} \\
+set args ...			& \RU{установить аргументы командной строки}\EN{set command-line arguments} \\
 \hline
 \end{tabular}
 \end{center}

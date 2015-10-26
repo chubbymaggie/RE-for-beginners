@@ -1,71 +1,29 @@
 \chapter{\RU{Уровень}\EN{Level} 1}
 
 \RU{Задачи первого уровня, это те, которые можно решать голове}\EN{Level 1 exercises are ones you
-may try to solve in mind}.
+may try to solve in your mind}.
 
-\section{\Exercise 1.1}
-% max()
-
-\subsection{MSVC 2012 x64 + \Ox}
-
-\index{x86!\Instructions!CMOVcc}
-\begin{lstlisting}
-a$ = 8
-b$ = 16
-f	PROC
-	cmp	ecx, edx
-	cmovg	edx, ecx
-	mov	eax, edx
-	ret	0
-f	ENDP
-\end{lstlisting}
-
-\subsection{Keil (ARM)}
-
-\begin{lstlisting}
-        CMP      r0,r1
-        MOVLE    r0,r1
-        BX       lr
-\end{lstlisting}
-
-\subsection{Keil (thumb)}
-        
-\begin{lstlisting}
-	CMP      r0,r1
-        BGT      |L0.6|
-        MOVS     r0,r1
-|L0.6|
-        BX       lr
-\end{lstlisting}
-
-\section{\Exercise 1.2}
-
-\index{x86!\Instructions!LOOP}
-\RU{Почему инструкция}\EN{Why} \LOOP \RU{больше не используется компиляторами}\EN{instruction is 
-not used by compilers anymore}?
-
-\section{\Exercise 1.3}
-
-\RU{Возьмите пример из секции}\EN{Take an loop example from} ``\Loops''\EN{ section} (\ref{sec:loops}), 
-\RU{скомпилируйте его в вашей любимой}\EN{compile it in your favorite} \ac{OS}
-\RU{и компиляторе, и модифицируйте исполняемый файл так, чтобы цикл был в пределах}\EN{and compiler 
-and modify (patch) executable file, so the loop range will be} [6..20].
+% 1.1
+% 1.2
+% 1.3
 
 \section{\Exercise 1.4}
 
-\RU{Эта программа запрашивает пароль}\EN{This program requires password}. \RU{Найдите его}\EN{Find it}.
+\RU{Эта программа запрашивает пароль}\EN{This program requires a password}. \RU{Найдите его}\EN{Find it}.
 
 \RU{Как дополнительное упражнение, попробуйте изменить пароль, модифицируя исполняемый файл,
 в т.ч., на более короткий или более длинный.}
-\EN{As an additional exercise, try to change the password by patching executable file. 
-It may also has a different length.}
+\EN{As an additional exercise, try to change the password by patching the executable file. 
+Also try using one with a different length.}
+\RU{Какой самый короткий пароль можно сделать}\EN{What is the shortest possible password here}?
 
 \RU{Попытайтесь также вызвать аварийное завершение программы только при помощи ввода строки}
 \EN{Try also to crash the program using only string input}.
 
 \begin{itemize}
-\item win32: \url{http://yurichev.com/RE-exercises/1/4/password1.exe}
-\item Linux x86: \url{http://yurichev.com/RE-exercises/1/4/password1_Linux_x86.tar}
-\item \MacOSX: \url{http://yurichev.com/RE-exercises/1/4/password1_MacOSX64.tar}
+\item \href{http://go.yurichev.com/17166}{win32 (beginners.re)}
+\item \href{http://go.yurichev.com/17167}{Linux x86 (beginners.re)}
+\item \href{http://go.yurichev.com/17168}{\MacOSX (beginners.re)}
+\item \href{http://go.yurichev.com/17169}{MIPS (beginners.re)}
 \end{itemize}
 

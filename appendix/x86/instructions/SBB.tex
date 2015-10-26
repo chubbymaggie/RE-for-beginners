@@ -1,12 +1,13 @@
 \index{x86!\Instructions!SBB}
+\index{x86!\Flags!CF}
   \item[SBB] (\IT{subtraction with borrow}) 
   \RU{вычесть одно значение из другого, \glslink{decrement}{декремент} результата если флаг CF выставлен.
-  часто используется для вычитания больших значений, например, для вычитания двух 64-битных
+  SBB часто используется для вычитания больших значений, например, для вычитания двух 64-битных
   значений в 32-битной среде используя инструкции SUB и SBB, например:}
-  \EN{subtract values, \gls{decrement} result if CF flag is set.
-  often used for subtraction of large values, for example,
-  to subtract two 64-bit values in 32-bit environment using two SUB and SBB instructions, for example:}
+  \EN{subtract values, \gls{decrement} the result if the CF flag is set.
+  SBB is often used for subtraction of large values, for example,
+  to subtract two 64-bit values in 32-bit environment using two SUB and SBB instructions. For example:}
 
-\lstinputlisting{appendix/x86/instructions/SBB_example_\LANG.lst}
+\lstinputlisting{appendix/x86/instructions/SBB_example.lst.\LANG}
 
-\RU{Еще один пример}\EN{One more example}: \ref{sec:64bit_in_32_env}.
+\RU{Еще один пример}\EN{One more example}: \myref{sec:64bit_in_32_env}.

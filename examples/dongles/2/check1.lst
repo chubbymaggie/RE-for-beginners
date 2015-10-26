@@ -11,7 +11,7 @@
 .data:004016B8                                         ; "3C"
 .data:004016BC                 dd offset a3e           ; "3E"
 
-; these names I gave to the labels:
+; these names we gave to the labels:
 .data:004016C0 answers1        dd 6B05h                ; DATA XREF: sys_info+E7r
 .data:004016C4                 dd 3D87h
 .data:004016C8 answers2        dd 3Ch                  ; DATA XREF: sys_info+F2r

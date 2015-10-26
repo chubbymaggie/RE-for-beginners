@@ -1,0 +1,57 @@
+\section{\Exercises}
+
+\subsection{\Exercise \#1}
+
+\RU{Избавьтесь от инструкции}\EN{Eliminate the} FXCH \RU{в примере}\EN{instruction in the example} 
+\myref{gcc481_o3} \RU{и протестируйте его}\EN{and test it}.
+
+\subsection{\Exercise \#2}
+\label{exercise_FPU_2}
+
+\WhatThisCodeDoes\
+
+\begin{lstlisting}[caption=\Optimizing MSVC 2010]
+__real@4014000000000000 DQ 04014000000000000r	; 5
+
+_a1$ = 8	; size = 8
+_a2$ = 16	; size = 8
+_a3$ = 24	; size = 8
+_a4$ = 32	; size = 8
+_a5$ = 40	; size = 8
+_f	PROC
+	fld	QWORD PTR _a1$[esp-4]
+	fadd	QWORD PTR _a2$[esp-4]
+	fadd	QWORD PTR _a3$[esp-4]
+	fadd	QWORD PTR _a4$[esp-4]
+	fadd	QWORD PTR _a5$[esp-4]
+	fdiv	QWORD PTR __real@4014000000000000
+	ret	0
+_f	ENDP
+\end{lstlisting}
+
+\begin{lstlisting}[caption=\NonOptimizingKeilVI (\ThumbMode{} / \RU{скомпилировано для}\EN{compiled for} Cortex-R4F CPU)]
+f PROC
+        VADD.F64 d0,d0,d1
+        VMOV.F64 d1,#5.00000000
+        VADD.F64 d0,d0,d2
+        VADD.F64 d0,d0,d3
+        VADD.F64 d2,d0,d4
+        VDIV.F64 d0,d2,d1
+        BX       lr
+        ENDP
+\end{lstlisting}
+
+\begin{lstlisting}[caption=\Optimizing GCC 4.9 (ARM64)]
+f:
+	fadd	d0, d0, d1
+	fmov	d1, 5.0e+0
+	fadd	d2, d0, d2
+	fadd	d3, d2, d3
+	fadd	d0, d3, d4
+	fdiv	d0, d0, d1
+	ret
+\end{lstlisting}
+
+\lstinputlisting[caption=\Optimizing GCC 4.4.5 (MIPS) (IDA)]{patterns/12_FPU/ex_MIPS_O3_IDA.lst}
+
+\Answer\: \myref{exercise_solutions_FPU_2}.

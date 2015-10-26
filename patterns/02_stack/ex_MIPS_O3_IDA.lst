@@ -1,0 +1,24 @@
+main:
+
+var_10          = -0x10
+var_4           = -4
+
+                lui     $gp, (__gnu_local_gp >> 16)
+                addiu   $sp, -0x20
+                la      $gp, (__gnu_local_gp & 0xFFFF)
+                sw      $ra, 0x20+var_4($sp)
+                sw      $gp, 0x20+var_10($sp)
+                lw      $t9, (time & 0xFFFF)($gp)
+                or      $at, $zero
+                jalr    $t9
+                move    $a0, $zero
+                lw      $gp, 0x20+var_10($sp)
+                lui     $a0, ($LC0 >> 16)  # "%d\n"
+                lw      $t9, (printf & 0xFFFF)($gp)
+                lw      $ra, 0x20+var_4($sp)
+                la      $a0, ($LC0 & 0xFFFF)  # "%d\n"
+                move    $a1, $v0
+                jr      $t9
+                addiu   $sp, 0x20
+
+$LC0:           .ascii "%d\n"<0>         # DATA XREF: main+28

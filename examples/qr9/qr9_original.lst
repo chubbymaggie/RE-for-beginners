@@ -543,7 +543,7 @@
 .text:005413E2                 push    1               ; Count
 .text:005413E4                 push    esi             ; Size
 .text:005413E5                 push    ebx             ; Str
-.text:005413E6                 call    _fwrite         ; write crypted file
+.text:005413E6                 call    _fwrite         ; write encrypted file
 .text:005413EB                 push    edi             ; File
 .text:005413EC                 call    _fclose
 .text:005413F1                 push    ebx             ; Memory
@@ -618,7 +618,7 @@
 .text:00541471                 xor     edx, edx
 .text:00541473                 repe cmpsb
 .text:00541475                 jz      short loc_541489
-.text:00541477                 push    offset aFileIsNotCrypt ; "File is not crypted!\n"
+.text:00541477                 push    offset aFileIsNotCrypt ; "File is not encrypted!\n"
 .text:0054147C                 call    _printf
 .text:00541481                 add     esp, 4
 .text:00541484                 pop     edi

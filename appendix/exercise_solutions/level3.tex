@@ -1,58 +1,51 @@
 \section{\RU{Уровень}\EN{Level} 3}
 
-\subsection{\Exercise 3.1}
-
-\RU{Подсказка \#1: В этом коде есть одна особенность, по которой можно значительно сузить поиск функции в glibc.}
-\EN{Hint \#1: The code has one characteristic thing, if considering it, it may help narrowing search of right function 
-among glibc functions}.
-
-\RU{Ответ: особенность ~--- это вызов callback-функции}\EN{Solution: characteristic~---is callback-function
-calling}~(\ref{sec:pointerstofunctions}),
-\RU{указатель на которую передается в четвертом аргументе}\EN{pointer to which is passed in 4th
-argument}. \RU{Это}\EN{It is} \TT{quicksort()}.
-
-\index{\CStandardLibrary!qsort()}
-\RU{Исходник на Си}\EN{C source code}: \url{http://yurichev.com/RE-exercise-solutions/3/1/2_1.c}
+% 3.1
 
 \subsection{\Exercise 3.2}
+% GOST
 
 \RU{Подсказка: проще всего конечно же искать по значениями в таблицах}
-\EN{Hint: easiest way is to find by values in the tables}.
+\EN{Hint: the easiest way is to search by value in the tables}.
 
 \RU{Исходник на Си с комментариями}\EN{Commented C source code}:\\
-\url{http://yurichev.com/RE-exercise-solutions/3/2/gost.c}
+\href{http://go.yurichev.com/17156}{beginners.re}
 
 \subsection{\Exercise 3.3}
+% entropy
 
 \RU{Исходник на Си с комментариями}\EN{Commented C source code}:\\
-\url{http://yurichev.com/RE-exercise-solutions/3/3/entropy.c}
+\href{http://go.yurichev.com/17157}{beginners.re}
 
 \subsection{\Exercise 3.4}
 \RU{Исходник на Си с комментариями, а также расшифрованный файл}
-\EN{Commented C source code, and also decrypted file}:
-\url{http://yurichev.com/RE-exercise-solutions/3/4/}
+\EN{Commented C source code, and also the decrypted file}:
+\href{http://go.yurichev.com/17158}{beginners.re}
 
 \subsection{\Exercise 3.5}
+% CRC16
 
 \RU{Подсказка: как видно, строка где указано имя пользователя занимает не весь ключевой файл}
-\EN{Hint: as we can see, the string with user name occupies not the whole file}.
+\EN{Hint: as we can see, the string with the user name does not occupy the whole file}.
 
 \RU{Байты за терминирующим нулем вплоть до смещения \TT{0x7F} игнорируются программой}
-\EN{Bytes after terminated zero till offset \TT{0x7F} are ignored by program}.
+\EN{Bytes after the terminating zero till offset \TT{0x7F} are ignored by the program}.
 
 \RU{Исходник на Си с комментариями}\EN{Commented C source code}:\\
-\url{http://yurichev.com/RE-exercise-solutions/3/5/crc16_keyfile_check.c}
+\href{http://go.yurichev.com/17159}{beginners.re}
 
 \subsection{\Exercise 3.6}
+% webserv
 
 {\RU{Исходник на Си с комментариями}\EN{Commented C source code}}:\\
-\url{http://yurichev.com/RE-exercise-solutions/3/6/}
+\href{http://go.yurichev.com/17160}{beginners.re}
 
-\RU{В качестве еще одного упражнения, теперь вы можете попробовать исправить уязвимости в этом веб-сервере}
-\EN{As another exercise, now you may try to fix all vulnerabilities you found in this web-server}.
+\RU{В качестве еще одного упражнения, теперь вы можете попробовать исправить уязвимости в этом веб-сервере.}
+\EN{As another exercise, now you may try to fix all the vulnerabilities you found in this web server.}
 
 \subsection{\Exercise 3.8}
+% LZSS
 
 {\RU{Исходник на Си с комментариями}\EN{Commented C source code}}:\\
-\url{http://yurichev.com/RE-exercise-solutions/3/8/}
+\href{http://go.yurichev.com/17161}{beginners.re}
 

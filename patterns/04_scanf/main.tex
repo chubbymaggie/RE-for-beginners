@@ -4,89 +4,39 @@
 
 \RU{Теперь попробуем использовать scanf().}\EN{Now let's use scanf().}
 
-\lstinputlisting{patterns/04_scanf/ex1.c}
+% sections
+\input{patterns/04_scanf/1_simple/main}
+\input{patterns/04_scanf/2_global/main}
+\input{patterns/04_scanf/3_checking_retval/main}
 
-\RU{Да, согласен, использовать \scanf в наши времена для того, чтобы спросить у пользователя что-то, 
-не самая хорошая идея.
-Но я хотел проиллюстрировать передачу указателя на \Tint.}
-\EN{OK, I agree, it is not clever to use \scanf today. But I wanted to illustrate passing pointer to \Tint.}
+\section{\Exercises}
 
-\section{\RU{Об указателях}\EN{About pointers}}
-\index{\CLanguageElements!\Pointers}
+\subsection{\Exercise \#1}
+\label{exercise_scanf_1}
 
-\RU{Это одна из фундаментальных вещей в компьютерных науках.}\EN{It is one of the most fundamental things in computer
-science.}
-\RU{Часто большой массив, структуру или объект передавать в другую функцию никак не выгодно, 
-а передать её адрес куда проще.}
-\EN{Often, large array, structure or object, it is too costly to pass to other function, 
-while passing its address is much easier.}
-\RU{К тому же, если вызываемая функция должна изменить что-то в этом большом массиве или структуре,
-то возвращать её полностью ~--- это так же абсурдно.}
-\EN{More than that: if calling function must modify something in the large array or structure,
-to return it as a whole is absurdly as well.}
-\RU{Так что самое простое, что можно сделать, это передать в функцию адрес массива или структуры,
-и пусть она что-то там изменит.}
-\EN{So the simplest thing to do is to pass an address of array or structure to function,
-and let it change what must be changed.}
+\EN{This code, compiled in Linux x86-64 using GCC is crashing while execution (segmentation fault).
+However, it works in Windows environment compiled by MSVC 2010 x86.
+Why?}
+\RU{Этот код, когда компилируется при помощи GCC в Linux x86-64, падает во время исполнения (segmentation fault).
+Но он работает в среде Windows, когда скомпилирован при помощи MSVC 2010 x86.
+Почему?}
 
-\RU{Указатель в}\EN{In} \CCpp \RU{ ~--- это просто адрес какого-либо места в памяти.}
-\EN{it is just an address of some point in memory.}
+\begin{lstlisting}
+#include <string.h>
+#include <stdio.h>
 
-\index{x86-64}
-\RU{В x86 адрес представляется в виде 32-битного числа (т.е., занимает 4 байта), а в x86--64 как 64-битное число 
-(занимает 8 байт).}
-\EN{In x86, address is represented as 32-bit number (i.e., occupying 4 bytes), while in x86--64 it is 64-bit number
-(occupying 8 bytes).}
-\RU{Кстати, отсюда негодование некоторых людей, связанное с переходом на x86-64 ~--- на этой архитектуре все указатели
-будут занимать места в 2 раза больше.}
-\EN{By the way, that is the reason of some people's indignation related to switching to x86-64~---all pointers
-on x64-architecture will require twice as more space.}
+void alter_string(char *s)
+{
+        strcpy (s, "Goodbye!");
+        printf ("Result: %s\n", s);
+};
 
-\index{\CStandardLibrary!memcpy()}
-\RU{При некотором упорстве можно работать только с бестиповыми указателями (\TT{void*})}\EN{With some effort,
-it is possible to work only with untyped pointers}; \RU{например,}\EN{e.g.} 
-\RU{стандартная функция Си}\EN{standard C function} \TT{memcpy()},
-\RU{копирующая блок из одного места памяти в другое}\EN{copying a block from one place in memory to another}, 
-\RU{принимает на вход 2 указателя типа}\EN{takes 2 pointers of} \TT{void*}\EN{ type on input}, 
-\RU{потому что нельзя
-заранее предугадать, какого типа блок вы собираетесь копировать. Да в общем это и не важно, важно только знать размер
-блока.}
-\EN{since it is impossible to predict block type you would like to copy. And it is not even important to know, 
-only block size is important.}
+int main()
+{
+        alter_string ("Hello, world!\n");
+};
+\end{lstlisting}
 
-\RU{Также указатели широко используются, когда функции нужно вернуть более одного значения}
-\EN{Also pointers are widely used when function needs to return more than one value}
-(\RU{мы еще вернемся к этому в будущем}\EN{we will back to this in future}~(\ref{label_pointers})).
-\IT{scanf()} \RU{ ~--- это как раз такой случай}\EN{is just that case}. 
-\RU{Помимо того, что этой функции нужно показать, сколько значений
-было прочитано успешно, ей еще и нужно вернуть сами значения.}
-\EN{In addition to the function's need to show how many values were read successfully, 
-it also should return all these values.}
 
-\RU{Тип указателя в}\EN{In} \CCpp \RU{нужен для проверки типов на стадии компиляции.}
-\EN{pointer type is needed only for type checking on compiling stage.}
-\RU{Внутри, в скомпилированном коде, никакой информации о типах указателей нет.}
-\EN{Internally, in compiled code, there is no information about pointers types.}
-
-\input{patterns/04_scanf/ex1_x86}
-\input{patterns/04_scanf/ex1_x64}
-\input{patterns/04_scanf/ex1_ARM}
-
-\section{\RU{Глобальные переменные}\EN{Global variables}}
-\index{\RU{Глобальные переменные}\EN{Global variables}}
-
-\RU{А что если переменная \TT{x} из предыдущего примера будет глобальной переменной, а не локальной? 
-Тогда к ней смогут обращаться из любого другого места, а не только из тела функции. 
-Глобальные переменные считаются \glslink{anti-pattern}{анти-паттерном},
-но ради примера мы можем себе это позволить.}
-\EN{What if \TT{x} variable from previous example will not be local but global variable? 
-Then it will be accessible from any point, not only from function body. 
-Global variables are considered as \gls{anti-pattern}, but for the sake of experiment we could do this.}
-
-\lstinputlisting{patterns/04_scanf/ex2.c}
-
-\input{patterns/04_scanf/ex2_global_vars_x86}
-\input{patterns/04_scanf/ex2_global_vars_ARM}
-
-\input{patterns/04_scanf/ex3_checking_retval}
+\Answer{}: \myref{exercise_solutions_scanf_1}.
 

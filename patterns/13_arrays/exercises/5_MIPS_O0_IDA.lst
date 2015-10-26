@@ -1,0 +1,67 @@
+main:
+
+var_18          = -0x18
+var_10          = -0x10
+var_C           = -0xC
+var_4           = -4
+
+                addiu   $sp, -0x18
+                sw      $fp, 0x18+var_4($sp)
+                move    $fp, $sp
+                la      $gp, __gnu_local_gp
+                sw      $gp, 0x18+var_18($sp)
+                sw      $zero, 0x18+var_C($fp)
+                b       loc_A0
+                or      $at, $zero
+
+loc_24:                                  # CODE XREF: main+AC
+                sw      $zero, 0x18+var_10($fp)
+                b       loc_7C
+                or      $at, $zero
+
+loc_30:                                  # CODE XREF: main+88
+                lw      $v0, 0x18+var_C($fp)
+                lw      $a0, 0x18+var_10($fp)
+                lw      $a1, 0x18+var_C($fp)
+                lw      $v1, 0x18+var_10($fp)
+                or      $at, $zero
+                mult    $a1, $v1
+                mflo    $a2
+                lw      $v1, (tbl & 0xFFFF)($gp)
+                sll     $v0, 1
+                sll     $a1, $v0, 2
+                addu    $v0, $a1
+                addu    $v0, $a0
+                sll     $v0, 2
+                addu    $v0, $v1, $v0
+                sw      $a2, 0($v0)
+                lw      $v0, 0x18+var_10($fp)
+                or      $at, $zero
+                addiu   $v0, 1
+                sw      $v0, 0x18+var_10($fp)
+
+loc_7C:                                  # CODE XREF: main+28
+                lw      $v0, 0x18+var_10($fp)
+                or      $at, $zero
+                slti    $v0, 0xA
+                bnez    $v0, loc_30
+                or      $at, $zero
+                lw      $v0, 0x18+var_C($fp)
+                or      $at, $zero
+                addiu   $v0, 1
+                sw      $v0, 0x18+var_C($fp)
+
+loc_A0:                                  # CODE XREF: main+1C
+                lw      $v0, 0x18+var_C($fp)
+                or      $at, $zero
+                slti    $v0, 0xA
+                bnez    $v0, loc_24
+                or      $at, $zero
+                move    $v0, $zero
+                move    $sp, $fp
+                lw      $fp, 0x18+var_4($sp)
+                addiu   $sp, 0x18
+                jr      $ra
+                or      $at, $zero
+
+                .comm tbl:0x64           # DATA XREF: main+4C

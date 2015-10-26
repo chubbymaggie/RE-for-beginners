@@ -1,0 +1,41 @@
+m:
+                li      $t5, 0x13880
+                move    $t4, $zero
+                li      $t1, 0xC8
+                li      $t3, 0x12C
+
+loc_14:                                  # CODE XREF: m+7C
+                addu    $t0, $a0, $t4
+                addu    $a3, $a1, $t4
+                move    $v1, $a2
+                move    $t2, $zero
+
+loc_24:                                  # CODE XREF: m+70
+                mtc1    $zero, $f0
+                move    $v0, $zero
+                mtc1    $zero, $f1
+                or      $at, $zero
+                swc1    $f0, 4($v1)
+                swc1    $f1, 0($v1)
+
+loc_3C:                                  # CODE XREF: m+5C
+                lwc1    $f4, 4($t0)
+                lwc1    $f2, 4($a3)
+                lwc1    $f5, 0($t0)
+                lwc1    $f3, 0($a3)
+                addiu   $v0, 1
+                mul.d   $f2, $f4, $f2
+                add.d   $f0, $f2
+                swc1    $f0, 4($v1)
+                bne     $v0, $t1, loc_3C
+                swc1    $f1, 0($v1)
+                addiu   $t2, 1
+                addiu   $v1, 8
+                addiu   $t0, 8
+                bne     $t2, $t3, loc_24
+                addiu   $a3, 8
+                addiu   $t4, 0x320
+                bne     $t4, $t5, loc_14
+                addiu   $a2, 0x320
+                jr      $ra
+                or      $at, $zero

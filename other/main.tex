@@ -7,6 +7,10 @@
 \input{other/compiler_intrinsic}
 \input{other/compiler_anomalies}
 \input{other/openmp/main}
+\ifdefined\IncludeItanium
 \input{other/itanium/main}
+\fi
+\ifdefined\IncludeMSDOS
 \input{other/8086mm}
+\fi
 \input{other/bb_reordering}

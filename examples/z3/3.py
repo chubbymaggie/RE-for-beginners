@@ -28,7 +28,7 @@ while True:
         for d in m:
             # d is a declaration
             if d.arity() > 0:
-                raise Z3Exception("uninterpreted functions are not suppported")
+                raise Z3Exception("uninterpreted functions are not supported")
             # create a constant from declaration
             c=d()
             if is_array(c) or c.sort().kind() == Z3_UNINTERPRETED_SORT:

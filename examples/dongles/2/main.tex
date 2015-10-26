@@ -4,16 +4,16 @@
 \index{SCO OpenServer}
 \RU{Древняя программа для}\EN{An ancient software for} SCO OpenServer \RU{от}\EN{from} 1997 
 \RU{разработанная давно исчезнувшей компанией}\EN{developed
-by a company disappeared long time ago}.
+by a company that disappeared a long time ago}.
 
 \RU{Специальный драйвер донглы инсталлируется в системе, он содержит такие текстовые строки}
-\EN{There is a special dongle driver to be installed in the system, containing text strings}:
-``Copyright 1989, Rainbow Technologies, Inc., Irvine, CA''
+\EN{There is a special dongle driver to be installed in the system, that contains the following text strings}:
+\q{Copyright 1989, Rainbow Technologies, Inc., Irvine, CA}
 \AndENRU
-``Sentinel Integrated Driver Ver. 3.0 ''.
+\q{Sentinel Integrated Driver Ver. 3.0 }.
 
 \RU{После инсталляции драйвера, в /dev появляются такие устройства}
-\EN{After driver installation in SCO OpenServer, these device files are appeared in /dev filesystem}:
+\EN{After the installation of the driver in SCO OpenServer, these device files appear in the /dev filesystem}:
 
 \begin{lstlisting}
 /dev/rbsl8
@@ -23,72 +23,71 @@ by a company disappeared long time ago}.
 
 \RU{Без подключенной донглы, программа сообщает об ошибке, но сообщение об ошибке не удается
 найти в исполняемых файлах}
-\EN{The program without dongle connected reports error, but the error string cannot be found in the executables}.
+\EN{The program reports an error without dongle connected, but the error string cannot be found in the executables}.
 
 \index{COFF}
 \RU{Еще раз спасибо \ac{IDA}, она легко загружает исполняемые файлы формата COFF использующиеся в}
-\EN{Thanks to \ac{IDA}, it does its job perfectly working out COFF executable used in} SCO OpenServer.
+\EN{Thanks to \ac{IDA}, it is easy to load the COFF executable used in} SCO OpenServer.
 
-\RU{Я попробовал также поискать строку}\EN{I've tried to find} ``rbsl'' 
-\RU{, и действительно, её можно найти в таком фрагменте кода}
-\EN{and indeed, found it in this code fragment}:
+\RU{Попробуем также поискать строку \q{rbsl}, и действительно, её можно найти в таком фрагменте кода}%
+\EN{Let's also try to find \q{rbsl} string and indeed, found it in this code fragment}:
 
 \lstinputlisting{examples/dongles/2/1.lst}
 
 \RU{Действительно, должна же как-то программа обмениваться информацией с драйвером}
-\EN{Yes, indeed, the program should communicate with driver somehow and that is how it is}.
+\EN{Yes, indeed, the program needs to communicate with the driver somehow}.
 
 \index{thunk-\RU{функции}\EN{functions}}
-\RU{Единственное место где вызывается ф-ция}\EN{The only place} \TT{SSQC()}
-\RU{это}\EN{function called is the} \gls{thunk function}:
+\RU{Единственное место где вызывается функция}\EN{The only place where the} \TT{SSQC()}
+\RU{это}\EN{function is called is the} \gls{thunk function}:
 
 \lstinputlisting{examples/dongles/2/2.lst}
 
-\RU{А вот }SSQ() \RU{вызывается по крайней мере из двух разных ф-ций}
-\EN{is called at least from 2 functions}.
+\RU{А вот }SSQ() \RU{вызывается по крайней мере из двух разных функций}
+\EN{is called from at least 2 functions}.
 
 \RU{Одна из них}\EN{One of these is}:
 
 \lstinputlisting{examples/dongles/2/check1.lst}
 
-``\TT{3C}'' \AndENRU ``\TT{3E}'' \RU{~--- это звучит знакомо: когда-то была донгла}
-\EN{are sounds familiar: there was a} Sentinel Pro \RU{от Rainbow без памяти,
-предоставляющая только одну секретную крипто-хеширующую ф-цию}\EN{dongle by Rainbow with no memory,
+\q{\TT{3C}} \AndENRU \q{\TT{3E}} \RU{\EMDASH{}это звучит знакомо: когда-то была донгла}
+\EN{sound familiar: there was a} Sentinel Pro \RU{от Rainbow без памяти,
+предоставляющая только одну секретную крипто-хеширующую функцию}\EN{dongle by Rainbow with no memory,
 providing only one crypto-hashing secret function}.
 
-\RU{О том, что такое хэш-функция, было описано здесь}\EN{A short description
-about what hash function is, read here}: \ref{hash_func}.
+\RU{О том, что такое хэш-функция, было описано здесь}\EN{You can read a short description
+of what hash function is here}: \myref{hash_func}.
 
-\RU{Но вернемся к нашей программе}\EN{But let's back to the program}.
+\RU{Но вернемся к нашей программе}\EN{But let's get back to the program}.
 \RU{Так что программа может только проверить подключена ли донгла или нет}
-\EN{So the program can only check the presence or absence dongle connected}.
+\EN{So the program can only check the presence or absence of a connected dongle}.
 \RU{Никакой больше информации в такую донглу без памяти записать нельзя}
-\EN{No other information can be written to such dongle with no memory}.
-\RU{Двухсимвольные коды ~--- это команды}\EN{Two-character codes are commands}
-(\RU{можно увидеть как они обрабатываются в ф-ции}\EN{we can see how commands are handled in} 
+\EN{No other information can be written to such dongle, as it has no memory}.
+\RU{Двухсимвольные коды\EMDASH{}это команды}\EN{The two-character codes are commands}
+(\RU{можно увидеть, как они обрабатываются в функции}\EN{we can see how the commands are handled in the} 
 \TT{SSQC()}\EN{ function}) 
 \RU{а все остальные строки хешируются внутри донглы превращаясь в 16-битное число}
-\EN{and all other strings are hashed inside the dongle transforming into 16-bit number}.
+\EN{and all other strings are hashed inside the dongle, being transformed into a 16-bit number}.
 \RU{Алгоритм был секретный, так что нельзя было написать замену драйверу или сделать
 электронную копию донглы идеально эмулирующую алгоритм}\EN{The algorithm was secret,
-so it was not possible to write driver replacement or to remake dongle hardware emulating it perfectly}.
+so it was not possible to write a driver replacement or to remake the dongle hardware that would emulate it perfectly}.
 \RU{С другой стороны, всегда можно было перехватить все обращения к ней и найти те константы, с которыми
 сравнивается результат хеширования}
-\EN{However, it was always possible to intercept all accesses to it and to find what constants
-the hash function results compared to}.
+\EN{However, it is always possible to intercept all accesses to it and to find what constants
+the hash function results are compared to}.
 \RU{Но надо сказать, вполне возможно создать устойчивую защиту от копирования базирующуюся
 на секретной хеш-функции: пусть она шифрует все файлы с которыми ваша программа работает}
-\EN{Needless to say it is possible to build a robust software copy protection scheme based on secret
-cryptographical hash-function: let it to encrypt/decrypt data files your software dealing with}.
+\EN{But we need to say that it is possible to build a robust software copy protection scheme based on secret
+cryptographic hash-function: let it encrypt/decrypt the data files your software uses}.
 
-\RU{Но вернемся к нашему коду}\EN{But let's back to the code}.
+\RU{Но вернемся к нашему коду}\EN{But let's get back to the code}.
 
 \RU{Коды}\EN{Codes} 51/52/53 \RU{используются для выбора номера принтеровского LPT-порта}
 \EN{are used for LPT printer port selection}.
-3x/4x \RU{используются для выбора}\EN{is for} ``family'' \RU{так донглы Sentinel Pro
+3x/4x \RU{используются для выбора}\EN{are used for} \q{family} \RU{так донглы Sentinel Pro
 можно отличать друг от друга: ведь более одной донглы может быть подключено к LPT-порту}
 \EN{selection (that's how Sentinel Pro dongles are differentiated from each other: more than one
-dongle can be connected to LPT port)}.
+dongle can be connected to a LPT port)}.
 
 \RU{Единственная строка, передающаяся в хеш-функцию это}
 \EN{The only non-2-character string passed to the hashing function is} "0123456789".
@@ -96,64 +95,64 @@ dongle can be connected to LPT port)}.
 \EN{Then, the result is compared against the set of valid results}.
 \RU{Если результат правилен}\EN{If it is correct},
 0xC \OrENRU 0xB \RU{будет записано в глобальную переменную}
-\EN{is to be written into global variable} \TT{ctl\_model}.
+\EN{is to be written into the global variable} \TT{ctl\_model}.
 
-\RU{Еще одна строка для хеширования:}\EN{Another text string to be passed is}
+\RU{Еще одна строка для хеширования:}\EN{Another text string that gets passed is}
 "PRESS ANY KEY TO CONTINUE: ", \RU{но результат не проверяется}\EN{but the result is not checked}.
-\RU{Не знаю зачем это, может быть по ошибке}\EN{I don't know why, probably by mistake}.
-(\RU{Это очень странное чувство: находить ошибки в столь древнем ПО}
-\EN{What a strange feeling: to reveal bugs in such ancient software}.)
+\RU{Трудно сказать, зачем это, может быть по ошибке}\EN{Hard to say why, probably by mistake}
+\footnote{\RU{Это очень странное чувство: находить ошибки в столь древнем ПО.}
+\EN{What a strange feeling: to find bugs in such ancient software.}}.
 
 \RU{Давайте посмотрим, где проверяется значение глобальной переменной}
 \EN{Let's see where the value from the global variable} \TT{ctl\_mode}\EN{ is used}.
 
-\RU{Одно из таких мест}\EN{One of such places is}:
+\RU{Одно из таких мест}\EN{One such place is}:
 
 \lstinputlisting{examples/dongles/2/4.lst}
 
-\RU{Если оно 0, шифрованное сообщение об ошибке будет передано в ф-цию дешифрования, и оно будет 
-показано}\EN{If it is 0, an encrypted error message is passed into decryption routine and printed}.
+\RU{Если оно 0, шифрованное сообщение об ошибке будет передано в функцию дешифрования, и оно будет 
+показано}\EN{If it is 0, an encrypted error message is passed to a decryption routine and printed}.
 
 \index{x86!\Instructions!XOR}
-\RU{Ф-ция дешифровки сообщений об ошибке похоже применяет простой \gls{xoring}}
-\EN{Error strings decryption routine is seems simple \gls{xoring}}:
+\RU{Функция дешифровки сообщений об ошибке похоже применяет простой \gls{xoring}}
+\EN{The error string decryption routine seems a simple \gls{xoring}}:
 
 \lstinputlisting{examples/dongles/2/err_warn.lst}
 
 \RU{Вот почему не получилось найти сообщение об ошибке в исполняемых файлах, потому что оно было
-зашифровано, это очень популярная практика}
-\EN{That's why I was unable to find error messages in the executable files, because they are encrypted,
-this is popular practice}.
+зашифровано, это очень популярная практика}%
+\EN{That's why we were unable to find the error messages in the executable files, because they are encrypted
+(which is is popular practice)}.
 
-\RU{Еще один вызов хеширующей ф-ции передает строку}\EN{Another call to \TT{SSQ()} hashing function passes}
-``offln'' \RU{и сравнивает результат с константами}\EN{string to it and comparing result with}
+\RU{Еще один вызов хеширующей функции передает строку}\EN{Another call to the \TT{SSQ()} hashing function passes the}
+\q{offln} \RU{и сравнивает результат с константами}\EN{string to it and compares the result with}
 \TT{0xFE81} \AndENRU \TT{0x12A9}.
-\RU{Если результат не сходится, происходит работа с какой-то ф-цией}
-\EN{If it not so, it deals with some} \TT{timer()} 
+\RU{Если результат не сходится, происходит работа с какой-то функцией}
+\EN{If they don't match, it works with some} \TT{timer()} 
 \RU{(может быть для ожидания плохо подключенной донглы и нового запроса?), затем дешифрует
-еще одно сообщение об ошибке и выводит его}\EN{function (maybe waiting for poorly
-connected dongle to be reconnected and check again?) and then decrypt another error message to dump}.
+еще одно сообщение об ошибке и выводит его}\EN{function (maybe waiting for a poorly
+connected dongle to be reconnected and check again?) and then decrypts another error message to dump}.
 
 \lstinputlisting{examples/dongles/2/check2.lst}
 
 \RU{Заставить работать программу без донглы довольно просто: просто пропатчить все места после инструкций
-\CMP где происходят соответствующие сравнения}\EN{Dongle bypassing is pretty straightforward: just patch all jumps after \CMP the relevant instructions}.
+\CMP где происходят соответствующие сравнения}\EN{Bypassing the dongle is pretty straightforward: just patch all jumps after the relevant \CMP instructions}.
 
-\RU{Еще одна возможность ~--- это написать свой драйвер для SCO OpenServer}
-\EN{Another option is to write our own SCO OpenServer driver}.
+\RU{Еще одна возможность\EMDASH{}это написать свой драйвер для SCO OpenServer, содержащий таблицу возможных вопросов и ответов, все те что имеются в програме.}
+\EN{Another option is to write our own SCO OpenServer driver, containing a table of questions and answers, all of those which present in the program.}
 
 \subsection{\RU{Дешифровка сообщений об ошибке}\EN{Decrypting error messages}}
 
 \RU{Кстати, мы также можем дешифровать все сообщения об ошибке}\EN{By the way, we can also 
 try to decrypt all error messages}.
-\RU{Алкгоритм, находящийся в ф-ции}\EN{The algorithm, locating in} \TT{err\_warn()} 
+\RU{Алгоритм, находящийся в функции}\EN{The algorithm that is located in the} \TT{err\_warn()} 
 \RU{действительно, крайне прост}\EN{function is very simple, indeed}:
 
-\lstinputlisting[caption=\RU{Ф-ция дешифровки}\EN{Decrypting function}]
-{examples/dongles/2/decrypting_\LANG.lst}
+\lstinputlisting[caption=\RU{Функция дешифровки}\EN{Decryption function}]
+{examples/dongles/2/decrypting.lst.\LANG}
 
 \RU{Как видно, не только сама строка поступает на вход, но также и ключ для дешифровки}\EN{As we can see, 
-not just string supplied to the decrypting function, but also the key}:
+not just string is supplied to the decryption function, but also the key}:
 
 \begin{lstlisting}
 .text:0000DAF7 error:                                  ; CODE XREF: sync_sys+255j
@@ -164,7 +163,7 @@ not just string supplied to the decrypting function, but also the key}:
 
 ...
 
-; this name I gave to label:
+; this name we gave to label manually:
 .text:0000D9B6 decrypt_end_print_message:              ; CODE XREF: sync_sys+29Dj
 .text:0000D9B6                                         ; sync_sys+2ABj
 .text:0000D9B6                 mov     eax, [ebp+var_18]
@@ -179,48 +178,47 @@ not just string supplied to the decrypting function, but also the key}:
 .text:0000D9C9                 call    err_warn
 \end{lstlisting}
 
-\RU{Алгоритм это очень простой}\EN{The algorithm is simple} \gls{xoring}: 
+\RU{Алгоритм это очень простой}\EN{The algorithm is a simple} \gls{xoring}: 
 \RU{каждый байт XOR-ится с ключом, но ключ увеличивается на 3 после обработки каждого байта}\EN{each 
-byte is xored with a key, but key is increased by 3 after processing of each byte}.
+byte is xored with a key, but the key is increased by 3 after the processing of each byte}.
 
-\RU{Я написал небольшой скрипт на Python для проверки своих догадок}\EN{I wrote a simple Python 
-script to check my insights}:
+\RU{Напишем небольшой скрипт на Python для проверки наших догадок}\EN{We can write a simple Python script to check our hypothesis}:
 
 \lstinputlisting[caption=Python 3.x]{examples/dongles/2/decr1.py}
 
-\RU{И он выводит}\EN{And it prints}: ``check security device connection''.
-\RU{Так что да, это дешифрованное сообщение}\EN{So yes, this is decrypted message}.
+\RU{И он выводит}\EN{And it prints}: \q{check security device connection}.
+\RU{Так что да, это дешифрованное сообщение}\EN{So yes, this is the decrypted message}.
 
 \RU{Здесь есть также и другие сообщения, с соответствующими ключами}\EN{There are also 
-other encrypted messages with corresponding keys}.
-\RU{Но надо сказать, их можно дешифровать и без ключей}\EN{But needless to say that it is possible 
-to decrypt them without keys}.
-\RU{В начале, мы можем заметить что ключ это просто байт}\EN{First, we may observe that key 
-is byte in fact}.
-\RU{Это потому что самая важная часть ф-ции дешифровки}\EN{It is because core decrypting instruction}
+other encrypted messages with their corresponding keys}.
+\RU{Но надо сказать, их можно дешифровать и без ключей}\EN{But needless to say, it is possible 
+to decrypt them without their keys}.
+\RU{В начале, мы можем заметить, что ключ\EMDASH{}это просто байт}\EN{First, we can see that the key 
+is in fact a byte}.
+\RU{Это потому что самая важная часть функции дешифровки}\EN{It is because the core decryption instruction}
 (\XOR) \RU{оперирует байтами}\EN{works on byte level}. 
-\RU{Ключ находится в регистре}\EN{Key is located in} \ESI\RU{, но только младшие 8 бит
-(т.е., байт) регистра используются}\EN{ register, but only byte part of \ESI is used}.
-\RU{Следовательно, ключ может быть больше}\EN{Hence, key may be greater than} 255, 
-\RU{но его значение будет округляться}\EN{but its value will always be rounded}.
+\RU{Ключ находится в регистре}\EN{The key is located in the} \ESI\RU{, но только младшие 8 бит
+(т.е. байт) регистра используются}\EN{ register, but only one byte part of \ESI is used}.
+\RU{Следовательно, ключ может быть больше}\EN{Hence, a key may be greater than} 255, 
+\RU{но его значение будет округляться}\EN{but its value is always to be rounded}.
 
 \RU{И как следствие, мы можем попробовать обычный перебор всех ключей в диапазоне}
-\EN{As a consequence, we can just try brute-force, trying all possible keys in} 0..255\EN{ range}.
-\RU{Мы также можем пропускать сообщения содержащие непечатные символы}\EN{We will also skip 
-messages containing unprintable characters}.
+\EN{As a consequence, we can just try brute-force, trying all possible keys in the} 0..255\EN{ range}.
+\RU{Мы также можем пропускать сообщения содержащие непечатные символы}\EN{We are also going to skip 
+the messages that contain unprintable characters}.
 
 \lstinputlisting[caption=Python 3.x]{examples/dongles/2/decr2.py}
 
-\RU{И мы получим}\EN{And we getting}:
+\RU{И мы получим}\EN{And we get}:
 
 \lstinputlisting[caption=Results]{examples/dongles/2/decr2_result.txt}
 
 \RU{Тут есть какой-то мусор, но мы можем быстро отыскать сообщения на английском языке}\EN{There 
-are some garbage, but we can quickly find English-language messages}!
+is some garbage, but we can quickly find the English-language messages}!
 
-\RU{Кстати, так как алгоритм использует простой \XOR, та же ф-ция может использоваться и для шифрования
-сообщения}\EN{By the way, since algorithm is simple xoring encryption, the very same function can be used
-for encrypting messages}.
+\RU{Кстати, так как алгоритм использует простой \XOR, та же функция может использоваться и для шифрования
+сообщения}\EN{By the way, since the algorithm is a simple xoring encryption, the very same function can be used
+to encrypt messages}.
 \RU{Если нужно, мы можем зашифровать наши собственные сообщения, и пропатчить программу вставив
-их}\EN{If we need, we can encrypt our own messages, and patch the program by inserting them}.
+их}\EN{If needed, we can encrypt our own messages, and patch the program by inserting them}.
 

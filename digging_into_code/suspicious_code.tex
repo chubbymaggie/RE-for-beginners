@@ -3,24 +3,27 @@
 \section{\RU{Инструкции XOR}\EN{XOR instructions}}
 \index{x86!\Instructions!XOR}
 
-\RU{Инструкции вроде}\EN{instructions like} \TT{XOR op, op} (\RU{например}\EN{for example}, \TT{XOR EAX, EAX}) 
+\RU{Инструкции вроде}\EN{Instructions like} \TT{XOR op, op} (\RU{например}\EN{for example}, \TT{XOR EAX, EAX}) 
 \RU{обычно используются для обнуления регистра,
-однако, если операнды разные, то применяется операция именно}\EN{are usually used for setting register value
-to zero, but if operands are different,} \IT{\RU{исключающего или}\EN{exclusive or}}\EN{ operation
+однако, если операнды разные, то применяется операция именно}\EN{are usually used for setting the register value
+to zero, but if the operands are different, the} \q{\RU{исключающего или}\EN{exclusive or}}\EN{ operation
 is executed}.
 \RU{Эта операция очень редко применяется в обычном программировании, но применяется очень часто в криптографии,
-включая любительскую}\EN{This operation is rare in common programming, but used often in cryptography,
-including amateur}.
-\RU{Особенно подозрительно, если второй операнд это большое число}\EN{Especially suspicious case if the
-second operand is big number}.
-\RU{Это может указывать на шифрование, вычисление контрольной суммы, итд}
-\EN{This may points to encrypting/decrypting, checksum computing, etc}.\\
+включая любительскую.}
+\EN{This operation is rare in common programming, but widespread in cryptography,
+including amateur one.}
+\RU{Особенно подозрительно, если второй операнд\EMDASH{}это большое число}\EN{It's especially suspicious if the
+second operand is a big number}.
+\RU{Это может указывать на шифрование, вычисление контрольной суммы,}
+\EN{This may point to encrypting/decrypting, checksum computing,}\etc{}.\\
 \\
-\RU{Одно из исключений из этого наблюдения о котором стоит сказать, то, что генерация и проверка значения ``канарейки''
-(\ref{subsec:BO_protection}) часто происходит используя инструкцию \XOR}
-\EN{One exception to this observation worth to note is ``canary'' (\ref{subsec:BO_protection}) generation and checking is often done using \XOR
-instruction}. \\
+\ifx\LITE\undefined
+\RU{Одно из исключений из этого наблюдения о котором стоит сказать, то, что генерация и проверка значения \q{канарейки}
+(\myref{subsec:BO_protection}) часто происходит, используя инструкцию \XOR.}
+\EN{One exception to this observation worth noting is the \q{canary} (\myref{subsec:BO_protection}). 
+Its generation and checking are often done using the \XOR instruction.} \\
 \\
+\fi
 \index{AWK}
 \RU{Этот AWK-скрипт можно использовать для обработки листингов (.lst) созданных \IDA{}}
 \EN{This AWK script can be used for processing \IDA{} listing (.lst) files}:
@@ -29,10 +32,12 @@ instruction}. \\
 gawk -e '$2=="xor" { tmp=substr($3, 0, length($3)-1); if (tmp!=$4) if($4!="esp") if ($4!="ebp") { print $1, $2, tmp, ",", $4 } }' filename.lst
 \end{lstlisting}
 
+\ifx\LITE\undefined
 \RU{Нельзя также забывать,
 что если использовать подобный скрипт, то, возможно, он захватит и неверно дизассемблированный
-код}\EN{It is also worth to note that such script may also capture incorrectly disassembled code} 
-(\ref{sec:incorrectly_disasmed_code}).
+код}\EN{It is also worth noting that this kind of script can also match incorrectly disassembled code} 
+(\myref{sec:incorrectly_disasmed_code}).
+\fi
 
 \section{\RU{Вручную написанный код на ассемблере}\EN{Hand-written assembly code}}
 
@@ -42,22 +47,29 @@ gawk -e '$2=="xor" { tmp=substr($3, 0, length($3)-1); if (tmp!=$4) if($4!="esp")
 \index{x86!\Instructions!RCL}
 \RU{Современные компиляторы не генерируют инструкции \TT{LOOP} и \TT{RCL}. 
 С другой стороны, эти инструкции хорошо знакомы кодерам, предпочитающим писать прямо на ассемблере. 
-Подобные инструкции отмечены как (M) в списке инструкций в приложении: \ref{sec:x86_instructions}.
+\ifx\LITE\undefined
+Подобные инструкции отмечены как (M) в списке инструкций в приложении: 
+\myref{sec:x86_instructions}.
+\fi
 Если такие инструкции встретились, можно сказать с какой-то вероятностью, что этот фрагмент кода написан вручную.}
-\EN{Modern compilers do not emit \TT{LOOP} and \TT{RCL} instructions.
-On the other hand, these instructions are well-known to coders who like to code in straight assembly language.
-If you spot these, it can be said, with a high probability, this fragment of code is hand-written.
-Such instructions are marked as (M) in the instructions list in appendix: \ref{sec:x86_instructions}.}\\
+\EN{Modern compilers do not emit the \TT{LOOP} and \TT{RCL} instructions.
+On the other hand, these instructions are well-known to coders who like to code directly in assembly language.
+If you spot these, it can be said that there is a high probability that this fragment of code was hand-written.
+\ifx\LITE\undefined
+Such instructions are marked as (M) in the instructions list in this appendix: 
+\myref{sec:x86_instructions}.
+\fi
+}\PTBRph{}\ESph{}\PLph{}\\
 \\
 \RU{Также, пролог/эпилог функции обычно не встречается в ассемблерном коде, написанном вручную.}
-\EN{Also function prologue/epilogue is not commonly present in hand-written assembly copy.}\\
+\EN{Also the function prologue/epilogue are not commonly present in hand-written assembly.}\\
 \\
 \RU{Как правило, в вручную написанном коде, нет никакого четкого метода передачи аргументов в 
 функцию}
-\EN{Commonly there is no fixed system in passing arguments into functions in the hand-written
+\EN{Commonly there is no fixed system for passing arguments to functions in the hand-written
 code}.\\
 \\
-\RU{Пример из ядра}\EN{Example from} Windows 2003\EN{ kernel} 
+\RU{Пример из ядра}\EN{Example from the} Windows 2003\EN{ kernel} 
 (\RU{файл }ntoskrnl.exe\EN{ file}):
 
 \begin{lstlisting}
@@ -91,7 +103,7 @@ locret_62057F:                       ; CODE XREF: Multiply+10
 Multiply     endp
 \end{lstlisting}
 
-\RU{Действительно, если заглянуть в исходные коды}\EN{Indeed, if we look into} 
+\RU{Действительно, если заглянуть в исходные коды}\EN{Indeed, if we look in the} 
 \ac{WRK} v1.2\RU{, данный код можно найти в файле}\EN{ source code, this code
-can be found easily in the file} 
+can be found easily in file} 
 \IT{WRK-v1.2\textbackslash{}base\textbackslash{}ntos\textbackslash{}ke\textbackslash{}i386\textbackslash{}cpu.asm}.

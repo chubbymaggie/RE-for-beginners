@@ -2,17 +2,17 @@
 
 \label{SEH_win64}
 \RU{Как видно, это не самая быстрая штука, устанавливать SEH-структуры в каждом прологе функции}
-\EN{As you might think, it is not very fast thing to set up SEH frame at each function prologue}.
-\RU{Еще одна проблема производительности это менять переменную}\EN{Another performance problem is to change} 
-\IT{previous try level} \RU{много раз в течении исполнении ф-ции}\EN{value many times while function execution}.
-\RU{Так что в x64 всё сильно изменилось, теперь все указатели на \TT{try}-блоки, ф-ции фильтров и обработчиков,
+\EN{As you might think, it is not very fast to set up the SEH frame at each function prologue}.
+\RU{Еще одна проблема производительности\EMDASH{}это менять переменную}\EN{Another performance problem is changing the} 
+\IT{previous try level} \RU{много раз в течении исполнении функции}\EN{value many times during the function's execution}.
+\RU{Так что в x64 всё сильно изменилось, теперь все указатели на \TT{try}-блоки, функции фильтров и обработчиков,
 теперь записаны в другом PE-сегменте}
 \EN{So things are changed completely in x64: now all pointers to \TT{try} blocks, filter and handler functions are stored
-in another PE-segment} \TT{.pdata}, \RU{откуда обработчик исключений OS берет всю информацию}
-\EN{that is where OS exception handler takes all the information}.
+in another PE segment} \TT{.pdata}, \RU{откуда обработчик исключений \ac{OS} берет всю информацию}
+\EN{and from there the \ac{OS}'s exception handler takes all the information}.
 
 \RU{Вот два примера из предыдущей секции, скомпилированных для}
-\EN{These are two examples from the previous section compiled for} x64:
+\EN{Here are the two examples from the previous section compiled for} x64:
 
 \lstinputlisting[caption=MSVC 2012]{OS/SEH/3/2_x64.asm}
 
@@ -21,8 +21,8 @@ in another PE-segment} \TT{.pdata}, \RU{откуда обработчик иск
 \RU{Смотрите}\EN{Read} \cite{IgorSkochinsky} \RU{для более детального описания}\EN{for more detailed information about this}.
 
 \RU{Помимо информации об исключениях, секция}\EN{Aside from exception information,} \TT{.pdata} 
-\RU{также содержит начала и концы почти всех ф-ций, так что эту информацию можно использовать в каких-либо
-утилитах предназначенных для автоматизации анализа}\EN{is a section containing addresses of almost all function starts and ends,
-hence it may be useful for a tools targetting automated analysis}.
+\RU{также содержит начала и концы почти всех функций, так что эту информацию можно использовать в каких-либо
+утилитах, предназначенных для автоматизации анализа}\EN{is a section that contains the addresses of almost all function starts and ends,
+hence it may be useful for a tools targeted at automated analysis}.
 
 

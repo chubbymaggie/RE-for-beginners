@@ -88,9 +88,9 @@ void rotate_all (char *pwd, int v)
 
 			switch (remainder)
 			{
-			case 0: for (int i=0; i<v; i++) rotate1 (quotient); break;
-			case 1: for (int i=0; i<v; i++) rotate2 (quotient); break;
-			case 2: for (int i=0; i<v; i++) rotate3 (quotient); break;
+			case 0: for (int i=0; i<v; i++) rotate_f (quotient); break;
+			case 1: for (int i=0; i<v; i++) rotate_t (quotient); break;
+			case 2: for (int i=0; i<v; i++) rotate_l (quotient); break;
 			};
 		};
 
@@ -197,7 +197,7 @@ void decrypt_file(char *fin, char* fout, char *pw)
 
 	if (memcmp (buf, "QR9", 3)!=0)
 	{
-		printf ("File is not crypted!\n");
+		printf ("File is not encrypted!\n");
 		return;
 	};
 

@@ -2,8 +2,7 @@ $SG85485 DB    'hello #1!', 0aH, 00H
 $SG85486 DB    'hello #2!', 0aH, 00H
 $SG85488 DB    'access violation, can''t recover', 0aH, 00H
 
-; scope table
-
+; scope table:
 xdata$x          SEGMENT
 __sehtable$_main DD 0fffffffeH   ; GS Cookie Offset
     DD           00H             ; GS Cookie XOR Offset
@@ -50,8 +49,7 @@ _main    PROC
     mov    DWORD PTR __$SEHRec$[ebp+20], -2 ; previous try level
     jmp    SHORT $LN6@main
 
-    ; filter
-
+; filter:
 $LN7@main:
 $LN12@main:
     mov    ecx, DWORD PTR __$SEHRec$[ebp+4]
@@ -70,8 +68,7 @@ $LN9@main:
 $LN11@main:
     ret    0
 
-    ; handler
-
+; handler:
 $LN8@main:
     mov    esp, DWORD PTR __$SEHRec$[ebp]
     push   OFFSET $SG85488 ; 'access violation, can''t recover'

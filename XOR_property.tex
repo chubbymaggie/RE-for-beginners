@@ -1,0 +1,29 @@
+﻿% included twice... a bit of redundancy, but it's OK
+
+\RU{\XOR (исключающее ИЛИ) часто используется для того чтобы поменять какой-то бит(ы) на противоположный.}
+\EN{\XOR is widely used when one need just to flip specific bit(s).}
+\RU{Действительно, операция \XOR с 1 на самом деле просто инвертирует бит:}
+\EN{Indeed, the \XOR operation applied with 1 is effectively inverting a bit:}
+
+\begin{center}
+\begin{tabular}{ | l | l | l | }
+\hline
+\cellcolor{blue!25} \RU{вход А}\EN{input A} & 
+\cellcolor{blue!25} \RU{вход Б}\EN{input B} & 
+\cellcolor{blue!25} \RU{выход}\EN{output} \\
+\hline
+0 & 0 & 0 \\
+\hline
+{\color{red} 0} & {\color{red} 1} & {\color{red} 1} \\
+\hline
+{\color{red} 1} & {\color{red} 0} & {\color{red} 1} \\
+\hline
+1 & 1 & 0 \\
+\hline
+\end{tabular}
+\end{center}
+
+\RU{И наоборот, операция \XOR с 0 ничего не делает, т.е. это холостая операция.}
+\EN{And on the contrary, the \XOR operation applied with 0 does nothing, i.e., it's an idle operation.}
+\RU{Это очень важное свойство операции \XOR и очень важно помнить его.}
+\EN{This is a very important property of the \XOR operation and it's highly recommended to memorize it.}

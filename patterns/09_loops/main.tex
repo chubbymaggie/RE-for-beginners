@@ -1,33 +1,10 @@
 \chapter{\Loops}
 \label{sec:loops}
 
-\input{patterns/09_loops/x86}
-\input{patterns/09_loops/ARM}
-
-\section{\RU{Еще кое-что}\EN{One more thing}}
-
-\RU{По генерируемому коду мы видим следующее}\EN{On the code generated we can see}: 
-\RU{после инициализации}\EN{after} \IT{i}\RU{, тело цикла не исполняется, а исполняется сразу
-проверка условия \IT{i}, а лишь затем исполняется тело цикла.}\EN{initialization, loop body will not be executed,
-but \IT{i} condition checked first, and only after loop body is to be executed.}
-\RU{Это правильно.}\EN{And that is correct.} 
-\RU{Потому что если условие в самом начале не выполняется, тело цикла исполнять нельзя.}
-\EN{Because, if loop condition is
-not met at the beginning, loop body must not be executed.}
-\RU{Так может быть, например, в таком случае:}\EN{For example, this is possible in the following case:}
-
-\lstinputlisting{patterns/09_loops/loops_3_\LANG.c}
-
-\RU{Если}\EN{If} \IT{total\_entries\_to\_process} \RU{равно}\EN{equals to} $0$,
-\RU{тело цикла не должно исполниться ни разу}\EN{loop body must not be executed whatsoever}.
-\RU{Поэтому проверка условия происходит перед тем как исполнить само тело.}
-\EN{So that is why condition checked before
-loop body execution.}
-
-\RU{Впрочем, оптимизирующий компилятор может переставить проверку условия и тело цикла местами, если он уверен,
-что описанная здесь ситуация невозможна, как в случае с нашим простейшим примером и компиляторами 
-Keil, Xcode (LLVM), MSVC и GCC в режиме оптимизации.}
-\EN{However, optimizing compiler may swap condition check and loop body,
-if it sure that the situation described here is
-not possible (like in case of our very simple example and Keil, Xcode (LLVM), MSVC in optimization mode).}
-
+% sections
+\input{patterns/09_loops/simple/main}
+\input{patterns/09_loops/memcpy/main}
+\input{patterns/09_loops/conclusion}
+\ifdefined\IncludeExercises
+\input{patterns/09_loops/exercises}
+\fi
